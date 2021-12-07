@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="01. GameManager">
+      <UniqueIdentifier>{b1112cd3-846c-4348-89f4-444021e27784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\01. Timer">
+      <UniqueIdentifier>{a9ae6b6e-a3eb-47ae-a18c-46b0e83daf56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\02. Ref">
+      <UniqueIdentifier>{c1b86cce-d831-448d-adc3-da567ca5bc62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\04. Path">
+      <UniqueIdentifier>{81fd64b1-54bb-44a4-9b66-0f3b78a66504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object">
+      <UniqueIdentifier>{657a7b65-beeb-463d-bfde-37e5ca0d680f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource">
+      <UniqueIdentifier>{2c702872-e6a8-4349-b43d-9f5c464f8bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\03. Stage">
+      <UniqueIdentifier>{9375f0cc-11e0-483b-9a0f-dbae1c036780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Cell">
+      <UniqueIdentifier>{c13fbf39-3066-4f6a-acc6-157bd04b57bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Block">
+      <UniqueIdentifier>{ae6378dc-c2fc-4d0c-9757-79de4dd99b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\03. Board">
+      <UniqueIdentifier>{28b34576-4075-4086-80dd-4e9749c37d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFile">
+      <UniqueIdentifier>{8dbb47a5-403f-4f81-91fc-65b56b4bcb1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeaderFile">
+      <UniqueIdentifier>{de062a53-68fa-479d-9401-18f0d7172225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\05. Math">
+      <UniqueIdentifier>{5567d435-bf7c-437a-89b0-7ebbe17fee93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\05. Input">
+      <UniqueIdentifier>{48d64023-5406-48b1-a8ce-5ecd8ce4668a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource\01. Texture">
+      <UniqueIdentifier>{1623e45b-3aad-4028-81bc-96021411094e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource\02. Animation">
+      <UniqueIdentifier>{dda05535-0ab4-40d4-819d-22739794700f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Map">
+      <UniqueIdentifier>{26926799-be23-41b7-9634-5ec40adb7a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. UI">
+      <UniqueIdentifier>{a5f793b8-2516-4f66-8f26-4b56020ba9fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. UI\01. Widget">
+      <UniqueIdentifier>{238aca10-f71c-42db-b54a-b608ee2e2d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. UI\02. Window">
+      <UniqueIdentifier>{418af7a4-3022-4980-b66d-7c26c95fd0a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameManager\06. SharedPtr">
+      <UniqueIdentifier>{66411e37-27e0-4db8-97f9-18d7c27d54ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>01. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>01. GameManager\01. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage\StageManager.cpp">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage\Stage.cpp">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Block.cpp">
+      <Filter>02. Object\02. Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Cell.cpp">
+      <Filter>02. Object\01. Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\CellBehaviour.cpp">
+      <Filter>02. Object\01. Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Board.cpp">
+      <Filter>02. Object\03. Board</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage\StageBuilder.cpp">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Path\PathManager.cpp">
+      <Filter>01. GameManager\04. Path</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>01. GameManager\05. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIWindow.cpp">
+      <Filter>05. UI\02. Window</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIWidget.cpp">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="Ref.cpp">
+      <Filter>01. GameManager\02. Ref</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ResourceManager.cpp">
+      <Filter>03. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>01. GameManager\05. Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Resource\Texture.cpp">
+      <Filter>03. Resource\01. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\AnimationSequence.cpp">
+      <Filter>03. Resource\02. Animation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameManager.h">
+      <Filter>01. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>01. GameManager\01. Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\StageManager.h">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\Stage.h">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Block.h">
+      <Filter>02. Object\02. Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Cell.h">
+      <Filter>02. Object\01. Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\CellBehaviour.h">
+      <Filter>02. Object\01. Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Board.h">
+      <Filter>02. Object\03. Board</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\StageBuilder.h">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Flag.h">
+      <Filter>HeaderFile</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInfo.h">
+      <Filter>HeaderFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Path\PathManager.h">
+      <Filter>01. GameManager\04. Path</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>01. GameManager\05. Input</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIWindow.h">
+      <Filter>05. UI\02. Window</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIWidget.h">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedPtr.h">
+      <Filter>01. GameManager\06. SharedPtr</Filter>
+    </ClInclude>
+    <ClInclude Include="Ref.h">
+      <Filter>01. GameManager\02. Ref</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceManager.h">
+      <Filter>03. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>01. GameManager\05. Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h" />
+    <ClInclude Include="resource.h">
+      <Filter>HeaderFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Texture.h">
+      <Filter>03. Resource\01. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\AnimationSequence.h">
+      <Filter>03. Resource\02. Animation</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WinAPI_Project_Puzzle_Game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+  </ItemGroup>
+</Project>

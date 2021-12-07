@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinAPI_Project_Puzzle_Game", "WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game.vcxproj", "{9B855008-63AE-41A3-A0FC-953121F3EEFB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinAPI_Project_Puzzle_Game", "WinAPI_Project_Puzzle_Game\include\WinAPI_Project_Puzzle_Game.vcxproj", "{9B855008-63AE-41A3-A0FC-953121F3EEFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A41F3949-6362-4B57-8B1F-3A5AC06D11FF}
+		SolutionGuid = {DDFDD4EB-59EC-455E-8E8C-3E14EFF968C4}
 	EndGlobalSection
 EndGlobal
