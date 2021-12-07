@@ -88,12 +88,14 @@ public:
 		const Vector2& Size, int Index = 0);
 
 public:
+	/*
 	void Save(FILE* pFile);
 	void Load(FILE* pFile);
+	*/
 
 	// 아래 함수를 만드는 이유는
 	// 객체를 생성하지 않고서도 loading을 할 수 있는
 	// 시스템을 만들기 위함이다.
-	static CTexture* LoadStatic(FILE* pFile, class CScene* Scene);
+	// static CTexture* LoadStatic(FILE* pFile, class CScene* Scene);
 };
 

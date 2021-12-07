@@ -1,6 +1,7 @@
 #include "Cell.h"
 
-CCell::CCell()
+CCell::CCell() :
+	m_CellType(CellType::BASIC)
 {
 }
 

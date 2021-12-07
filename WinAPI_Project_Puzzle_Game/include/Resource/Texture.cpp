@@ -187,6 +187,7 @@ void CTexture::Render(HDC hDC, const Vector2& WindowPos, const Vector2& ImgPos, 
 	}
 }
 
+/*
 void CTexture::Save(FILE* pFile)
 {
 	int Length = (int)m_Name.length();
@@ -285,7 +286,9 @@ void CTexture::Load(FILE* pFile)
 		}
 	}
 }
+*/
 
+/*
 CTexture* CTexture::LoadStatic(FILE* pFile, CScene* Scene)
 {
 	CTexture* Result = nullptr;
@@ -318,14 +321,14 @@ CTexture* CTexture::LoadStatic(FILE* pFile, CScene* Scene)
 		fread(&FileName, sizeof(TCHAR), NameCount, pFile);
 
 		// Texture Load
-		/*
-		Scene->GetSceneResource()->LoadTexture(Name, FileName);
+		
+		Stage->GetSceneResource()->LoadTexture(Name, FileName);
 		if (ColorKeyEnable)
 		{
-			Scene->GetSceneResource()->SetTextureColorKey(Name, ColorKey);
+			Stage->GetSceneResource()->SetTextureColorKey(Name, ColorKey);
 		}
-		Result = Scene->GetSceneResource()->FindTexture(Name);
-		*/
+		Result = Stage->GetSceneResource()->FindTexture(Name);
+		
 	}
 	else // vector<wstring> 형태로 가져와야 한다 
 	{
@@ -357,7 +360,7 @@ CTexture* CTexture::LoadStatic(FILE* pFile, CScene* Scene)
 		}
 
 		// Texture Load
-		/*
+		
 		Scene->GetSceneResource()->LoadTexture(Name, vecFileName);
 
 		// 전체 반복 돌면서 SetColorKey
@@ -367,7 +370,9 @@ CTexture* CTexture::LoadStatic(FILE* pFile, CScene* Scene)
 			Scene->GetSceneResource()->SetTextureColorKey(Name, vecColorkey[i]);
 		}
 		Result = Scene->GetSceneResource()->FindTexture(Name);
-		*/
+		
 	}
 	return Result;
 }
+
+*/

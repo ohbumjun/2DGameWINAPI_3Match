@@ -9,7 +9,6 @@ private :
 private :
 	bool m_Init;
 	class CStage* m_Stage;
-	class CStageBuilder* m_StageBuilder;
 public :
 	void Start();
 	bool Init();

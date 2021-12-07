@@ -1,6 +1,9 @@
 #include "Stage.h"
 
-CStage::CStage(CStageBuilder* builder, int row, int col)
+CStage::CStage(CStageBuilder* builder, int row, int col) :
+	m_Board(nullptr),
+	m_Col(0),
+	m_Row(0)
 {
 	m_Builder = builder;
 }

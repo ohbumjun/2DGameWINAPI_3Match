@@ -194,10 +194,4 @@
       <Filter>03. Resource\02. Animation</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="WinAPI_Project_Puzzle_Game.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="icon1.ico" />
-  </ItemGroup>
 </Project>

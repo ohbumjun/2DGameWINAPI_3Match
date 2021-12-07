@@ -1,6 +1,9 @@
 #pragma once
+#include "../GameInfo.h"
+
 class CBoard
 {
+	friend class CStage;
 public:
 	CBoard();
 	~CBoard();
@@ -27,5 +30,8 @@ public :
 	{
 		return m_Blocks[Row][Col];
 	}
+public :
+	void SetCell(class CCell* Cell, int row, int col);
+	void SetBlock(class CBlock* Cell, int row, int col);
 };
 

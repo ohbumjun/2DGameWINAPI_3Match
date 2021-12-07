@@ -20,7 +20,7 @@
 
 // Sound 
 // #include "fmod.hpp"
-// #pragma comment(lib, "msimg32.lib")
+#pragma comment(lib, "msimg32.lib")
 // #pragma comment(lib, "fmod64_vc.lib")
 
 // Const 

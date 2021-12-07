@@ -4,6 +4,7 @@
 
 class CStage
 {
+	friend class CStageBuilder;
 public :
 	CStage(class CStageBuilder* builder, int row, int col);
 	~CStage();
@@ -26,9 +27,14 @@ public :
 	{
 		return m_Col;
 	}
-	CBoard* Board()
+	CBoard* GetBoard() const
 	{
 		return m_Board;
+	}
+public :
+	void SetBuilder(class CStageBuilder* Builder)
+	{
+		m_Builder = Builder;
 	}
 };
 

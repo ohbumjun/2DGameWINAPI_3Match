@@ -7,10 +7,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 	_CrtSetBreakAlloc(120);
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//new char;
 
-	srand((unsigned int)GetTickCount());
-	rand();
+	// srand((unsigned int)GetTickCount());
+	// rand();
 
 	if (!CGameManager::GetInst()->Init(hInstance))
 	{

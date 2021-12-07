@@ -8,6 +8,7 @@
 #include "Resource/ResourceManager.h"
 
 CGameManager* CGameManager::m_Inst = nullptr;
+
 bool CGameManager::m_Loop = true;
 
 CGameManager::CGameManager() :
@@ -144,13 +145,11 @@ int CGameManager::Run()
 
 			DispatchMessage(&msg);
 		}
-
 		else
 		{
 			Logic();
 		}
 	}
-
 	return (int)msg.wParam;
 }
 
