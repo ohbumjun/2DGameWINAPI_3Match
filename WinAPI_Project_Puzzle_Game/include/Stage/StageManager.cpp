@@ -49,5 +49,10 @@ bool CStageManager::Render(HDC hDC)
 
 void CStageManager::BuildStage()
 {
-    m_Stage = CStageBuilder::BuildStage(0, 9, 9);
+    // Stage 구성 
+    m_Stage = CStageBuilder::Init(0, 9, 9);
+
+    // 생성한 Stage 정보를 이용해서 씬을 구성한다
+    m_Stage->ComposeStage();
+
 }

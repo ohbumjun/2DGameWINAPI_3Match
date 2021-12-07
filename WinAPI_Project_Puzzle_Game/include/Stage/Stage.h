@@ -36,5 +36,7 @@ public :
 	{
 		m_Builder = Builder;
 	}
+public :
+	void ComposeStage();
 };
 

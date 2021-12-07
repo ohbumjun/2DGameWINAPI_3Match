@@ -23,6 +23,6 @@ public :
 	class CBlock* CreateBlock(int row, int col);
 	class CCell* CreateCell(int row, int col);
 public :
-	static class CStage* BuildStage(int nStage, int row, int col);
+	static class CStage* Init(int nStage, int row, int col);
 };
 

@@ -18,6 +18,9 @@ CStage* CStageBuilder::ComposeStage(int row, int col)
 	// Stage 객체 생성 
 	CStage* stage = new CStage(this, row, col);
 
+	// Stage 객체 초기화 
+	stage->Init();
+
 	// Cell, Block 초기값 생성
 	for (int r = 0; r < row; r++)
 	{
@@ -45,7 +48,7 @@ CCell* CStageBuilder::CreateCell(int row, int col)
 	return new CCell;
 }
 
-CStage* CStageBuilder::BuildStage(int nStage, int row, int col)
+CStage* CStageBuilder::Init(int nStage, int row, int col)
 {
 	CStageBuilder* m_StageBuilder = new CStageBuilder(0); // 0번 레벨 
 	CStage* Stage = m_StageBuilder->ComposeStage(row, col);

@@ -28,6 +28,7 @@
     <ClInclude Include="Object\Board.h" />
     <ClInclude Include="Object\Cell.h" />
     <ClInclude Include="Object\CellBehaviour.h" />
+    <ClInclude Include="Object\CellObject.h" />
     <ClInclude Include="Path\PathManager.h" />
     <ClInclude Include="Ref.h" />
     <ClInclude Include="resource.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Object\Board.cpp" />
     <ClCompile Include="Object\Cell.cpp" />
     <ClCompile Include="Object\CellBehaviour.cpp" />
+    <ClCompile Include="Object\CellObject.cpp" />
     <ClCompile Include="Path\PathManager.cpp" />
     <ClCompile Include="Ref.cpp" />
     <ClCompile Include="Resource\AnimationSequence.cpp" />
