@@ -37,7 +37,10 @@ public :
 	void ComposeStage();
 	float CalcInitX(float offset = 0);
 	float CalcInitY(float offset = 0);
-public :
-	
+public:
+	bool Init();
+	bool Update(float DeltaTime);
+	bool PostUpdate(float DeltaTime);
+	bool Render(HDC hDC);
 };
 

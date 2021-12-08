@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation\AnimationInfo.h" />
     <ClInclude Include="Flag.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameManager.h" />
@@ -27,8 +28,6 @@
     <ClInclude Include="Object\Block.h" />
     <ClInclude Include="Object\Board.h" />
     <ClInclude Include="Object\Cell.h" />
-    <ClInclude Include="Object\CellBehaviour.h" />
-    <ClInclude Include="Object\CellObject.h" />
     <ClInclude Include="Path\PathManager.h" />
     <ClInclude Include="Ref.h" />
     <ClInclude Include="resource.h" />
@@ -44,6 +43,7 @@
     <ClInclude Include="UI\UIWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation\AnimationInfo.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
@@ -51,8 +51,6 @@
     <ClCompile Include="Object\Block.cpp" />
     <ClCompile Include="Object\Board.cpp" />
     <ClCompile Include="Object\Cell.cpp" />
-    <ClCompile Include="Object\CellBehaviour.cpp" />
-    <ClCompile Include="Object\CellObject.cpp" />
     <ClCompile Include="Path\PathManager.cpp" />
     <ClCompile Include="Ref.cpp" />
     <ClCompile Include="Resource\AnimationSequence.cpp" />

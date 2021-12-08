@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../GameInfo.h"
-#include "CellObject.h"
 
 class CCell
 {
@@ -10,27 +9,26 @@ public :
 	~CCell();
 private :
 	CellType m_CellType;
-	class CCellObject* m_CellObject;
-
+	Vector2 m_RowColPos; 
+	AnimalType m_AnimalType;
 public :
 	void SetCellType(CellType Type)
 	{
 		m_CellType = Type;
+	}
+	void SetRowColPos(float Row, float Col)
+	{
+		m_RowColPos = Vector2(Row, Col);
 	}
 public :
 	CellType GetCellType()
 	{
 		return m_CellType;
 	}
-public:
-	CCellObject* CreateCellObject()
-	{
-		m_CellObject = new CCellObject;
-
-		if (!m_CellObject->Init())
-			return nullptr;
-
-		return m_CellObject;
-	}
+public :
+	bool Init();
+	bool Update(float DeltaTime);
+	bool PostUpdate(float DeltaTime);
+	bool Render(HDC hDC);
 };
 

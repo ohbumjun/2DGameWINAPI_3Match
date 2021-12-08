@@ -84,9 +84,6 @@
     <ClCompile Include="Object\Cell.cpp">
       <Filter>02. Object\01. Cell</Filter>
     </ClCompile>
-    <ClCompile Include="Object\CellBehaviour.cpp">
-      <Filter>02. Object\01. Cell</Filter>
-    </ClCompile>
     <ClCompile Include="Object\Board.cpp">
       <Filter>02. Object\03. Board</Filter>
     </ClCompile>
@@ -124,8 +121,8 @@
     <ClCompile Include="Resource\AnimationSequence.cpp">
       <Filter>03. Resource\02. Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Object\CellObject.cpp">
-      <Filter>02. Object\01. Cell</Filter>
+    <ClCompile Include="Animation\AnimationInfo.cpp">
+      <Filter>03. Resource\02. Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +142,6 @@
       <Filter>02. Object\02. Block</Filter>
     </ClInclude>
     <ClInclude Include="Object\Cell.h">
-      <Filter>02. Object\01. Cell</Filter>
-    </ClInclude>
-    <ClInclude Include="Object\CellBehaviour.h">
       <Filter>02. Object\01. Cell</Filter>
     </ClInclude>
     <ClInclude Include="Object\Board.h">
@@ -196,8 +190,8 @@
     <ClInclude Include="Resource\AnimationSequence.h">
       <Filter>03. Resource\02. Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Object\CellObject.h">
-      <Filter>02. Object\01. Cell</Filter>
+    <ClInclude Include="Animation\AnimationInfo.h">
+      <Filter>03. Resource\02. Animation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

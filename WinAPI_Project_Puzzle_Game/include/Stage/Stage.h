@@ -37,6 +37,7 @@ public :
 		m_Builder = Builder;
 	}
 public :
+	// 실제 위치 세팅 
 	void ComposeStage();
 };
 

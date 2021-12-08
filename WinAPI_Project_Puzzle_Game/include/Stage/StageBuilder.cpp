@@ -30,7 +30,6 @@ CStage* CStageBuilder::ComposeStage(int row, int col)
 			stage->GetBoard()->SetBlock(CreateBlock(r,c), r, c);
 		}
 	}
-
 	// Owner ¼¼ÆÃ
 	m_Owner = stage;
 	stage->SetBuilder(this);

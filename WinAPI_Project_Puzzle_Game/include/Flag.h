@@ -24,7 +24,16 @@ enum class CellType
 
 enum class BlockType
 {
-	EMPTY = 0,
-	BASIC = 1
+	EMPTY = 0, // 빈 블럭, 블럭이 존재하지 않는 위치에 설정
+	BASIC = 1  // 기본형, 세부종류로 6가지의 동물 캐릭터 스프라이트가 출력된다
 };
 
+enum AnimalType
+{
+	PANDA = 0,
+	BEAR,
+	PARROT , // red bird 
+ 	ELEPHANT,
+	PENGUIN,
+	DUCK // green bird
+};

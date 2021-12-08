@@ -33,8 +33,8 @@ void CBoard::ComposeStage()
 	{
 		for (int col = 0; col < m_Col; col++)
 		{
-			CCellObject* Cell = m_Cells[row][col]->CreateCellObject();
-			Cell->SetPos(InitY + row, InitX + col);
+			m_Cells[row][col]->SetRowColPos(InitY + row, InitX + col);
+			m_Blocks[row][col]->SetRowColPos(InitY + row, InitX + col);
 		}
 	}
 }
@@ -47,4 +47,24 @@ float CBoard::CalcInitX(float offset)
 float CBoard::CalcInitY(float offset)
 {
 	return -m_Row / 2.0f + offset;
+}
+
+bool CBoard::Init()
+{
+	return true;
+}
+
+bool CBoard::Update(float DeltaTime)
+{
+	return false;
+}
+
+bool CBoard::PostUpdate(float DeltaTime)
+{
+	return false;
+}
+
+bool CBoard::Render(HDC hDC)
+{
+	return false;
 }
