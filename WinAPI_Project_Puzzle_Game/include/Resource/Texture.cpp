@@ -16,6 +16,7 @@ CTexture::~CTexture()
 
 bool CTexture::LoadTexture(const std::string& Name, const TCHAR* FileName, const std::string& PathName)
 {
+	const
 	
 	return false;
 }
