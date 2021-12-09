@@ -124,6 +124,9 @@
     <ClCompile Include="Animation\AnimationInfo.cpp">
       <Filter>03. Resource\02. Animation</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UIImage.cpp">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -192,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="Animation\AnimationInfo.h">
       <Filter>03. Resource\02. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIImage.h">
+      <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -77,7 +77,7 @@ public :
 	{
 		return (unsigned int)m_vecTextureInfo[idx]->BmpInfo.bmHeight;
 	}
-	void SetColorKeyEnable(const unsigned char r, const unsigned char g, const unsigned char b, int Index = 0)
+	void SetColorKey(const unsigned char r, const unsigned char g, const unsigned char b, int Index = 0)
 	{
 		m_vecTextureInfo[Index]->ColorKeyEnable = true;
 		m_vecTextureInfo[Index]->ColorKey = RGB(r,g,b);
