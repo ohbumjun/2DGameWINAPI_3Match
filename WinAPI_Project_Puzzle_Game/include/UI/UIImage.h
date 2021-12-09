@@ -14,8 +14,8 @@ protected :
 	std::vector<AnimationFrameData> m_vecFrameData;
 	int m_FrameIndex;
 	float m_PlayTime;
-	float m_AnimaTime;
-	Vector2 m_OffSet;
+	float m_AnimTime;
+	Vector2 m_Offset;
 public :
 	void SetTexture(CTexture* Texture)
 	{
