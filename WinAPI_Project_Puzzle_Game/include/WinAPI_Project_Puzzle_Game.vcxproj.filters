@@ -121,9 +121,6 @@
     <ClCompile Include="Resource\AnimationSequence.cpp">
       <Filter>03. Resource\02. Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Animation\AnimationInfo.cpp">
-      <Filter>03. Resource\02. Animation</Filter>
-    </ClCompile>
     <ClCompile Include="UI\UIImage.cpp">
       <Filter>05. UI\01. Widget</Filter>
     </ClCompile>

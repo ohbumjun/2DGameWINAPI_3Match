@@ -44,7 +44,6 @@
     <ClInclude Include="UI\UIWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation\AnimationInfo.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
