@@ -8,7 +8,7 @@ public :
 	CRef();
 	CRef(const CRef& ref);
 	virtual ~CRef();
-private :
+protected :
 	int m_RefCount;
 	std::string m_Name;
 	bool m_Active;

@@ -1,4 +1,3 @@
-
 #include "UIWidget.h"
 
 CUIWidget::CUIWidget() :
@@ -18,12 +17,6 @@ CUIWidget::~CUIWidget()
 {
 }
 
-void CUIWidget::Move(Vector2& Dir, float Speed)
-{
-	Vector2	CurrentMove = Dir * Speed;
-	m_Pos += CurrentMove;
-}
-
 bool CUIWidget::Init()
 {
 	return true;
@@ -34,10 +27,6 @@ void CUIWidget::Update(float DeltaTime)
 }
 
 void CUIWidget::PostUpdate(float DeltaTime)
-{
-}
-
-void CUIWidget::Collision(float DeltaTime)
 {
 }
 
@@ -60,12 +49,17 @@ bool CUIWidget::CollisionMouse(const Vector2& MousePos, float DeltaTime)
 		m_Pos.y <= MousePos.y && MousePos.y <= m_Pos.y + m_Size.y)
 	{
 		if (!m_MouseHovered)
-		{
 			CollisionMouseHoveredCallback(DeltaTime);
-		}
 		return true;
 	}
 	return false;
+}
+
+void CUIWidget::Move(Vector2& Dir, float Speed)
+{
+	Dir.Normalize();
+	Vector2 CurrentMove = Dir * Speed;
+	m_Pos += CurrentMove;
 }
 
 void CUIWidget::CollisionMouseHoveredCallback(float DeltaTime)
