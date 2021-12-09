@@ -24,7 +24,7 @@ struct  TextureInfo
 	unsigned int ColorKey;
 
 	// 각각 TextureInfo마다 FileName을 지니게 한다.
-	TCHAR FileName;
+	TCHAR FileName[MAX_PATH];
 
 	TextureInfo() :
 		hDC(0),

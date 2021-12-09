@@ -12,6 +12,6 @@ public :
 	class CSharedPtr<CTexture> m_Texture;
 	std::vector<AnimationFrameData> m_FrameDatas;
 public :
-	void SetTexture()
+	void SetTexture();
 };
 
