@@ -31,7 +31,7 @@ public :
 		if (m_RefCount <= 0)
 		{
 			delete this;
-			return;
+			return 0;
 		}
 		return m_RefCount;
 	}

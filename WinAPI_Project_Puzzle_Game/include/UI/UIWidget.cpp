@@ -30,6 +30,10 @@ void CUIWidget::PostUpdate(float DeltaTime)
 {
 }
 
+void CUIWidget::Collision(float DeltaTime)
+{
+}
+
 void CUIWidget::Render(HDC hDC)
 {
 }
