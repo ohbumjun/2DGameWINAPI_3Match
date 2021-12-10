@@ -7,7 +7,6 @@ struct  AnimationNotify
 	int Frame;
 	bool Call;
 	std::function<void()> Function;
-
 	AnimationNotify() : 
 		Frame(0),
 		Call(false){}

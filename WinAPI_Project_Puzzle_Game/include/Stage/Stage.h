@@ -12,7 +12,6 @@ private :
 	int m_Row;
 	int m_Col;
 	class CBoard* m_Board;
-	class CStageBuilder* m_Builder;
 public:
 	virtual bool Init();
 	virtual bool Update(float DeltaTime);
@@ -21,20 +20,15 @@ public:
 public :
 	int GetRow() const
 	{
-		return m_Row;
+		return m_Board->GetRow();
 	}
 	int GetCol() const
 	{
-		return m_Col;
+		return m_Board->GetCol();
 	}
 	CBoard* GetBoard() const
 	{
 		return m_Board;
-	}
-public :
-	void SetBuilder(class CStageBuilder* Builder)
-	{
-		m_Builder = Builder;
 	}
 public :
 	// 실제 위치 세팅 

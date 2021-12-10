@@ -36,9 +36,7 @@ CGameManager::CGameManager() :
 
 CGameManager::~CGameManager()
 {
-	// CSceneManager::DestroyInst();
 	CInput::DestroyInst();
-	// CCollisionManager::DestroyInst();
 	CResourceManager::DestroyInst();
 	CPathManager::DestroyInst();
 
@@ -98,16 +96,10 @@ bool CGameManager::Init(HINSTANCE hInst)
 	if (!CResourceManager::GetInst()->Init())
 		return false;
 
-	// if (!CCollisionManager::GetInst()->Init())
-	//	return false;
-
 	if (!CInput::GetInst()->Init(m_hWnd))
 		return false;
 
-	// if (!CSceneManager::GetInst()->Init())
-	//	return false;
-
-	// CSceneManager::GetInst()->CreateScene<CIntroScene>();
+	CStageManager::GetInst()->CreateStage<CIntroScene>();
 
 	m_Timer = new CTimer;
 

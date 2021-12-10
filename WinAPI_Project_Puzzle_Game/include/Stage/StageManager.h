@@ -7,16 +7,23 @@ private :
 	CStageManager();
 	~CStageManager();
 private :
-	bool m_Init;
 	class CStage* m_Stage;
+	class CStage* m_NextStage;
 public :
 	void Start();
 	bool Init();
 	bool Update(float DeltaTime);
 	bool PostUpdate(float DeltaTime);
 	bool Render(HDC hDC);
+private :
+	bool ChangeStage();
 public :
-	void BuildStage();
+	template<typename T>
+	bool CreateStage()
+	{
+		m_NextStage = new T;
+		return true;
+	}
 private :
 	static CStageManager* m_Inst;
 public :

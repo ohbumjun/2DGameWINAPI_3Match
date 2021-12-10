@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameInfo.h"
-// #include "UI/UIImage.h"
+#include "UI/UIImage.h"
 
 enum EMouse_Type
 {
@@ -62,8 +62,7 @@ private :
 
 	bool m_ShowCursor; // 현재 마우스 커서가 보이는지 안보이는지
 
-	// std::vector<CSharedPtr<CUIImage>> m_vecMouseImage;
-
+	std::vector<CSharedPtr<CUIImage>> m_vecMouseImage;
 	EMouse_Type m_MouseType;
 
 public :
