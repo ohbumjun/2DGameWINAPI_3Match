@@ -1,7 +1,8 @@
 #pragma once
 #include "../GameInfo.h"
+#include "../Ref.h"
 
-class CBlock
+class CBlock : public CRef
 {
 public :
 	CBlock();
@@ -14,9 +15,9 @@ public :
 	{
 		m_BlockType = Type;
 	}
-	void SetRowColPos(float Row, float Col)
+	void SetRowColPos(int Row, int Col)
 	{
-		m_RowColPos = Vector2(Row, Col);
+		m_RowColPos = Vector2((float)Row, (float)Col);
 	}
 public :
 	BlockType GetBlockType() const

@@ -52,7 +52,7 @@ bool CPathManager::Init()
 	AddPath(MAP_PATH, TEXT("Map\\"));
 
 
-	return false;
+	return true;
 }
 
 bool CPathManager::AddPath(const std::string& Name, const TCHAR* Path, const std::string& BaseName)

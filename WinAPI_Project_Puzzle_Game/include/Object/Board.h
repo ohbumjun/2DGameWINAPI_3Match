@@ -31,9 +31,6 @@ public :
 		return m_Blocks[Row][Col];
 	}
 public :
-	void SetCell(class CCell* Cell, int row, int col);
-	void SetBlock(class CBlock* Cell, int row, int col);
-public :
 	// void ComposeStage();
 	float CalcInitX(float offset = 0);
 	float CalcInitY(float offset = 0);

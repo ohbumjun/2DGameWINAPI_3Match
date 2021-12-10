@@ -1,10 +1,15 @@
 
 #include "GameManager.h"
 #include "Timer.h"
+// Stage
 #include "Stage/Stage.h"
+#include "Stage/BasicStage.h"
 #include "Stage/StageManager.h"
+// Input 
 #include "Input.h"
+// Path
 #include "Path/PathManager.h"
+// Resource
 #include "Resource/ResourceManager.h"
 
 CGameManager* CGameManager::m_Inst = nullptr;
@@ -99,7 +104,10 @@ bool CGameManager::Init(HINSTANCE hInst)
 	if (!CInput::GetInst()->Init(m_hWnd))
 		return false;
 
-	// CStageManager::GetInst()->CreateStage<CIntroScene>();
+	if (!CStageManager::GetInst()->Init())
+		return false;
+
+	CStageManager::GetInst()->CreateStage<CBasicStage>();
 
 	m_Timer = new CTimer;
 

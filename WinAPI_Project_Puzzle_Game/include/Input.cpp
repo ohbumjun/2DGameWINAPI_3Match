@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "Resource/ResourceManager.h"
 
 CInput* CInput::m_Inst = nullptr;
 CInput::CInput() :
@@ -31,6 +32,38 @@ CInput::~CInput()
 	{
 		SAFE_DELETE(iter->second);
 	}
+}
+
+void CInput::LoadMouseAnimation()
+{
+	CUIImage* MouseDefault = new CUIImage;
+	// MouseDefault->SetSize(32.f, 31.f);
+
+	std::vector<std::wstring> vecFileName;
+
+	for (int i = 0; i < 10; i++)
+	{
+		TCHAR FileName[MAX_PATH] = {};
+		wsprintf(FileName, TEXT("Mouse%d.bmp"), i);
+
+		vecFileName.push_back(FileName);
+	}
+
+	CResourceManager::GetInst()->LoadTexture("MouseDefault", vecFileName);
+
+	CTexture* Texture = CResourceManager::GetInst()->FindTexture("MouseDefault");
+	for (int i = 0; i < 10; i++)
+	{
+		Texture->SetColorKey(255, 0, 255, i);
+	}
+
+	MouseDefault->SetTexture("MouseDefault");
+	for (int i = 0; i < 10; i++)
+	{
+		MouseDefault->AddFrameData(Vector2(0.f, 0.f), Vector2(32.f, 32.f));
+	}
+
+	m_vecMouseImage.push_back(MouseDefault);
 }
 
 bool CInput::CreateKey(const std::string& Name, int Key)
@@ -108,6 +141,8 @@ bool CInput::Init(HWND hWnd)
 	// KeySetUp
 	CreateKey("MouseUp", 'W');
 	ShowCursor(false);
+
+	LoadMouseAnimation();
 
 	return true;
 }

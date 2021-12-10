@@ -124,6 +124,9 @@
     <ClCompile Include="Animation\Animation.cpp">
       <Filter>03. Resource\02. Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Stage\BasicStage.cpp">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -195,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="Animation\Animation.h">
       <Filter>03. Resource\02. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\BasicStage.h">
+      <Filter>01. GameManager\03. Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

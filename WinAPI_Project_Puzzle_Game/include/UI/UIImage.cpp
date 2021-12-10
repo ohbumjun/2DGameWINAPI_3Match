@@ -118,7 +118,9 @@ void CUIImage::Render(const Vector2& Pos, HDC hDC)
 {
 	if (m_Texture)
 	{
-		Vector2 Pos = m_Pos + m_Owner->GetPos();
+		Vector2 Pos = m_Pos;
+		if (m_Owner)
+			Pos += m_Owner->GetPos();
 		Vector2 ImagePos = Vector2(0.f, 0.f);
 		Vector2 Size = m_Size;
 

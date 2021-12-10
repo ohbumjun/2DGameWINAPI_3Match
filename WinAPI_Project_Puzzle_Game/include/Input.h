@@ -96,13 +96,14 @@ public :
 		m_ShowCursor = Cursor;
 	}
 public :
+	void LoadMouseAnimation();
+public :
 	bool CreateKey(const std::string& Name, int Key);
 	bool SetCtrlKey(const std::string& Name, bool State);
 	bool SetAltKey(const std::string& Name, bool State);
 	bool SetShiftKey(const std::string& Name, bool State);
 private :
 	KeyInfo* FindKeyInfo(const std::string& Name);
-
 public :
 	bool Init(HWND hWnd);
 	void Update(float DeltaTime);

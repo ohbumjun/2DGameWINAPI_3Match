@@ -22,18 +22,6 @@ CBoard::~CBoard()
 	}
 }
 
-void CBoard::SetCell(CCell* Cell, int row, int col)
-{
-	m_Cells[row][col] = Cell;
-	m_Cells[row][col]->SetRowColPos(row, col);
-}
-
-void CBoard::SetBlock(CBlock* Block, int row, int col)
-{
-	m_Blocks[row][col] = Block;
-	m_Blocks[row][col]->SetRowColPos(row, col);
-}
-
 /*
 void CBoard::ComposeStage()
 {
@@ -65,13 +53,34 @@ bool CBoard::Init(int row, int col)
 {
 	m_Row = row;
 	m_Col = col;
+
 	// Cell, Block 檬扁蔼 积己
+	m_Cells.reserve(m_Row);
+	m_Blocks.reserve(m_Row);
+
 	for (int r = 0; r < m_Row; r++)
 	{
+		// vector 积己 
+		std::vector<CCell*> cV;
+		m_Cells.push_back(cV);
+
+		std::vector<CBlock*> bV;
+		m_Blocks.push_back(bV);
+
+		// 凯 积己 
+		m_Cells[r].reserve(m_Col);
+		m_Blocks[r].reserve(m_Col);
 		for (int c = 0; c < m_Col; c++)
 		{
-			SetCell(CreateCell(), r, c);
-			SetBlock(CreateBlock(), r, c);
+			// Cell
+			CCell* NewCell = CreateCell();
+			NewCell->SetRowColPos(row, col);
+			m_Cells[r].push_back(NewCell);
+
+			// Block
+			CBlock* NewBlock = CreateBlock();
+			NewBlock->SetRowColPos(row, col);
+			m_Blocks[r].push_back(NewBlock);
 		}
 	}
 	return true;

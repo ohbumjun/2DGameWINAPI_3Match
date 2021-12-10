@@ -4,10 +4,9 @@
 
 class CStage
 {
-	friend class CStageBuilder;
 public :
 	CStage(int row = 5, int col = 5);
-	~CStage();
+	virtual ~CStage();
 private :
 	class CBoard* m_Board;
 	int m_Row;
@@ -36,5 +35,6 @@ public :
 public :
 	// 실제 위치 세팅 
 	// void ComposeStage();
+	void SetCharactersAnimation();
 };
 

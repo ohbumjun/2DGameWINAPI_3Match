@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../GameInfo.h"
+#include "../Ref.h"
 
-class CCell
+class CCell : public CRef
 {
 public :
 	CCell();
@@ -16,9 +17,9 @@ public :
 	{
 		m_CellType = Type;
 	}
-	void SetRowColPos(float Row, float Col)
+	void SetRowColPos(int Row, int Col)
 	{
-		m_RowColPos = Vector2(Row, Col);
+		m_RowColPos = Vector2((float)Row, (float)Col);
 	}
 public :
 	CellType GetCellType()
