@@ -6,12 +6,13 @@ class CStage
 {
 	friend class CStageBuilder;
 public :
-	CStage(class CStageBuilder* builder, int row, int col);
+	CStage(int row = 5, int col = 5);
 	~CStage();
 private :
+	class CBoard* m_Board;
 	int m_Row;
 	int m_Col;
-	class CBoard* m_Board;
+	int m_StageLevel;
 public:
 	virtual bool Init();
 	virtual bool Update(float DeltaTime);
@@ -20,11 +21,13 @@ public:
 public :
 	int GetRow() const
 	{
-		return m_Board->GetRow();
+		// return m_Board->GetRow();
+		return m_Row;
 	}
 	int GetCol() const
 	{
-		return m_Board->GetCol();
+		// return m_Board->GetCol();
+		return m_Col;
 	}
 	CBoard* GetBoard() const
 	{
@@ -32,6 +35,6 @@ public :
 	}
 public :
 	// 실제 위치 세팅 
-	void ComposeStage();
+	// void ComposeStage();
 };
 

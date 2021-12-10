@@ -99,7 +99,7 @@ bool CGameManager::Init(HINSTANCE hInst)
 	if (!CInput::GetInst()->Init(m_hWnd))
 		return false;
 
-	CStageManager::GetInst()->CreateStage<CIntroScene>();
+	// CStageManager::GetInst()->CreateStage<CIntroScene>();
 
 	m_Timer = new CTimer;
 

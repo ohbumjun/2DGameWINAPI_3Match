@@ -1,12 +1,11 @@
 #include "Stage.h"
 #include "../Object/Board.h"
 
-CStage::CStage(CStageBuilder* builder, int row, int col)  :
-	m_Col(0),
-	m_Row(0)
+CStage::CStage(int row, int col) :
+	m_Row(row),
+	m_Col(col),
+	m_StageLevel(0)
 {
-	m_Builder = builder;
-	
 }
 
 CStage::~CStage()
@@ -16,7 +15,11 @@ CStage::~CStage()
 bool CStage::Init()
 {
 	m_Board = new CBoard;
-	return false;
+
+	if (!m_Board->Init(m_Row, m_Col))
+		return false;
+
+	return true;
 }
 
 bool CStage::Update(float DeltaTime)
@@ -34,7 +37,9 @@ bool CStage::Render(HDC hDC)
 	return false;
 }
 
+/*
 void CStage::ComposeStage()
 {
 	m_Board->ComposeStage();
 }
+*/

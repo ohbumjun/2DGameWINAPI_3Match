@@ -1,5 +1,4 @@
 #include "StageManager.h"
-#include "StageBuilder.h"
 #include "../Input.h"
 #include "Stage.h"
 
@@ -60,11 +59,10 @@ bool CStageManager::ChangeStage()
     return false;
 }
 
+/*
 void CStageManager::BuildStage()
 {
-    // Stage 구성 
-    m_Stage = CStageBuilder::Init(0, 9, 9);
-
     // 생성한 Stage 정보를 이용해서 씬을 구성한다
     m_Stage->ComposeStage();
 }
+*/

@@ -87,9 +87,6 @@
     <ClCompile Include="Object\Board.cpp">
       <Filter>02. Object\03. Board</Filter>
     </ClCompile>
-    <ClCompile Include="Stage\StageBuilder.cpp">
-      <Filter>01. GameManager\03. Stage</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>SourceFile</Filter>
     </ClCompile>
@@ -149,9 +146,6 @@
     </ClInclude>
     <ClInclude Include="Object\Board.h">
       <Filter>02. Object\03. Board</Filter>
-    </ClInclude>
-    <ClInclude Include="Stage\StageBuilder.h">
-      <Filter>01. GameManager\03. Stage</Filter>
     </ClInclude>
     <ClInclude Include="Flag.h">
       <Filter>HeaderFile</Filter>

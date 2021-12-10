@@ -34,11 +34,14 @@ public :
 	void SetCell(class CCell* Cell, int row, int col);
 	void SetBlock(class CBlock* Cell, int row, int col);
 public :
-	void ComposeStage();
+	// void ComposeStage();
 	float CalcInitX(float offset = 0);
 	float CalcInitY(float offset = 0);
+	// Block, Cell »ý¼º
+	class CBlock* CreateBlock();
+	class CCell* CreateCell();
 public:
-	bool Init();
+	bool Init(int Row, int Col);
 	bool Update(float DeltaTime);
 	bool PostUpdate(float DeltaTime);
 	bool Render(HDC hDC);

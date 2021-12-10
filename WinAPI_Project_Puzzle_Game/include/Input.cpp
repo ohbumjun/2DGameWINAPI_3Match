@@ -107,10 +107,7 @@ bool CInput::Init(HWND hWnd)
 
 	// KeySetUp
 	CreateKey("MouseUp", 'W');
-
 	ShowCursor(false);
-
-
 
 	return true;
 }

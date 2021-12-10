@@ -37,7 +37,6 @@
     <ClInclude Include="Resource\Texture.h" />
     <ClInclude Include="SharedPtr.h" />
     <ClInclude Include="Stage\Stage.h" />
-    <ClInclude Include="Stage\StageBuilder.h" />
     <ClInclude Include="Stage\StageManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UI\UIImage.h" />
@@ -59,7 +58,6 @@
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Resource\Texture.cpp" />
     <ClCompile Include="Stage\Stage.cpp" />
-    <ClCompile Include="Stage\StageBuilder.cpp" />
     <ClCompile Include="Stage\StageManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UI\UIImage.cpp" />
