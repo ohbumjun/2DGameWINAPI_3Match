@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Cell.h"
+#include "../Resource/ResourceManager.h"
 #include "Block.h"
 
 CBoard::CBoard() :
@@ -83,6 +84,10 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	// 2) (심화) 적어도 1개는 세팅될 수 있도록 세팅하기 
 	// 그 다음 구한 idx 들을 차례대로 Cell에 세팅해서 해당 idx에 맞는 Cell Type --> Texture 세팅하기 
 
+
+	// 기본 Board Texture Loading 
+	CTexture* BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
+
 	for (int r = 0; r < m_RowCount; r++)
 	{
 		for (int c = 0; c < m_ColCount; c++)
@@ -93,13 +98,14 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			// Cell
 			CCell* NewCell = new CCell;
 			NewCell->Init();
-			NewCell->SetRowColPos(row, col);
+			// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
+			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, r * m_ColCount + c);
 			m_vecCells.push_back(NewCell);
 
 			// Block
 			CBlock* NewBlock = new CBlock;
-			NewBlock->Init();
-			NewBlock->SetRowColPos(row, col);
+			NewBlock->Init(); // SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
+			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, r * m_ColCount + c, BlockTexture);
 			m_vecBlocks.push_back(NewBlock);
 		}
 	}
@@ -108,44 +114,25 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 bool CBoard::Init()
 {
+	// Load Basic Block Texture
+	CResourceManager::GetInst()->LoadTexture("BlockTexture", TEXT("block.bmp"));
 	return true;
 }
 
 bool CBoard::Update(float DeltaTime)
 {
-	for (int row = 0; row < m_Row; row++)
-	{
-		for (int col = 0; col < m_Col; col++)
-		{
-			// m_Cells[row][col]->SetRowColPos(row, col);
-			// m_Blocks[row][col]->SetRowColPos(row, col);
-		}
-	}
+
 	return false;
 }
 
 bool CBoard::PostUpdate(float DeltaTime)
 {
-	for (int row = 0; row < m_Row; row++)
-	{
-		for (int col = 0; col < m_Col; col++)
-		{
-			// m_Cells[row][col]->PostUpdate(DeltaTime);
-			// m_Blocks[row][col]->PostUpdate(DeltaTime);
-		}
-	}
+
 	return true;
 }
 
 bool CBoard::Render(HDC hDC)
 {
-	for (int row = 0; row < m_Row; row++)
-	{
-		for (int col = 0; col < m_Col; col++)
-		{
-			// m_Cells[row][col]->Render(hDC);
-			// m_Blocks[row][col]->Render(hDC);
-		}
-	}
+
 	return true;
 }

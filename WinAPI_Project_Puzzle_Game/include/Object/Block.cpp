@@ -11,7 +11,7 @@ CBlock::~CBlock()
 
 bool CBlock::Init()
 {
-	return false;
+	return true;
 }
 
 bool CBlock::Update(float DeltaTime)

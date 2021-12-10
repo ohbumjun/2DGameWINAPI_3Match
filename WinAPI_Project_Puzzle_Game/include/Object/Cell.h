@@ -12,7 +12,9 @@ public :
 private :
 	CellType m_CellType;
 	AnimalType m_AnimalType;
-
+	Vector2     m_Dir;
+	float		m_MoveSpeed;
+	float		m_TimeScale;
 public :
 	void SetCellType(CellType Type)
 	{

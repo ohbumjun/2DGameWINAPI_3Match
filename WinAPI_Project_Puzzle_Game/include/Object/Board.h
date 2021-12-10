@@ -13,7 +13,7 @@ private :
 	std::vector<class CBlock*> m_vecBlocks;
 
 	// Block Texture
-	CSharedPtr<CTexture*> m_BlockTexture;
+	CSharedPtr<CTexture> m_BlockTexture;
 
 	// Board 전체 크기
 	Vector2 m_Size;

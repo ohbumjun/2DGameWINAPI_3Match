@@ -5,6 +5,7 @@
 CStage::CStage(int row, int col) :
 	m_Row(row),
 	m_Col(col),
+	m_Board(nullptr),
 	m_StageLevel(0)
 {
 }
@@ -17,7 +18,7 @@ bool CStage::Init()
 {
 	m_Board = new CBoard;
 
-	if (!m_Board->Init(m_Row, m_Col))
+	if (!m_Board->Init())
 		return false;
 
 	return true;

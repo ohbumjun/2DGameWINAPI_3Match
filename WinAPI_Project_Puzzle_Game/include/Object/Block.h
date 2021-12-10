@@ -15,9 +15,16 @@ public :
 	{
 		m_BlockType = Type;
 	}
-	void SetRowColPos(int Row, int Col)
+	void SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
 	{
-		m_RowColPos = Vector2((float)Row, (float)Col);
+		m_Pos = Pos;
+		m_Size = Size;
+		m_RowIndex = RowIndex;
+		m_ColIndex = ColIndex;
+		m_Index = Index;
+
+		// Texture
+		m_Texture = Texture;
 	}
 public :
 	BlockType GetBlockType() const
