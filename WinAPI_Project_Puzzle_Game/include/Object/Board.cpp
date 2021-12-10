@@ -3,23 +3,28 @@
 #include "Block.h"
 
 CBoard::CBoard() :
-	m_Row(0),
-	m_Col(0),
-	m_Cells{},
-	m_Blocks{}
+	m_RowCount(0),
+	m_ColCount(0),
+	m_vecCells{},
+	m_vecBlocks{}
 {
 }
 
 CBoard::~CBoard()
 {
-	for (int i = 0; i < m_Row; i++)
+	size_t Size = m_vecCells.size();
+	for (size_t i = 0; i < Size; i++)
 	{
-		for (int j = 0; j < m_Col; j++)
-		{
-			SAFE_DELETE(m_Cells[i][j]);
-			SAFE_DELETE(m_Blocks[i][j]);
-		}
+		SAFE_DELETE(m_vecCells[i]);
 	}
+	m_vecCells.clear();
+
+	Size = m_vecBlocks.size();
+	for (size_t i = 0; i < Size; i++)
+	{
+		SAFE_DELETE(m_vecBlocks[i]);
+	}
+	m_vecBlocks.clear();
 }
 
 /*
@@ -39,50 +44,70 @@ void CBoard::ComposeStage()
 }
 */
 
-float CBoard::CalcInitX(float offset)
+
+bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 {
-	return -m_Col / 2.0f + offset;
-}
+	m_RowCount = RowCount;
+	m_ColCount = ColCount;
+	m_SquareSize = SquareSize;
 
-float CBoard::CalcInitY(float offset)
-{
-	return -m_Row / 2.0f + offset;
-}
-
-bool CBoard::Init(int row, int col)
-{
-	m_Row = row;
-	m_Col = col;
-
-	// Cell, Block 초기값 생성
-	m_Cells.reserve(m_Row);
-	m_Blocks.reserve(m_Row);
-
-	for (int r = 0; r < m_Row; r++)
+	// 기존 Board 제거 
 	{
-		// vector 생성 
-		std::vector<CCell*> cV;
-		m_Cells.push_back(cV);
-
-		std::vector<CBlock*> bV;
-		m_Blocks.push_back(bV);
-
-		// 열 생성 
-		m_Cells[r].reserve(m_Col);
-		m_Blocks[r].reserve(m_Col);
-		for (int c = 0; c < m_Col; c++)
+		auto iter = m_vecCells.begin();
+		auto iterEnd = m_vecCells.end();
+		for (; iter != iterEnd; ++iter)
 		{
+			SAFE_DELETE((*iter));
+		}
+		m_vecCells.clear();
+	}
+	{
+		auto iter = m_vecBlocks.begin();
+		auto iterEnd = m_vecBlocks.end();
+		for (; iter != iterEnd; ++iter)
+		{
+			SAFE_DELETE((*iter));
+		}
+		m_vecBlocks.clear();
+	}
+
+	m_Size = m_SquareSize * Vector2((float)m_RowCount, (float)m_ColCount);
+	int Size = m_RowCount * m_ColCount;
+	m_vecCells.reserve(Size);
+	m_vecBlocks.reserve(Size);
+
+
+	// 여기에서, Random 하게 섞일 수 있는 idx 들을 마련하는 함수를 호출
+	// while 문을 돌려서, 
+	// 1) Set가 없을 때까지, 찾은 다음 , 찾으면 return 
+	// 2) (심화) 적어도 1개는 세팅될 수 있도록 세팅하기 
+	// 그 다음 구한 idx 들을 차례대로 Cell에 세팅해서 해당 idx에 맞는 Cell Type --> Texture 세팅하기 
+
+	for (int r = 0; r < m_RowCount; r++)
+	{
+		for (int c = 0; c < m_ColCount; c++)
+		{
+			// 현재 위치
+			Vector2 Pos = Vector2((float)r, (float)c)* m_SquareSize;
+
 			// Cell
-			CCell* NewCell = CreateCell();
+			CCell* NewCell = new CCell;
+			NewCell->Init();
 			NewCell->SetRowColPos(row, col);
-			m_Cells[r].push_back(NewCell);
+			m_vecCells.push_back(NewCell);
 
 			// Block
-			CBlock* NewBlock = CreateBlock();
+			CBlock* NewBlock = new CBlock;
+			NewBlock->Init();
 			NewBlock->SetRowColPos(row, col);
-			m_Blocks[r].push_back(NewBlock);
+			m_vecBlocks.push_back(NewBlock);
 		}
 	}
+	return true;
+}
+
+bool CBoard::Init()
+{
 	return true;
 }
 
@@ -92,8 +117,8 @@ bool CBoard::Update(float DeltaTime)
 	{
 		for (int col = 0; col < m_Col; col++)
 		{
-			m_Cells[row][col]->SetRowColPos(row, col);
-			m_Blocks[row][col]->SetRowColPos(row, col);
+			// m_Cells[row][col]->SetRowColPos(row, col);
+			// m_Blocks[row][col]->SetRowColPos(row, col);
 		}
 	}
 	return false;
@@ -105,8 +130,8 @@ bool CBoard::PostUpdate(float DeltaTime)
 	{
 		for (int col = 0; col < m_Col; col++)
 		{
-			m_Cells[row][col]->PostUpdate(DeltaTime);
-			m_Blocks[row][col]->PostUpdate(DeltaTime);
+			// m_Cells[row][col]->PostUpdate(DeltaTime);
+			// m_Blocks[row][col]->PostUpdate(DeltaTime);
 		}
 	}
 	return true;
@@ -118,20 +143,9 @@ bool CBoard::Render(HDC hDC)
 	{
 		for (int col = 0; col < m_Col; col++)
 		{
-			m_Cells[row][col]->Render(hDC);
-			m_Blocks[row][col]->Render(hDC);
+			// m_Cells[row][col]->Render(hDC);
+			// m_Blocks[row][col]->Render(hDC);
 		}
 	}
 	return true;
 }
-
-CBlock* CBoard::CreateBlock()
-{
-	return new CBlock;
-}
-
-CCell* CBoard::CreateCell()
-{
-	return new CCell;
-}
-

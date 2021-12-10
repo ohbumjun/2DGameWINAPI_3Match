@@ -29,6 +29,7 @@
     <ClInclude Include="Object\Block.h" />
     <ClInclude Include="Object\Board.h" />
     <ClInclude Include="Object\Cell.h" />
+    <ClInclude Include="Object\GameObject.h" />
     <ClInclude Include="Path\PathManager.h" />
     <ClInclude Include="Ref.h" />
     <ClInclude Include="resource.h" />
@@ -53,6 +54,7 @@
     <ClCompile Include="Object\Block.cpp" />
     <ClCompile Include="Object\Board.cpp" />
     <ClCompile Include="Object\Cell.cpp" />
+    <ClCompile Include="Object\GameObject.cpp" />
     <ClCompile Include="Path\PathManager.cpp" />
     <ClCompile Include="Ref.cpp" />
     <ClCompile Include="Resource\AnimationSequence.cpp" />

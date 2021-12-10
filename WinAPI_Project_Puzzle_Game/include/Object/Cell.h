@@ -1,25 +1,30 @@
 #pragma once
 
 #include "../GameInfo.h"
-#include "../Ref.h"
+#include "../Object/GameObject.h"
 
-class CCell : public CRef
+class CCell : public CGameObject
 {
 public :
 	CCell();
+	CCell(const CCell& Cell);
 	~CCell();
 private :
 	CellType m_CellType;
-	Vector2 m_RowColPos; 
 	AnimalType m_AnimalType;
+
 public :
 	void SetCellType(CellType Type)
 	{
 		m_CellType = Type;
 	}
-	void SetRowColPos(int Row, int Col)
+	void SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
 	{
-		m_RowColPos = Vector2((float)Row, (float)Col);
+		m_Pos = Pos;
+		m_Size = Size;
+		m_RowIndex = RowIndex;
+		m_ColIndex = ColIndex;
+		m_Index = Index;
 	}
 public :
 	CellType GetCellType()

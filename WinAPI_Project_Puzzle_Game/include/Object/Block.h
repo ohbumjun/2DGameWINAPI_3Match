@@ -1,8 +1,8 @@
 #pragma once
 #include "../GameInfo.h"
-#include "../Ref.h"
+#include "../Object/GameObject.h"
 
-class CBlock : public CRef
+class CBlock : public CGameObject
 {
 public :
 	CBlock();
