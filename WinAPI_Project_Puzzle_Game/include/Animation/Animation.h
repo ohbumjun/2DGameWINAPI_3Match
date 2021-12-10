@@ -22,8 +22,8 @@ public :
 	void SetCurrentAnimation(const std::string& Name);
 	void ChangeAnimation(const std::string& Name);
 	bool CheckCurrentAnimation(const std::string& Name);
-	void SetReverse(bool Reverse);
-	void SetLoop(bool Loop);
+	void SetReverse(const std::string& Name, bool Reverse);
+	void SetLoop(const std::string& Name, bool Loop);
 	void Update(float DeltaTime);
 	CAnimation* Clone();
 private :

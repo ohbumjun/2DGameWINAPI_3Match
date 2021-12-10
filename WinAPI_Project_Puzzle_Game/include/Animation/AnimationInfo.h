@@ -17,8 +17,8 @@ struct AnimationInfo
 {
 	CSharedPtr<CAnimationSequence> Sequence;
 	int Frame;
-	int FrameTime;
-	int PlayTime;
+	float FrameTime;
+	float PlayTime;
 	float PlayScale;
 	float m_Time;
 	bool Loop;
