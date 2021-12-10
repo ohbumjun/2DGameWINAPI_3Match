@@ -12,6 +12,7 @@ private:
 	~CResourceManager();
 private :
 	std::unordered_map<std::string, CSharedPtr<CTexture>> m_mapTexture;
+	std::unordered_map<std::string, CSharedPtr<CAnimationSequence>> m_mapAnimationSequence;
 
 public :
 	bool Init();
@@ -26,10 +27,17 @@ public :
 		const unsigned char b, int Index = 0);
 	void SetTextureColorKey(const std::string& Name,
 		unsigned int ColorKey, int Index = 0);
-
 	void ReleaseTexture(const std::string& Name);
-
 	CTexture* FindTexture(const std::string& Name);
+
+	// AnimationSequence -------------------------------------------------------------------------------------------------------------------------------------------------
+	bool CreateAnimationSequence(const std::string& SequenceName, const std::string& TextureName);
+	bool CreateAnimationSequence(const std::string& SequenceName, const std::string& TextureName, const TCHAR* FileName, const std::string& PathName = TEXTURE_PATH);
+	bool CreateAnimationSequence(const std::string& SequenceName, const std::string& TextureName, const std::vector<std::wstring>& vecFileName, const std::string& PathName = TEXTURE_PATH);
+	void ReleaseAnimationSequence(const std::string& Name);
+	void AddAnimationFrameData(const std::string& SequenceName, const Vector2& StartPos, const Vector2& Size);
+	void AddAnimationFrameData(const std::string& SequenceName, float StartX, float StartY, float SizeX, float SizeY);
+	CAnimationSequence* FindAnimationSequence(const std::string& Name);
 private :
 	static CResourceManager* m_Inst;
 public :
@@ -39,7 +47,7 @@ public :
 			m_Inst = new CResourceManager;
 		return m_Inst;
 	}
-	static void Destroy()
+	static void DestroyInst()
 	{
 		SAFE_DELETE(m_Inst);
 	}

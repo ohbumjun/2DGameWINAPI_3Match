@@ -19,18 +19,13 @@ CTexture::~CTexture()
 
 bool CTexture::LoadTexture(const std::string& Name, const TCHAR* FileName, const std::string& PathName)
 {
-	CTexture* Texture = FindTexture(Name);
-
-	if (Texture)
-		return true;
-
+	const PathInfo* FolderPath = CPathManager::GetInst()->FindPath(PathName);
 	TCHAR FullPath[MAX_PATH] = {};
 
-	const PathInfo* FolderPath = CPathManager::GetInst()->FindPath(PathName);
 	if (FolderPath)
 		lstrcpy(FullPath, FolderPath->Path);
+
 	lstrcat(FullPath, FileName);
-	
 	
 	return LoadTextureFullPath(Name, FullPath);
 }
