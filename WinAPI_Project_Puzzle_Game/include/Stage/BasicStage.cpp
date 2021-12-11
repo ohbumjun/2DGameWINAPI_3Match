@@ -11,9 +11,10 @@ CBasicStage::~CBasicStage()
 
 bool CBasicStage::Init()
 {
+	CStage::Init();
 	LoadAnimationSequence();
 
-	return false;
+	return true;
 }
 
 void CBasicStage::LoadAnimationSequence()

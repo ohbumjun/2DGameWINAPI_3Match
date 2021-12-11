@@ -3,7 +3,8 @@
 CUIWidget::CUIWidget() :
 	m_ZOrder(0),
 	m_Visibility(true),
-	m_MouseHovered(false)
+	m_MouseHovered(false),
+	m_Owner(nullptr)
 {
 }
 

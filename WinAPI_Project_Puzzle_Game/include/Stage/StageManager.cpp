@@ -51,7 +51,7 @@ bool CStageManager::ChangeStage()
     {
         SAFE_DELETE(m_Stage);
         CInput::GetInst()->ClearCallback();
-
+        
         m_NextStage->Init();
         m_Stage = m_NextStage;
         m_NextStage = nullptr;

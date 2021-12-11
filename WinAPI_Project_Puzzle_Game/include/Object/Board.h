@@ -1,6 +1,8 @@
 #pragma once
 #include "../GameInfo.h"
 #include "../Resource/Texture.h"
+#include "Cell.h"
+#include "Block.h"
 
 class CBoard
 {
@@ -9,8 +11,8 @@ public:
 	CBoard();
 	~CBoard();
 private :
-	std::vector<class CCell*> m_vecCells;
-	std::vector<class CBlock*> m_vecBlocks;
+	std::vector<CSharedPtr<CCell>> m_vecCells;
+	std::vector<CSharedPtr<CBlock>> m_vecBlocks;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -28,6 +30,13 @@ private :
 	int m_StartY;
 	int m_EndX;
 	int m_EndY;
+
+	/*
+	std::list<CSharedPtr<CGameObject>> m_ObjList;
+	int m_RenderCount;
+	int m_RenderCapacity;
+	CGameObject** m_RenderArray;
+	*/
 public :
 	int GetRowCount() const
 	{

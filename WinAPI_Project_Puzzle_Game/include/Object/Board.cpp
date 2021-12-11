@@ -1,7 +1,5 @@
 #include "Board.h"
-#include "Cell.h"
 #include "../Resource/ResourceManager.h"
-#include "Block.h"
 
 CBoard::CBoard() :
 	m_RowCount(0),
@@ -96,14 +94,14 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			Vector2 Pos = Vector2((float)r, (float)c)* m_SquareSize;
 
 			// Cell
-			CCell* NewCell = new CCell;
+			CSharedPtr<CCell> NewCell = new CCell;
 			NewCell->Init();
 			// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
 			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, r * m_ColCount + c);
 			m_vecCells.push_back(NewCell);
 
 			// Block
-			CBlock* NewBlock = new CBlock;
+			CSharedPtr<CBlock> NewBlock = new CBlock;
 			NewBlock->Init(); // SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
 			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, r * m_ColCount + c, BlockTexture);
 			m_vecBlocks.push_back(NewBlock);
@@ -116,23 +114,77 @@ bool CBoard::Init()
 {
 	// Load Basic Block Texture
 	CResourceManager::GetInst()->LoadTexture("BlockTexture", TEXT("block.bmp"));
+	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
+	Vector2 TextureSize = Vector2(m_BlockTexture->GetWidth(), m_BlockTexture->GetHeight());
+	// CreateBoard(5,5,);
 	return true;
 }
 
 bool CBoard::Update(float DeltaTime)
 {
+	if (!m_vecCells.empty())
+	{
+		size_t vecCellSize = m_vecCells.size();
+		for (size_t i = 0; i < vecCellSize; i++)
+		{
+			m_vecCells[i]->Update(DeltaTime);
+		}
+	}
 
-	return false;
+	if (!m_vecBlocks.empty())
+	{
+		size_t vecBlockSize = m_vecBlocks.size();
+		for (size_t i = 0; i < vecBlockSize; i++)
+		{
+			m_vecBlocks[i]->Update(DeltaTime);
+		}
+	}
+
+	return true;
 }
 
 bool CBoard::PostUpdate(float DeltaTime)
 {
+	if (!m_vecCells.empty())
+	{
+		size_t vecCellSize = m_vecCells.size();
+		for (size_t i = 0; i < vecCellSize; i++)
+		{
+			m_vecCells[i]->PostUpdate(DeltaTime);
+		}
+	}
+
+	if (!m_vecBlocks.empty())
+	{
+		size_t vecBlockSize = m_vecBlocks.size();
+		for (size_t i = 0; i < vecBlockSize; i++)
+		{
+			m_vecBlocks[i]->PostUpdate(DeltaTime);
+		}
+	}
 
 	return true;
 }
 
 bool CBoard::Render(HDC hDC)
 {
+	if (!m_vecCells.empty())
+	{
+		size_t vecCellSize = m_vecCells.size();
+		for (size_t i = 0; i < vecCellSize; i++)
+		{
+			m_vecCells[i]->Render(hDC);
+		}
+	}
+
+	if (!m_vecBlocks.empty())
+	{
+		size_t vecBlockSize = m_vecBlocks.size();
+		for (size_t i = 0; i < vecBlockSize; i++)
+		{
+			m_vecBlocks[i]->Render(hDC);
+		}
+	}
 
 	return true;
 }

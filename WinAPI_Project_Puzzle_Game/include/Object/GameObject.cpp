@@ -8,7 +8,11 @@ CGameObject::CGameObject() :
 	m_RowIndex(-1),
 	m_ColIndex(-1),
 	m_Index(-1),
-	m_Texture(nullptr)
+	m_Texture(nullptr),
+	m_Start(false),
+	m_RenderPos(Vector2(0.f, 0.f)),
+	m_Offset(Vector2(0.f, 0.f)),
+	m_Animation(nullptr)
 {
 }
 
@@ -19,6 +23,18 @@ CGameObject::CGameObject(const CGameObject& Obj)
 	m_RowIndex = Obj.m_RowIndex;
 	m_ColIndex = Obj.m_ColIndex;
 	m_Index = Obj.m_Index;
+	m_Pivot = Obj.m_Pivot;
+	m_Start = false;
+	m_Offset = Obj.m_Offset;
+	m_Texture = Obj.m_Texture;
+	m_ImageStart = Obj.m_ImageStart;
+
+	if (Obj.m_Animation)
+		m_Animation = Obj.m_Animation->Clone();
+	else
+		m_Animation = nullptr;
+	if (m_Animation)
+		m_Animation->m_Owner = this;
 }
 
 CGameObject::~CGameObject()
@@ -148,4 +164,75 @@ void CGameObject::SetTextureColorKey(unsigned char r, unsigned char g, unsigned 
 {
 	if (m_Texture)
 		m_Texture->SetColorKey(r, g, b, Index);
+}
+
+void CGameObject::Start()
+{
+	m_Start = true;
+}
+
+bool CGameObject::Init()
+{
+	return true;
+}
+
+void CGameObject::Update(float DeltaTime)
+{
+	// Animation
+	if (m_Animation)
+		m_Animation->Update(DeltaTime);
+}
+
+void CGameObject::PostUpdate(float DeltaTime)
+{
+	if (m_Animation && m_Animation->m_CurrentAnimation)
+	{
+		AnimationInfo* AnimInfo = m_Animation->m_CurrentAnimation;
+		const AnimationFrameData FrameData = AnimInfo->Sequence->GetFrameData(AnimInfo->Frame);
+		m_Size = FrameData.Size;
+	}
+}
+
+void CGameObject::PrevRender()
+{
+}
+
+void CGameObject::Render(HDC hDC)
+{
+	// Animation이 있다면 Animation Render
+	if (m_Animation && m_Animation->m_CurrentAnimation)
+	{
+		AnimationInfo* AnimInfo = m_Animation->m_CurrentAnimation;
+		const AnimationFrameData FrameData = AnimInfo->Sequence->GetFrameData(AnimInfo->Frame);
+		Vector2 LT = m_RenderPos - m_Pivot * FrameData.Size + m_Offset;
+		if (AnimInfo->Sequence->GetTextureType() == ETexture_Type::Atlas) // 하나의 이미지 파일 --> 하나의 Texture 구성 
+		{
+			AnimInfo->Sequence->GetTexture()->Render(hDC, LT, FrameData.StartPos, FrameData.Size);
+		}
+		else // 여러개 이미지 파일 --> Texture 구성 
+		{
+			AnimInfo->Sequence->GetTexture()->Render(hDC, LT,
+				FrameData.StartPos, FrameData.Size, AnimInfo->Frame);
+		}
+	}
+	// 그게 아니라면 Texture Render
+	else
+	{
+		Vector2 LT = m_RenderPos - m_Pivot * m_Size + m_Offset; // 여기서 m_Size는 Texture Size로 맞춰지게 세팅되어 있다
+		if (m_Texture)
+		{
+			// 이미지를 이용해서 출력
+			m_Texture->Render(hDC, LT, m_ImageStart, m_Size);
+		}
+		else
+		{
+			// Rectangle(hDC, (int)LT.x, (int)LT.y,
+			// (int)(LT.x + m_Size.x), (int)(LT.y + m_Size.y));
+		}
+	}
+}
+
+CGameObject* CGameObject::Clone()
+{
+	return new  CGameObject(*this);
 }

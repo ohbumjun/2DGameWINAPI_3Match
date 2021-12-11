@@ -23,6 +23,14 @@
 #pragma comment(lib, "msimg32.lib")
 // #pragma comment(lib, "fmod64_vc.lib")
 
+
+#ifdef _DEBUG
+
+#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+
+#endif // _DEBUG
+
+
 // Const 
 #define GRAVITY 9.8f
 #define M_PI 3.14f

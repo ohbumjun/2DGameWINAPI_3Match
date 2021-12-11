@@ -19,22 +19,28 @@ CCell::~CCell()
 {
 }
 
+void CCell::Start()
+{
+}
+
 bool CCell::Init()
 {
 	return true;
 }
 
-bool CCell::Update(float DeltaTime)
+void CCell::Update(float DeltaTime)
 {
-	return false;
 }
 
-bool CCell::PostUpdate(float DeltaTime)
+void CCell::PostUpdate(float DeltaTime)
 {
-	return false;
 }
 
-bool CCell::Render(HDC hDC)
+void CCell::Render(HDC hDC)
 {
-	return false;
+}
+
+CCell* CCell::Clone()
+{
+	return new CCell(*this);
 }

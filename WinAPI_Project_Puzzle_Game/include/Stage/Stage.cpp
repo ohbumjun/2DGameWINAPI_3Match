@@ -10,8 +10,22 @@ CStage::CStage(int row, int col) :
 {
 }
 
+CStage::CStage(const CStage& Stage)
+{
+	m_Row = Stage.m_Row;
+	m_Col = Stage.m_Col;;
+	if (Stage.m_Board)
+		m_Board = Stage.m_Board;
+}
+
 CStage::~CStage()
 {
+	SAFE_DELETE(m_Board);
+}
+
+CGameObject* CStage::FindObject(const std::string& Name)
+{
+	return nullptr;
 }
 
 bool CStage::Init()
@@ -26,16 +40,19 @@ bool CStage::Init()
 
 bool CStage::Update(float DeltaTime)
 {
+	m_Board->Update(DeltaTime);
 	return false;
 }
 
 bool CStage::PostUpdate(float DeltaTime)
 {
-	return false;
+	m_Board->PostUpdate(DeltaTime);
+	return true;
 }
 
 bool CStage::Render(HDC hDC)
 {
+	m_Board->Render(hDC);
 	return false;
 }
 

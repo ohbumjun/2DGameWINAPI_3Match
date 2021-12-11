@@ -11,14 +11,16 @@ public:
 	~CGameObject();
 protected:
 	CSharedPtr<CTexture>	m_Texture;
-	Vector2 m_Pos;
-	Vector2 m_Size;
-	int m_RowIndex;
-	int m_ColIndex;
-	int m_Index;
-	Vector2 m_Dir;
-	float m_TimeScale;
-	float m_MoveSpeed;
+	bool          m_Start;
+	Vector2     m_Pos;
+	Vector2     m_Size;
+	Vector2		m_Pivot;
+	Vector2		m_RenderPos;
+	Vector2		m_Offset;
+	Vector2		m_ImageStart;
+	int				m_RowIndex;
+	int				m_ColIndex;
+	int				m_Index;
 	class CAnimation* m_Animation;
 public:
 	Vector2 GetPos() const
@@ -71,5 +73,13 @@ public : // Texture   ==========
 	void SetTextureFullPath(const std::string& Name, const TCHAR* FullPath);
 	void SetTexture(const std::string& Name, const std::vector<std::wstring>& vecFileName, const std::string& PathName = TEXTURE_PATH);
 	void SetTextureColorKey(unsigned char r, unsigned char g, unsigned char b, int Index = 0);
+public : // Basic Functions =====
+	virtual void Start();
+	virtual bool Init();
+	virtual void Update(float DeltaTime);
+	virtual void PostUpdate(float DeltaTime);
+	virtual void PrevRender();
+	virtual void Render(HDC hDC);
+	virtual CGameObject* Clone();
 };
 

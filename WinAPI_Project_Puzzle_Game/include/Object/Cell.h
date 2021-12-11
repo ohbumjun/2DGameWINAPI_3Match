@@ -34,9 +34,11 @@ public :
 		return m_CellType;
 	}
 public :
-	bool Init();
-	bool Update(float DeltaTime);
-	bool PostUpdate(float DeltaTime);
-	bool Render(HDC hDC);
+	virtual void Start() override;
+	virtual bool Init() override ;
+	virtual void Update(float DeltaTime) override;
+	virtual void PostUpdate(float DeltaTime) override;
+	virtual void Render(HDC hDC) override;
+	CCell* Clone();
 };
 

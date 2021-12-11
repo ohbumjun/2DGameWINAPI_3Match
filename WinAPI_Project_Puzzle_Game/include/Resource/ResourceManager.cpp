@@ -11,6 +11,7 @@ CResourceManager::CResourceManager()
 CResourceManager::~CResourceManager()
 {
 	m_mapTexture.clear();
+	m_mapAnimationSequence.clear();
 }
 
 bool CResourceManager::Init()
