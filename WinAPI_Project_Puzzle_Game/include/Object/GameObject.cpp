@@ -39,6 +39,7 @@ CGameObject::CGameObject(const CGameObject& Obj)
 
 CGameObject::~CGameObject()
 {
+	SAFE_DELETE(m_Animation);
 }
 
 void CGameObject::CreateAnimation()

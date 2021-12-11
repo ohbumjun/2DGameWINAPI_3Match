@@ -138,8 +138,8 @@ bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, 
 bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, const std::string& TextureName, const TCHAR* FileName, const std::string& PathName)
 {
 	CAnimationSequence* Sequence = CResourceManager::GetInst()->FindAnimationSequence(SequenceName);
-	if (!Sequence)
-		return false;
+	if (Sequence)
+		return true;
 
 	if (!LoadTexture(TextureName, FileName, PathName))
 		return false;
@@ -158,8 +158,8 @@ bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, 
 bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, const std::string& TextureName, const std::vector<std::wstring>& vecFileName, const std::string& PathName)
 {
 	CAnimationSequence* Sequence = CResourceManager::GetInst()->FindAnimationSequence(SequenceName);
-	if (!Sequence)
-		return false;
+	if (Sequence)
+		return true;
 
 	if (!LoadTexture(TextureName, vecFileName, PathName))
 		return false;

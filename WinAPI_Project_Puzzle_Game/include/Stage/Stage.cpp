@@ -35,6 +35,8 @@ bool CStage::Init()
 	if (!m_Board->Init())
 		return false;
 
+	SetCharactersAnimation();
+
 	return true;
 }
 

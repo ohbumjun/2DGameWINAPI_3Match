@@ -25,15 +25,23 @@ void CCell::Start()
 
 bool CCell::Init()
 {
+	if (!CGameObject::Init())
+		return false;
+
+	CreateAnimation();
+	AddAnimation("Elephant", true, 0.1f);
+
 	return true;
 }
 
 void CCell::Update(float DeltaTime)
 {
+	CGameObject::Update(DeltaTime);
 }
 
 void CCell::PostUpdate(float DeltaTime)
 {
+	CGameObject::PostUpdate(DeltaTime);
 }
 
 void CCell::Render(HDC hDC)

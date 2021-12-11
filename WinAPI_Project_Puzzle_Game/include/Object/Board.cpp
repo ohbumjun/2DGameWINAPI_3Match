@@ -174,7 +174,7 @@ bool CBoard::Render(HDC hDC)
 		size_t vecBlockSize = m_vecBlocks.size();
 		for (size_t i = 0; i < vecBlockSize; i++)
 		{
-			m_vecCells[i]->PrevRender();
+			m_vecBlocks[i]->PrevRender();
 			m_vecBlocks[i]->Render(hDC);
 		}
 	}
