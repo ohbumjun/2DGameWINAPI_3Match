@@ -38,6 +38,7 @@ void CCell::PostUpdate(float DeltaTime)
 
 void CCell::Render(HDC hDC)
 {
+	CGameObject::Render(hDC);
 }
 
 CCell* CCell::Clone()

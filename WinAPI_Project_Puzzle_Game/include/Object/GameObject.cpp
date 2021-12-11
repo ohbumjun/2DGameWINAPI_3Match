@@ -195,6 +195,7 @@ void CGameObject::PostUpdate(float DeltaTime)
 
 void CGameObject::PrevRender()
 {
+	m_RenderPos = m_Pos;
 }
 
 void CGameObject::Render(HDC hDC)
@@ -226,8 +227,7 @@ void CGameObject::Render(HDC hDC)
 		}
 		else
 		{
-			// Rectangle(hDC, (int)LT.x, (int)LT.y,
-			// (int)(LT.x + m_Size.x), (int)(LT.y + m_Size.y));
+			Rectangle(hDC, (int)LT.x, (int)LT.y,(int)(LT.x + m_Size.x), (int)(LT.y + m_Size.y));
 		}
 	}
 }

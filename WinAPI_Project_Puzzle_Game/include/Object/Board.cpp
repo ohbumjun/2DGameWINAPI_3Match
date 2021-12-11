@@ -11,18 +11,7 @@ CBoard::CBoard() :
 
 CBoard::~CBoard()
 {
-	size_t Size = m_vecCells.size();
-	for (size_t i = 0; i < Size; i++)
-	{
-		SAFE_DELETE(m_vecCells[i]);
-	}
 	m_vecCells.clear();
-
-	Size = m_vecBlocks.size();
-	for (size_t i = 0; i < Size; i++)
-	{
-		SAFE_DELETE(m_vecBlocks[i]);
-	}
 	m_vecBlocks.clear();
 }
 
@@ -115,8 +104,10 @@ bool CBoard::Init()
 	// Load Basic Block Texture
 	CResourceManager::GetInst()->LoadTexture("BlockTexture", TEXT("block.bmp"));
 	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
+
 	Vector2 TextureSize = Vector2(m_BlockTexture->GetWidth(), m_BlockTexture->GetHeight());
-	// CreateBoard(5,5,);
+	CreateBoard(5,5, TextureSize);
+
 	return true;
 }
 
@@ -173,6 +164,7 @@ bool CBoard::Render(HDC hDC)
 		size_t vecCellSize = m_vecCells.size();
 		for (size_t i = 0; i < vecCellSize; i++)
 		{
+			m_vecCells[i]->PrevRender();
 			m_vecCells[i]->Render(hDC);
 		}
 	}
@@ -182,6 +174,7 @@ bool CBoard::Render(HDC hDC)
 		size_t vecBlockSize = m_vecBlocks.size();
 		for (size_t i = 0; i < vecBlockSize; i++)
 		{
+			m_vecCells[i]->PrevRender();
 			m_vecBlocks[i]->Render(hDC);
 		}
 	}
