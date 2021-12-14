@@ -34,8 +34,7 @@ void CCell::Start()
 	CGameObject::Start();
 
 	AddAnimation(m_AnimalNames[m_AnimalType], true, 1.f);
-	SetCurrentAnimation(m_AnimalNames[m_AnimalType]);
-	
+	// SetCurrentAnimation(m_AnimalNames[m_AnimalType]);
 }
 
 bool CCell::Init(AnimalType Type)
@@ -46,16 +45,27 @@ bool CCell::Init(AnimalType Type)
 	m_AnimalType = Type;
 
 	CreateAnimation();
-
 	return true;
 }
 
 void CCell::Update(float DeltaTime)
 {
+	CGameObject::Update(DeltaTime);
+
+	// WM_MOUSELEAVE
+	// Move(Vector2(0.0f, 1.f));
+	
+	// Check Block State
+	m_BlockType = m_Board->GetBlockType(m_RowIndex, m_ColIndex);
+	
+	if (m_BlockType == BlockType::EMPTY)
+		Destroy();
+	
 }
 
 void CCell::PostUpdate(float DeltaTime)
 {
+	
 	CGameObject::PostUpdate(DeltaTime);
 }
 

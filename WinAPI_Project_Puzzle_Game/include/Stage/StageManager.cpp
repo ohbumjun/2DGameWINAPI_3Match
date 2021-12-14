@@ -27,22 +27,22 @@ bool CStageManager::Init()
     return true;
 }
 
-bool CStageManager::Update(float DeltaTime)
+void CStageManager::Update(float DeltaTime)
 {
     m_Stage->Update(DeltaTime);
-    return ChangeStage() ;
+    ChangeStage() ;
 }
 
-bool CStageManager::PostUpdate(float DeltaTime)
+void CStageManager::PostUpdate(float DeltaTime)
 {
     m_Stage->PostUpdate(DeltaTime);
-    return ChangeStage();
+    ChangeStage();
 }
 
-bool CStageManager::Render(HDC hDC)
+void CStageManager::Render(HDC hDC)
 {
     m_Stage->Render(hDC);
-    return ChangeStage();
+    ChangeStage();
 }
 
 bool CStageManager::ChangeStage()

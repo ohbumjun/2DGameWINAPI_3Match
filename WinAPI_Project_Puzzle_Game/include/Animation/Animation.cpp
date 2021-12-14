@@ -152,7 +152,7 @@ void CAnimation::Update(float DeltaTime)
 
 		bool AnimEnd = false;
 		// Frame 증가 및 감소 처리 + 애니메이션 종료 여부 확인 
-		if (m_CurrentAnimation->m_Time == m_CurrentAnimation->FrameTime)
+		if (m_CurrentAnimation->m_Time >= m_CurrentAnimation->FrameTime)
 		{
 			m_CurrentAnimation->m_Time -= m_CurrentAnimation->FrameTime;
 			if (m_CurrentAnimation->Reverse)
@@ -184,17 +184,17 @@ void CAnimation::Update(float DeltaTime)
 		{
 			if (m_CurrentAnimation->Loop)
 			{
-				if (!m_CurrentAnimation->Reverse)
-					m_CurrentAnimation->Frame = m_CurrentAnimation->Sequence->GetFrameCount() - 1;
-				else
+				if (m_CurrentAnimation->Reverse)
 					m_CurrentAnimation->Frame = 0;
+				else
+					m_CurrentAnimation->Frame = m_CurrentAnimation->Sequence->GetFrameCount() - 1;
 			}
 			else
 			{
-				if (!m_CurrentAnimation->Reverse)
-					m_CurrentAnimation->Frame = 0;
-				else
+				if (m_CurrentAnimation->Reverse)
 					m_CurrentAnimation->Frame = m_CurrentAnimation->Sequence->GetFrameCount() - 1;
+				else
+					m_CurrentAnimation->Frame = 0;
 			}
 
 			// 모션이 끝났다면, EndFunction이 있을 경우 호출한다

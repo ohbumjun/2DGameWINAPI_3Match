@@ -113,5 +113,7 @@ public:
 	bool Update(float DeltaTime);
 	bool PostUpdate(float DeltaTime);
 	bool Render(HDC hDC);
+public :
+	void RenderElementsInOrder(int order, HDC hdc);
 };
 

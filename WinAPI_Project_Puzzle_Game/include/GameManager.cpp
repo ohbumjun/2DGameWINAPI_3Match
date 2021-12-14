@@ -158,21 +158,19 @@ void CGameManager::Logic()
 	CResourceManager::GetInst()->Update();
 	CInput::GetInst()->Update(DeltaTime);
 
-	if (Update(DeltaTime))
-		return;
-	if (PostUpdate(DeltaTime))
-		return;
+	Update(DeltaTime);
+	PostUpdate(DeltaTime);
 	Render(DeltaTime);
 }
 
-bool CGameManager::Update(float DeltaTime)
+void CGameManager::Update(float DeltaTime)
 {
-	return CStageManager::GetInst()->Update(DeltaTime);
+	CStageManager::GetInst()->Update(DeltaTime);
 }
 
-bool CGameManager::PostUpdate(float DeltaTime)
+void CGameManager::PostUpdate(float DeltaTime)
 {
-	return CStageManager::GetInst()->PostUpdate(DeltaTime);
+	CStageManager::GetInst()->PostUpdate(DeltaTime);
 }
 
 void CGameManager::Render(float DeltaTime)

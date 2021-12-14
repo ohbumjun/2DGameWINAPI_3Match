@@ -158,7 +158,7 @@ bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, 
 {
 	CAnimationSequence* Sequence = CResourceManager::GetInst()->FindAnimationSequence(SequenceName);
 	if (Sequence)
-		return true;
+		return false;
 
 	if (!LoadTexture(TextureName, FileName, PathName))
 		return false;

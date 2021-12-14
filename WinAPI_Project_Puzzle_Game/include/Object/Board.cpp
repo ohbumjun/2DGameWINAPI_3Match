@@ -170,7 +170,8 @@ bool CBoard::Init()
 	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
 
 	Vector2 TextureSize = Vector2(m_BlockTexture->GetWidth(), m_BlockTexture->GetHeight());
-	// CreateBoard(5,5,);
+	CreateBoard(5,5, TextureSize);
+
 	return true;
 }
 
@@ -219,14 +220,17 @@ bool CBoard::Render(HDC hDC)
 {
 	if (m_BlockCount > 0)
 	{
-		for (size_t i = 0; i < m_BlockCount; i++)
-		{
-			m_vecCells[i]->PrevRender();
-			m_vecCells[i]->Render(hDC);
-			// m_vecCells[i]->SetBoard(this);
-		}
+		RenderElementsInOrder(1, hDC);
+		RenderElementsInOrder(2, hDC);
+	}
 
+	return true;
+}
 
+void CBoard::RenderElementsInOrder(int order, HDC hDC)
+{
+	if (order == 1)
+	{
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
 			m_vecBlocks[i]->PrevRender();
@@ -234,6 +238,13 @@ bool CBoard::Render(HDC hDC)
 			// m_vecBlocks[i]->SetBoard(this);
 		}
 	}
-
-	return true;
+	else if(order == 2)
+	{
+		for (size_t i = 0; i < m_BlockCount; i++)
+		{
+			m_vecCells[i]->PrevRender();
+			m_vecCells[i]->Render(hDC);
+			// m_vecCells[i]->SetBoard(this);
+		}
+	}
 }

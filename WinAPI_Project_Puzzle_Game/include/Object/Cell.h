@@ -12,14 +12,14 @@ public :
 	CCell(const CCell& Cell);
 	~CCell();
 private :
-	CellType m_CellType;
-	AnimalType m_AnimalType;
-	Vector2     m_Dir;
+	CellType			 m_CellType;
+	AnimalType     m_AnimalType;
+	Vector2          m_Dir;
 	class CBoard* m_Board;
-	float		m_MoveSpeed;
-	float		m_TimeScale;
+	float				 m_MoveSpeed;
+	float				 m_TimeScale;
 	std::vector<const char*> m_AnimalNames;
-	BlockType m_BlockType;
+	BlockType		 m_BlockType;
 public :
 	void SetBoard(CBoard* Board)
 	{

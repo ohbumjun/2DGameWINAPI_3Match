@@ -12,9 +12,9 @@ private :
 public :
 	void Start();
 	bool Init();
-	bool Update(float DeltaTime);
-	bool PostUpdate(float DeltaTime);
-	bool Render(HDC hDC);
+	void Update(float DeltaTime);
+	void PostUpdate(float DeltaTime);
+	void Render(HDC hDC);
 private :
 	bool ChangeStage();
 public :

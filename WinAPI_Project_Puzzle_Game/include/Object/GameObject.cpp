@@ -208,7 +208,7 @@ void CGameObject::PrevRender()
 void CGameObject::Render(HDC hDC)
 {
 	// Animation이 있다면 Animation Render
-	if (m_Animation)
+	if (m_Animation && m_Animation->m_CurrentAnimation)
 	{
 		AnimationInfo* AnimInfo = m_Animation->m_CurrentAnimation;
 		const AnimationFrameData FrameData = AnimInfo->Sequence->GetFrameData(AnimInfo->Frame);
