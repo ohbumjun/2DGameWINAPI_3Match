@@ -1,18 +1,21 @@
 #pragma once
+
 #include "../GameInfo.h"
 #include "../Resource/Texture.h"
 #include "Cell.h"
 #include "Block.h"
 
-class CBoard
+class CBoard : public CRef
 {
 	friend class CStage;
 public:
 	CBoard();
 	~CBoard();
 private :
-	std::vector<CSharedPtr<CCell>> m_vecCells;
-	std::vector<CSharedPtr<CBlock>> m_vecBlocks;
+	int m_BlockCount;
+	int m_BlockCapacity;
+	CCell** m_vecCells;
+	CBlock** m_vecBlocks;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -30,6 +33,14 @@ private :
 	int m_StartY;
 	int m_EndX;
 	int m_EndY;
+
+	bool m_ClickFirst;
+	bool m_ClickSecond;
+	Vector2 m_ClickFirstPos;
+	Vector2 m_ClickSecondPos;
+
+	bool m_Start;
+	Vector2 m_Resolution; // Width, Height
 
 	/*
 	std::list<CSharedPtr<CGameObject>> m_ObjList;
@@ -70,6 +81,10 @@ public :
 	{
 		return m_Size;
 	}
+	BlockType GetBlockType(const int& IndexRow, const int& IndexCol) const
+	{
+		return m_vecBlocks[IndexRow + m_RowCount + IndexCol]->GetBlockType();
+	}
 public :
 	void SetPos(const Vector2& Pos)
 	{
@@ -89,7 +104,11 @@ public :
 	}
 public :
 	bool CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize);
+	void MouseLButton(float DeltaTime);
+	void CompareClicks();
+	void ReceiveClicks();
 public:
+	void Start();
 	bool Init();
 	bool Update(float DeltaTime);
 	bool PostUpdate(float DeltaTime);

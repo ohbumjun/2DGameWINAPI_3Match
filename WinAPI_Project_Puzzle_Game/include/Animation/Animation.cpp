@@ -170,7 +170,7 @@ void CAnimation::Update(float DeltaTime)
 		}
 
 		// Frame 별 할당된 함수 포인터를 통해 함수 호출 
-		size_t Size = m_mapAnimation.size();
+		size_t Size = m_CurrentAnimation->m_vecNotify.size();
 		for (size_t i = 0; i < Size; i++)
 		{
 			if (!m_CurrentAnimation->m_vecNotify[i]->Call && m_CurrentAnimation->m_vecNotify[i]->Frame == m_CurrentAnimation->Frame)
@@ -211,6 +211,7 @@ void CAnimation::Update(float DeltaTime)
 			}
 		}
 	}
+
 }
 
 CAnimation* CAnimation::Clone()

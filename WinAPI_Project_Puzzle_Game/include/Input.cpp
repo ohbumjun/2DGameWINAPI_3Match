@@ -37,7 +37,6 @@ CInput::~CInput()
 void CInput::LoadMouseAnimation()
 {
 	CUIImage* MouseDefault = new CUIImage;
-	// MouseDefault->SetSize(32.f, 31.f);
 
 	std::vector<std::wstring> vecFileName;
 
@@ -45,12 +44,10 @@ void CInput::LoadMouseAnimation()
 	{
 		TCHAR FileName[MAX_PATH] = {};
 		wsprintf(FileName, TEXT("Mouse%d.bmp"), i);
-
 		vecFileName.push_back(FileName);
 	}
 
 	CResourceManager::GetInst()->LoadTexture("MouseDefault", vecFileName);
-
 	CTexture* Texture = CResourceManager::GetInst()->FindTexture("MouseDefault");
 	for (int i = 0; i < 10; i++)
 	{
@@ -139,7 +136,8 @@ bool CInput::Init(HWND hWnd)
 	m_MouseUp = false;
 
 	// KeySetUp
-	CreateKey("MouseUp", 'W');
+	CreateKey("MouseLButton", VK_LBUTTON);
+	CreateKey("MouseRButton", VK_RBUTTON);
 	ShowCursor(false);
 
 	LoadMouseAnimation();
@@ -167,22 +165,29 @@ void CInput::Update(float DeltaTime)
 	// 따라서, rc 범위 밖에 있을 때는
 	// animation이 없는 원래의 마우스 커서가 보이게
 	// rc 범위 안에 있을 때는, 원래의 마우스 커서 안보이게
-	if (rc.left <= ptMouse.x && ptMouse.x <= rc.right && rc.top <= ptMouse.y && ptMouse.y <= rc.bottom)
+	if (rc.left <= ptMouse.x && ptMouse.x <= rc.right &&
+		rc.top <= ptMouse.y &&
+		ptMouse.y <= rc.bottom)
 	{
+		// 들어왔을 때는,
+		// 보이는 경우, 안보이게 해야 한다
 		if (IsShowCursor())
 		{
 			SetShowCursor(false);
-			ShowCursor(FALSE);
+			// ShowCursor(FALSE);
 		}
 	}
 	else
 	{
+		// 안에 "안"들어왔는데 안보이고 있다면
 		if (!IsShowCursor())
 		{
+			// 보이게 처리하기
 			SetShowCursor(true);
-			ShowCursor(TRUE);
+			// ShowCursor(TRUE);
 		}
 	}
+	ShowCursor(TRUE);
 
 	UpdateKeyState();
 	UpdateMouse(DeltaTime);
@@ -223,18 +228,16 @@ void CInput::UpdateMouse(float DeltaTime)
 			m_MouseDown = false;
 		}
 	}
-	else
+	else if (m_MousePush)
 	{
-		if (m_MousePush)
-		{
-			m_MouseDown = false;
-			m_MousePush = false;
-			m_MouseUp = true;
-		}
-		else if(m_MouseUp)
-		{
-			m_MouseUp = true;
-		}
+		m_MouseDown = false;
+		m_MousePush = false;
+		m_MouseUp = true;
+	}
+
+	else if (m_MouseUp)
+	{
+		m_MouseUp = false;
 	}
 }
 

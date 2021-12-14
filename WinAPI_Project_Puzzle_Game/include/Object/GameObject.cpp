@@ -39,6 +39,7 @@ CGameObject::CGameObject(const CGameObject& Obj)
 
 CGameObject::~CGameObject()
 {
+	SAFE_DELETE(m_Animation);
 }
 
 void CGameObject::CreateAnimation()
@@ -178,6 +179,12 @@ bool CGameObject::Init()
 
 void CGameObject::Update(float DeltaTime)
 {
+	if (!m_Start)
+	{
+		Start();
+		m_Start = true;
+	}
+	
 	// Animation
 	if (m_Animation)
 		m_Animation->Update(DeltaTime);
@@ -195,12 +202,13 @@ void CGameObject::PostUpdate(float DeltaTime)
 
 void CGameObject::PrevRender()
 {
+	m_RenderPos = m_Pos;
 }
 
 void CGameObject::Render(HDC hDC)
 {
 	// Animation이 있다면 Animation Render
-	if (m_Animation && m_Animation->m_CurrentAnimation)
+	if (m_Animation)
 	{
 		AnimationInfo* AnimInfo = m_Animation->m_CurrentAnimation;
 		const AnimationFrameData FrameData = AnimInfo->Sequence->GetFrameData(AnimInfo->Frame);
@@ -226,8 +234,7 @@ void CGameObject::Render(HDC hDC)
 		}
 		else
 		{
-			// Rectangle(hDC, (int)LT.x, (int)LT.y,
-			// (int)(LT.x + m_Size.x), (int)(LT.y + m_Size.y));
+			Rectangle(hDC, (int)LT.x, (int)LT.y,(int)(LT.x + m_Size.x), (int)(LT.y + m_Size.y));
 		}
 	}
 }

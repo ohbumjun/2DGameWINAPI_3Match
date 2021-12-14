@@ -118,9 +118,6 @@ void CUIImage::Render(const Vector2& Pos, HDC hDC)
 {
 	if (m_Texture)
 	{
-		Vector2 Pos = m_Pos;
-		if (m_Owner)
-			Pos += m_Owner->GetPos();
 		Vector2 ImagePos = Vector2(0.f, 0.f);
 		Vector2 Size = m_Size;
 
@@ -136,7 +133,7 @@ void CUIImage::Render(const Vector2& Pos, HDC hDC)
 		if (m_Texture->GetTextureType() == ETexture_Type::Frame)
 		{
 			// 이미지를 이용해서 출력한다
-			m_Texture->Render(hDC, Pos + m_Offset, ImagePos, Size, m_FrameIndex);
+			m_Texture->Render(hDC, Vector2(500.f, 500.f), ImagePos, Size, m_FrameIndex);
 		}
 		else
 		{

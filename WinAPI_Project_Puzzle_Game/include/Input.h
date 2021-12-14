@@ -86,6 +86,10 @@ public :
 	{
 		return m_MouseMove;
 	}
+	Vector2 GetMousePos() const
+	{
+		return m_MousePos;
+	}
 public :
 	void ChangeMouse(EMouse_Type Type)
 	{

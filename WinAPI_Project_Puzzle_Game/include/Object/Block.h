@@ -1,6 +1,9 @@
 #pragma once
+
 #include "../GameInfo.h"
-#include "../Object/GameObject.h"
+#include "GameObject.h"
+
+class CBoard;
 
 class CBlock : public CGameObject
 {
@@ -8,9 +11,14 @@ public :
 	CBlock();
 	~CBlock();
 private :
-	BlockType m_BlockType;
-	Vector2 m_RowColPos;
+	BlockType	 	 m_BlockType;
+	Vector2			 m_RowColPos;
+	class CBoard* m_Board;
 public :
+	void SetBoard(CBoard* Board)
+	{
+		m_Board = Board;
+	}
 	void SetBlockType(BlockType Type)
 	{
 		m_BlockType = Type;

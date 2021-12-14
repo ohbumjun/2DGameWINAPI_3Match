@@ -54,6 +54,7 @@ bool CStageManager::ChangeStage()
         
         m_NextStage->Init();
         m_Stage = m_NextStage;
+
         m_NextStage = nullptr;
     }
     return false;

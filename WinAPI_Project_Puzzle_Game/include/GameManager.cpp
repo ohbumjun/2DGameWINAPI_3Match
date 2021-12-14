@@ -88,8 +88,8 @@ bool CGameManager::Init(HINSTANCE hInst)
 {
 	m_hInst = hInst;
 
-	m_RS.Width = 1280;
-	m_RS.Height = 720;
+	m_RS.Width = 700;
+	m_RS.Height = 640;
 
 	Register();
 	Create();
@@ -224,7 +224,7 @@ BOOL CGameManager::Create()
 
 	SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 100, rc.right - rc.left,
 		rc.bottom - rc.top,
-		SWP_NOZORDER);
+		SWP_NOZORDER | SWP_NOACTIVATE);
 
 	ShowWindow(m_hWnd, SW_SHOW);
 

@@ -28,12 +28,13 @@ enum class BlockType
 	BASIC = 1  // 기본형, 세부종류로 6가지의 동물 캐릭터 스프라이트가 출력된다
 };
 
-enum AnimalType
+enum  AnimalType
 {
 	PANDA = 0,
 	BEAR,
 	PARROT , // red bird 
  	ELEPHANT,
 	PENGUIN,
-	DUCK // green bird
+	DUCK, // green bird
+	END
 };

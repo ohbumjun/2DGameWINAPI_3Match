@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../GameInfo.h"
-#include "../Object/GameObject.h"
+#include "GameObject.h"
+
+class CBoard;
 
 class CCell : public CGameObject
 {
@@ -13,9 +15,16 @@ private :
 	CellType m_CellType;
 	AnimalType m_AnimalType;
 	Vector2     m_Dir;
+	class CBoard* m_Board;
 	float		m_MoveSpeed;
 	float		m_TimeScale;
+	std::vector<const char*> m_AnimalNames;
+	BlockType m_BlockType;
 public :
+	void SetBoard(CBoard* Board)
+	{
+		m_Board = Board;
+	}
 	void SetCellType(CellType Type)
 	{
 		m_CellType = Type;
@@ -35,10 +44,12 @@ public :
 	}
 public :
 	virtual void Start() override;
-	virtual bool Init() override ;
+	bool Init(AnimalType Type) ;
 	virtual void Update(float DeltaTime) override;
 	virtual void PostUpdate(float DeltaTime) override;
 	virtual void Render(HDC hDC) override;
 	CCell* Clone();
+	void Move(const Vector2& Dir);
+	void Move(const Vector2& Dir, float Speed);
 };
 
