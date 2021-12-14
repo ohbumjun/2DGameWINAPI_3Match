@@ -52,17 +52,6 @@ bool CCell::Init(AnimalType Type)
 
 void CCell::Update(float DeltaTime)
 {
-	CGameObject::Update(DeltaTime);
-
-	// WM_MOUSELEAVE
-	// Move(Vector2(0.0f, 1.f));
-	
-	// Check Block State
-	m_BlockType = m_Board->GetBlockType(m_RowIndex, m_ColIndex);
-	
-	if (m_BlockType == BlockType::EMPTY)
-		Destroy();
-	
 }
 
 void CCell::PostUpdate(float DeltaTime)

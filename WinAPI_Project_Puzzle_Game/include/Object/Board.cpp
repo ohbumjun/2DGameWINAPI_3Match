@@ -170,11 +170,7 @@ bool CBoard::Init()
 	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
 
 	Vector2 TextureSize = Vector2(m_BlockTexture->GetWidth(), m_BlockTexture->GetHeight());
-	CreateBoard(5,5, TextureSize);
-
-	Resolution RS = CGameManager::GetInst()->GetResolution();
-	m_Resolution = Vector2(RS.Width, RS.Height);
-
+	// CreateBoard(5,5,);
 	return true;
 }
 
