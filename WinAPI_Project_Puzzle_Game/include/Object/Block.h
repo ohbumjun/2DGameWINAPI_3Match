@@ -26,7 +26,7 @@ public :
 	}
 	void SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
 	{
-		m_Pos = Pos;
+		m_Pos = Pos; //
 		m_Size = Size;
 		m_RowIndex = RowIndex;
 		m_ColIndex = ColIndex;
