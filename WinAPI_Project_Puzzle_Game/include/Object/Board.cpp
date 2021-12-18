@@ -78,34 +78,36 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 	// 기본 Board Texture Loading 
 	CTexture* BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
-
 	Vector2 StartOffset = Vector2(25.f, 0.f);
+	int Index = -1;
 
 	for (int r = 0; r < m_RowCount; r++)
 	{
 		for (int c = 0; c < m_ColCount; c++)
 		{
 			// 현재 위치
-			// Vector2 Pos = Vector2((float)r, (float)c)* m_SquareSize + StartOffset;
-			Vector2 Pos = Vector2((float)r, (float)c) * m_SquareSize;
+			// Vector (x,y) : x는 열, y는 행 
+			Vector2 Pos = Vector2((float)c, (float)r) * m_SquareSize;
 
 			// AnimType
 			AnimalType Type = (AnimalType)(rand() % AnimalType::END);
+
+			Index = r * m_ColCount + c;
 
 			// Cell
 			CCell* NewCell = new CCell;
 			NewCell->Init(Type);
 			NewCell->SetBoard(this);
 			// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
-			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, r * m_ColCount + c);
-			m_vecCells[r * m_ColCount + c] = NewCell;
+			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, Index);
+			m_vecCells[Index] = NewCell;
 
 			// Block
 			CBlock* NewBlock = new CBlock;
 			NewBlock->Init(); // SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
 			NewBlock->SetBoard(this);
-			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, r * m_ColCount + c, BlockTexture);
-			m_vecBlocks[r * m_ColCount + c] = NewBlock;
+			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, Index, BlockTexture);
+			m_vecBlocks[Index] = NewBlock;
 		}
 	}
 	
@@ -183,11 +185,19 @@ bool CBoard::Update(float DeltaTime)
 	{
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
+			if (!m_vecCells[i])
+				continue;
+			if (!m_vecCells[i]->IsActive())
+			{
+				SAFE_DELETE(m_vecCells[i]);
+				continue;
+			}
 			m_vecCells[i]->Update(DeltaTime);
 		}
 
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
+		
 			m_vecBlocks[i]->Update(DeltaTime);
 		}
 	}
@@ -204,6 +214,13 @@ bool CBoard::PostUpdate(float DeltaTime)
 	{
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
+			if (!m_vecCells[i])
+				continue;
+			if (!m_vecCells[i]->IsActive())
+			{
+				SAFE_DELETE(m_vecCells[i]);
+				continue;
+			}
 			m_vecCells[i]->PostUpdate(DeltaTime);
 		}
 
@@ -242,6 +259,8 @@ void CBoard::RenderElementsInOrder(int order, HDC hDC)
 	{
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
+			if (!m_vecCells[i])
+				continue;
 			m_vecCells[i]->PrevRender();
 			m_vecCells[i]->Render(hDC);
 			// m_vecCells[i]->SetBoard(this);

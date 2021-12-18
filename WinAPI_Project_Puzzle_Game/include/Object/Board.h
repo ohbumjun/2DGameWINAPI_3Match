@@ -81,9 +81,10 @@ public :
 	{
 		return m_Size;
 	}
-	BlockType GetBlockType(const int& IndexRow, const int& IndexCol) const
+
+	BlockType GetBlockType(const int Index) const
 	{
-		return m_vecBlocks[IndexRow + m_RowCount + IndexCol]->GetBlockType();
+		return m_vecBlocks[Index]->GetBlockType();
 	}
 public :
 	void SetPos(const Vector2& Pos)

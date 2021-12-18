@@ -56,7 +56,7 @@ void CCell::Update(float DeltaTime)
 	// Move(Vector2(0.0f, 1.f));
 	
 	// Check Block State
-	m_BlockType = m_Board->GetBlockType(m_RowIndex, m_ColIndex);
+	m_BlockType = m_Board->GetBlockType(m_Index);
 	
 	if (m_BlockType == BlockType::EMPTY)
 		Destroy();
