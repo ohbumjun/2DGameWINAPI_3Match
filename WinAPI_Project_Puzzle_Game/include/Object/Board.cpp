@@ -141,12 +141,14 @@ void CBoard::MouseLButton(float DeltaTime)
 	{
 		m_ClickSecond = true;
 		m_ClickSecondPos = MousePos;
+		// 선택된 녀석 Block 상태 바꾸기 
+		int SIndex = BlockIdxY * m_RowCount + BlockIdxX ;
+		m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
+		m_vecBlocks[SIndex]->SetMoveEnable(true);
+
+		m_ClickFirst = false;
 	}
 
-	// 선택된 녀석 Block 상태 바꾸기 
-	int SIndex = BlockIdxY * m_RowCount + BlockIdxX ;
-	m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
-	m_vecBlocks[SIndex]->SetMoveEnable(true);
 
 }
 
@@ -206,7 +208,6 @@ bool CBoard::Update(float DeltaTime)
 		}
 	}
 	
-	MouseLButton(DeltaTime);
 	CompareClicks();
 	ReceiveClicks();
 	return true;
