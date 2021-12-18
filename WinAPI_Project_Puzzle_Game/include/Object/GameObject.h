@@ -69,15 +69,7 @@ public: // Animation ==========
 	void SetAnimationReverse(const std::string& Name, bool Reverse);
 	void SetAnimationLoop(const std::string& Name, bool Loop);
 public : // Texture   ==========
-	void SetTexture(CTexture* Texture)
-	{
-		m_Texture = Texture;
-		if (m_Texture)
-		{
-			m_Size.x = (float)m_Texture->GetWidth();
-			m_Size.y = (float)m_Texture->GetHeight();
-		}
-	}
+	void SetTexture(CTexture* Texture);
 	void SetTexture(const std::string& Name);
 	void SetTexture(const std::string& Name, const TCHAR* FileName, const std::string& PathName = TEXTURE_PATH);
 	void SetTextureFullPath(const std::string& Name, const TCHAR* FullPath);

@@ -116,6 +116,16 @@ void CGameObject::SetAnimationLoop(const std::string& Name, bool Loop)
 	m_Animation->SetLoop(Name, Loop);
 }
 
+void CGameObject::SetTexture(CTexture* Texture)
+{
+	m_Texture = Texture;
+	if (m_Texture)
+	{
+		m_Size.x = (float)m_Texture->GetWidth();
+		m_Size.y = (float)m_Texture->GetHeight();
+	}
+}
+
 void CGameObject::SetTexture(const std::string& Name)
 {
 	m_Texture = CResourceManager::GetInst()->FindTexture(Name);

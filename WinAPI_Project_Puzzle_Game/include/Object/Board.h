@@ -20,6 +20,7 @@ private :
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
+	CSharedPtr<CTexture> m_WhiteTexture;
 
 	// Board 전체 크기
 	Vector2 m_Size;
@@ -116,6 +117,8 @@ public :
 	void ReceiveClicks();
 	void ChangeUpperBlockStates(int RowIndex, int ColIndex);
 	void CreateNewCells();
+	void SortRenderObject(int Left, int Right);
+	int SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 public:
 	void Start();
 	bool Init();

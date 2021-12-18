@@ -44,7 +44,7 @@ CBoard::~CBoard()
 
 bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 {
-	m_RowCount = RowCount ; // Virtual 까지 합쳐서 
+	m_RowCount = RowCount * 2 ; // Virtual 까지 합쳐서 
 	m_ColCount = ColCount;
 	m_SquareSize = SquareSize;
 
@@ -82,8 +82,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 
 	// 기본 Board Texture Loading 
-	CTexture* BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
-	Vector2 StartOffset = Vector2(25.f, 0.f);
+	Vector2 StartOffset = Vector2(25.f, -100.f);
 	int Index = -1;
 	int ObjectNums = 0;
 
@@ -92,7 +91,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 		for (int c = 0; c < m_ColCount; c++)
 		{
 			// Vector (x,y) : x는 열, y는 행 
-			Vector2 Pos = Vector2((float)c, (float)r) * m_SquareSize;
+			Vector2 Pos = Vector2((float)c, (float)r) * m_SquareSize + StartOffset;
+			// Vector2 Pos = Vector2((float)c, (float)r) * m_SquareSize + 0;
 
 			// AnimType
 			AnimalType Type = (AnimalType)(rand() % AnimalType::END);
@@ -107,22 +107,26 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewBlock->SetYIdx(0);
 			NewBlock->AddRef();
 			m_vecBlocks[Index] = NewBlock;
+			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, Index, m_WhiteTexture);
+
+			// Cell
+			CCell* NewCell = new CCell;
+			NewCell->Init(Type);
+			NewCell->SetBoard(this);
+			// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
+			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, Index);
+			NewCell->SetSize(m_SquareSize);
+			NewCell->SetYIdx(-1);
+			NewCell->AddRef();
+			m_vecCells[Index] = NewCell;
 
 			// DownWard Real Block
-			// if (r >= m_RowCount / 2)
-			//{
-				NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, Index, BlockTexture);
-				// Cell
-				CCell* NewCell = new CCell;
-				NewCell->Init(Type);
-				NewCell->SetBoard(this);
-				// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
-				NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, Index);
-				NewCell->SetSize(m_SquareSize);
+			if (r >= m_RowCount / 2)
+			{
+				NewBlock->SetTexture(m_BlockTexture);
+				// 화면에 보여지는 Board 에서의 NewCell YIdx 
 				NewCell->SetYIdx(1);
-				NewCell->AddRef();
-				m_vecCells[Index] = NewCell; 
-			// }
+			}
 
 			// Render 목록에 추가하기
 			m_RenderObjects.push_back(NewBlock);
@@ -191,7 +195,9 @@ bool CBoard::Init()
 {
 	// Load Basic Block Texture
 	CResourceManager::GetInst()->LoadTexture("BlockTexture", TEXT("block.bmp"));
+	CResourceManager::GetInst()->LoadTexture("WhiteTexture", TEXT("white.bmp"));
 	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
+	m_WhiteTexture = CResourceManager::GetInst()->FindTexture("WhiteTexture");
 
 	Vector2 TextureSize = Vector2(m_BlockTexture->GetWidth(), m_BlockTexture->GetHeight());
 	CreateBoard(5,5, TextureSize);
@@ -259,7 +265,9 @@ bool CBoard::Render(HDC hDC)
 	if (m_BlockCount > 0)
 	{
 		int RenderLength = m_RenderObjects.size();
-		std::sort(m_RenderObjects.begin(), m_RenderObjects.end());
+		// std::sort(m_RenderObjects.begin(), m_RenderObjects.end());
+		SortRenderObject(0, RenderLength - 1);
+
 		for (int i = 0; i < RenderLength; i++)
 		{
 			m_RenderObjects[i]->PrevRender();
@@ -284,4 +292,50 @@ void CBoard::CreateNewCells()
 {
 	// 각 열마다 MoveEnable이 Setting되어 있는 요소 세팅 
 
+}
+
+void CBoard::SortRenderObject(int Left, int Right)
+{
+	if (Left < Right)
+	{
+		int Pivot = SortPartition(Left, Right, m_RenderObjects);
+		SortRenderObject(Left, Pivot - 1);
+		SortRenderObject(Pivot + 1, Right);
+	}
+}
+
+int CBoard::SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)
+{
+	// 왼쪽부터는, 큰 것
+	// 오른쪽부터는 작은 것
+	// 만나면 2개 교체 
+	int Low = Left;
+	int High = Right + 1;
+	do
+	{
+		do
+		{
+			Low++;
+		} while (Low <= Right  && RenderObjects[Low]->GetYIdx() < RenderObjects[Left]->GetYIdx());
+
+		do
+		{
+			High--;
+		} while (High >= Left && RenderObjects[High]->GetYIdx() > RenderObjects[Left]->GetYIdx());
+
+		if (Low < High)
+		{
+			// 바꿔주기 
+			CSharedPtr<CGameObject> temp = RenderObjects[Low];
+			RenderObjects[Low] = RenderObjects[High];
+			RenderObjects[High] = temp;
+		}
+
+	} while (Low < High);
+
+	// 바꿔주기 
+	CSharedPtr<CGameObject> temp = RenderObjects[Left];
+	RenderObjects[Left] = RenderObjects[High];
+	RenderObjects[High] = temp;
+	return High;
 }

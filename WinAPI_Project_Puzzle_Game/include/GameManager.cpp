@@ -89,7 +89,7 @@ bool CGameManager::Init(HINSTANCE hInst)
 	m_hInst = hInst;
 
 	m_RS.Width = 700;
-	m_RS.Height = 640;
+	m_RS.Height = 1000;
 
 	Register();
 	Create();
