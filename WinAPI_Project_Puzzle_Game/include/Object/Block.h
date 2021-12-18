@@ -12,6 +12,7 @@ public :
 	~CBlock();
 private :
 	BlockType	 	 m_BlockType;
+	bool               m_MoveEnable;
 	Vector2			 m_RowColPos;
 	class CBoard* m_Board;
 public :
@@ -34,7 +35,15 @@ public :
 		// Texture
 		m_Texture = Texture;
 	}
+	void SetMoveEnable(bool Enable)
+	{
+		m_MoveEnable = Enable;
+	}
 public :
+	bool GetMoveEnable() const
+	{
+		return m_MoveEnable;
+	}
 	BlockType GetBlockType() const
 	{
 		return m_BlockType;

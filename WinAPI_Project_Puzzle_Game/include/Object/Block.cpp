@@ -3,7 +3,8 @@
 
 CBlock::CBlock() :
 	m_BlockType(BlockType::BASIC),
-	m_Board(nullptr)
+	m_Board(nullptr),
+	m_MoveEnable(false)
 {
 }
 

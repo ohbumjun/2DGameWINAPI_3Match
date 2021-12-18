@@ -146,6 +146,8 @@ void CBoard::MouseLButton(float DeltaTime)
 	// 선택된 녀석 Block 상태 바꾸기 
 	int SIndex = BlockIdxY * m_RowCount + BlockIdxX ;
 	m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
+	m_vecBlocks[SIndex]->SetMoveEnable(true);
+
 }
 
 void CBoard::CompareClicks()
@@ -267,5 +269,13 @@ void CBoard::RenderElementsInOrder(int order, HDC hDC)
 			m_vecCells[i]->Render(hDC);
 			// m_vecCells[i]->SetBoard(this);
 		}
+	}
+}
+
+void CBoard::ChangeUpperBlockStates(int RowIndex, int ColIndex)
+{
+	for (int i = RowIndex - 1; i >= 0; i--)
+	{
+		m_vecBlocks[i * m_ColCount + ColIndex]->SetMoveEnable(true);
 	}
 }

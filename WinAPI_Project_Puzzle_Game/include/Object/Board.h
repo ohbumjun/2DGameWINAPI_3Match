@@ -67,6 +67,8 @@ public :
 	}
 	class CBlock* GetBlock(const int& IndexRow, const int& IndexCol)
 	{
+		int Index = IndexRow * m_ColCount + IndexCol;
+
 		return m_vecBlocks[IndexRow * m_ColCount + IndexCol];
 	}
 	class CBlock* GetBlock(int Index)
@@ -112,5 +114,6 @@ public:
 	bool Render(HDC hDC);
 public :
 	void RenderElementsInOrder(int order, HDC hdc);
+	void ChangeUpperBlockStates(int RowIndex, int ColIndex);
 };
 

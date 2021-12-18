@@ -56,14 +56,21 @@ void CCell::Update(float DeltaTime)
 	m_BlockType = m_Board->GetBlock(m_RowIndex, m_ColIndex)->GetBlockType();
 	
 	if (m_BlockType == BlockType::EMPTY)
+	{
 		Destroy();
+		m_Board->ChangeUpperBlockStates(m_RowIndex, m_ColIndex);
+	}
 	
 	// 자기 아래 Block 상태 확인 --> Empty면 계속 내려가게 세팅한다. 
 	// WM_MOUSELEAVE
 	if (CanMove())
 	{
 		Move(Vector2(0.0f, 10.f));
+
+		// Update Row Index
+		m_RowIndex = m_Pos.y / m_Size.y;
 	}
+
 }
 
 void CCell::PostUpdate(float DeltaTime)
@@ -73,9 +80,8 @@ void CCell::PostUpdate(float DeltaTime)
 	// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 	if (!CanMove())
 	{
-		int NewRow = m_Pos.y / m_Size.y;
-		m_RowIndex = NewRow;
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
+		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
 	}
 }
 
@@ -104,9 +110,12 @@ void CCell::Move(const Vector2& Dir, float Speed)
 bool CCell::CanMove()
 {
 	int DownRow = m_RowIndex + 1;
-	if (m_RowIndex >= (m_Board->GetSize().y / m_Size.y) - 1)
-		DownRow -= 1;
 
-	BlockType DownBlockType = m_Board->GetBlock(DownRow, m_ColIndex)->GetBlockType();
-	return DownBlockType == BlockType::EMPTY;
+	// 맨 마지막 Idx
+	if (m_RowIndex >= (m_Board->GetSize().y / m_Size.y) - 1)
+	{
+		DownRow -= 1;
+		m_Board->GetBlock(DownRow, m_ColIndex)->SetMoveEnable(false);
+	}
+	return  m_Board->GetBlock(DownRow, m_ColIndex)->GetMoveEnable();
 }
