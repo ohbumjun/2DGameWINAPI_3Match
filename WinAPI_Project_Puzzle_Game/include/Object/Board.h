@@ -59,7 +59,7 @@ public :
 	}
 	class CCell* GetCell(const int &IndexRow, const int &IndexCol)
 	{
-		return m_vecCells[IndexRow * m_RowCount + IndexCol];
+		return m_vecCells[IndexRow * m_ColCount + IndexCol];
 	}
 	class CCell* GetCell(int Index)
 	{
@@ -67,7 +67,7 @@ public :
 	}
 	class CBlock* GetBlock(const int& IndexRow, const int& IndexCol)
 	{
-		return m_vecBlocks[IndexRow * m_RowCount + IndexCol];
+		return m_vecBlocks[IndexRow * m_ColCount + IndexCol];
 	}
 	class CBlock* GetBlock(int Index)
 	{
@@ -82,10 +82,6 @@ public :
 		return m_Size;
 	}
 
-	BlockType GetBlockType(const int Index) const
-	{
-		return m_vecBlocks[Index]->GetBlockType();
-	}
 public :
 	void SetPos(const Vector2& Pos)
 	{

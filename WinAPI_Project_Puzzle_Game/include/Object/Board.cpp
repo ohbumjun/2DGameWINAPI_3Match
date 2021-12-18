@@ -47,7 +47,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	// m_vecCells.clear();
 	// m_vecBlocks.clear();
 
-	m_Size = m_SquareSize * Vector2((float)m_RowCount, (float)m_ColCount);
+	m_Size = m_SquareSize * Vector2((float)m_ColCount, (float)m_RowCount);
 	m_BlockCount = m_RowCount * m_ColCount;
 
 	// 크기 재할당 
@@ -100,13 +100,15 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewCell->SetBoard(this);
 			// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
 			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, Index);
-			m_vecCells[Index] = NewCell;
+			NewCell->SetSize(m_SquareSize);
+			m_vecCells[Index] = NewCell; 
 
 			// Block
 			CBlock* NewBlock = new CBlock;
 			NewBlock->Init(); // SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
 			NewBlock->SetBoard(this);
 			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, Index, BlockTexture);
+			NewBlock->SetSize(m_SquareSize);
 			m_vecBlocks[Index] = NewBlock;
 		}
 	}

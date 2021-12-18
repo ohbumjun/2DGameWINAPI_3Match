@@ -51,22 +51,32 @@ bool CCell::Init(AnimalType Type)
 void CCell::Update(float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
-
-	// WM_MOUSELEAVE
-	// Move(Vector2(0.0f, 1.f));
 	
 	// Check Block State
-	m_BlockType = m_Board->GetBlockType(m_Index);
+	m_BlockType = m_Board->GetBlock(m_RowIndex, m_ColIndex)->GetBlockType();
 	
 	if (m_BlockType == BlockType::EMPTY)
 		Destroy();
 	
+	// 자기 아래 Block 상태 확인 --> Empty면 계속 내려가게 세팅한다. 
+	// WM_MOUSELEAVE
+	if (CanMove())
+	{
+		Move(Vector2(0.0f, 10.f));
+	}
 }
 
 void CCell::PostUpdate(float DeltaTime)
 {
-	
 	CGameObject::PostUpdate(DeltaTime);
+
+	// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
+	if (!CanMove())
+	{
+		int NewRow = m_Pos.y / m_Size.y;
+		m_RowIndex = NewRow;
+		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
+	}
 }
 
 void CCell::Render(HDC hDC)
@@ -89,4 +99,14 @@ void CCell::Move(const Vector2& Dir, float Speed)
 {
 	Vector2 CurrentMove = Dir * Speed * CGameManager::GetInst()->GetDeltaTime() * m_TimeScale;
 	m_Pos += CurrentMove;
+}
+
+bool CCell::CanMove()
+{
+	int DownRow = m_RowIndex + 1;
+	if (m_RowIndex >= (m_Board->GetSize().y / m_Size.y) - 1)
+		DownRow -= 1;
+
+	BlockType DownBlockType = m_Board->GetBlock(DownRow, m_ColIndex)->GetBlockType();
+	return DownBlockType == BlockType::EMPTY;
 }
