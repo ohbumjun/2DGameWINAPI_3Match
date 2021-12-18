@@ -16,6 +16,7 @@ private :
 	int m_BlockCapacity;
 	CCell** m_vecCells;
 	CBlock** m_vecBlocks;
+	std::vector<CSharedPtr<CGameObject>> m_RenderObjects;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -83,8 +84,15 @@ public :
 	{
 		return m_Size;
 	}
-
+	int GetNewIndex(int RowIndex, int ColIndex)
+	{
+		return RowIndex * m_ColCount + ColIndex;
+	}
 public :
+	void SetCell(int Index, CCell* NewCell)
+	{
+		m_vecCells[Index] = NewCell;
+	}
 	void SetPos(const Vector2& Pos)
 	{
 		m_Pos = Pos;
@@ -106,14 +114,13 @@ public :
 	void MouseLButton(float DeltaTime);
 	void CompareClicks();
 	void ReceiveClicks();
+	void ChangeUpperBlockStates(int RowIndex, int ColIndex);
+	void CreateNewCells();
 public:
 	void Start();
 	bool Init();
 	bool Update(float DeltaTime);
 	bool PostUpdate(float DeltaTime);
 	bool Render(HDC hDC);
-public :
-	void RenderElementsInOrder(int order, HDC hdc);
-	void ChangeUpperBlockStates(int RowIndex, int ColIndex);
 };
 

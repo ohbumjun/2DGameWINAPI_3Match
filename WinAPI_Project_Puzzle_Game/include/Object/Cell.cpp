@@ -77,11 +77,14 @@ void CCell::PostUpdate(float DeltaTime)
 {
 	CGameObject::PostUpdate(DeltaTime);
 
-	// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 	if (!CanMove())
 	{
+		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
+		// MoveEnable Settting 
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
+		// 새로운 Idx 세팅
+		m_Index = m_Board->GetNewIndex(m_RowIndex, m_ColIndex);
 	}
 }
 

@@ -21,6 +21,8 @@ protected:
 	int				m_RowIndex;
 	int				m_ColIndex;
 	int				m_Index;
+	int            m_PrevIdx;
+	int            m_YIdx;
 	class CAnimation* m_Animation;
 public:
 	Vector2 GetPos() const
@@ -39,6 +41,10 @@ public:
 	{
 		return m_ColIndex;
 	}
+	int GetYIdx() const
+	{
+		return m_YIdx;
+	}
 public:
 	void SetPos(const Vector2& Pos)
 	{
@@ -47,6 +53,10 @@ public:
 	void SetSize(const Vector2& Size)
 	{
 		m_Size = Size;
+	}
+	void SetYIdx(int YIndex)
+	{
+		m_YIdx = YIndex;
 	}
 public: // Animation ==========
 	void CreateAnimation();
@@ -81,5 +91,10 @@ public : // Basic Functions =====
 	virtual void PrevRender();
 	virtual void Render(HDC hDC);
 	virtual CGameObject* Clone();
+public : // Sort
+	bool operator < (CGameObject* Object)
+	{
+		return m_YIdx < Object->m_YIdx;
+	}
 };
 
