@@ -7,8 +7,7 @@
 CBoard::CBoard() :
 	m_RowCount(0),
 	m_ColCount(0),
-	m_ClickFirst(false),
-	m_ClickSec(false),
+	m_Click(0),
 	m_ClickFirstPos{},
 	m_ClickSecPos{},
 	m_Start(false),
@@ -153,20 +152,19 @@ void CBoard::MouseLButton(float DeltaTime)
 
 
 	// Tile 선택이 안되면, return 처리 
-	if (!m_ClickFirst)
+	if (m_Click == 0)
 	{
-		m_ClickFirst = true;
 		m_ClickFirstPos = MousePos;
 
 		// 선택된 Block 의 Idx 
 		m_ClickFirstIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 		m_ClickFirstIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
+		
+		m_Click = 1;
 	}
-	else
+	else if (m_Click == 1)
 	{
-		m_ClickSec = true;
 		m_ClickSecPos = MousePos;
-		m_ClickFirst = false;
 
 		// 선택된 Block 의 Idx 
 		m_ClickSecIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
@@ -179,15 +177,12 @@ void CBoard::MouseLButton(float DeltaTime)
 			int SecCellIdx  = m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX;
 	
 			// New Pos 세팅 
-			m_vecCells[FirstCellIdx]->SetNewPos(m_ClickFirstPos);
-			m_vecCells[SecCellIdx]->SetNewPos(m_ClickSecPos);
+			m_vecCells[FirstCellIdx]->SetNewPos(m_ClickSecPos);
+			m_vecCells[SecCellIdx]->SetNewPos(m_ClickFirstPos);
 
-			m_ClickFirst = false;
-			m_ClickSec = false;
+			m_Click = 0;
 		}
 	}
-
-
 
 	// m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
 	// m_vecBlocks[SIndex]->SetMoveEnable(true);
@@ -195,8 +190,6 @@ void CBoard::MouseLButton(float DeltaTime)
 
 void CBoard::CompareClicks()
 {
-	if (!m_ClickFirst || !m_ClickSec)
-		return;
 }
 
 void CBoard::ReceiveClicks()

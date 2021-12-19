@@ -61,28 +61,13 @@ void CCell::Update(float DeltaTime)
 	{
 		Destroy();
 	}
-		
+
+	/*
+	// 아래 이동 
 	if (m_Pos.y < m_NewPos.y) // 아래 이동
 	{
 		// 아래로 이동 
 		Move(Vector2(0.0f, 30.f));
-		m_IsMoving = true;
-
-		// Update Row Index
-		// float RealBoardSize = m_Board->GetSize().y / 2;
-		// float NewPosY = m_Pos.y + RealBoardSize;
-		// m_RowIndex = (int)(NewPosY / m_Size.y);
-	}
-	else if (m_Pos.x < m_NewPos.x) // 오른쪽 이동 
-	{
-		// 아래로 이동 
-		Move(Vector2(30.0f, 0.f));
-		m_IsMoving = true;
-	}
-	else if (m_Pos.x > m_NewPos.x) // 왼쪽 이동 
-	{
-		// 아래로 이동 
-		Move(Vector2(30.f, 0.f));
 		m_IsMoving = true;
 	}
 	else
@@ -91,6 +76,7 @@ void CCell::Update(float DeltaTime)
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
 		m_IsMoving = false;
 	}
+	*/
 }
 
 void CCell::PostUpdate(float DeltaTime)
