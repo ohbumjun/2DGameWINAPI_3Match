@@ -67,7 +67,7 @@ void CCell::Update(float DeltaTime)
 	if (m_Pos.y < m_NewPos.y)
 	{
 		// 아래로 이동 
-		Move(Vector2(0.0f, 50.f));
+		Move(Vector2(0.0f, 30.f));
 
 		// Update Row Index
 		// float RealBoardSize = m_Board->GetSize().y / 2;

@@ -89,7 +89,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 
 	// Cell, Block 세팅 
-	Vector2 StartOffset = Vector2(0, -m_Size.y / 2);
+	Vector2 StartOffset = Vector2(0, -m_Size.y / 2.f);
+	// Vector2 StartOffset = Vector2(0.f, 0.f);
 	AnimalType Type = (AnimalType)0;
 	m_TopYPos = StartOffset.y;
 	m_MiddelYPos = 0.f;
@@ -112,7 +113,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewBlock->Init();
 			NewBlock->SetBoard(this);
 			NewBlock->SetSize(m_SingleBlockSize);
-			NewBlock->SetYIdx(2);
+			// NewBlock->SetYIdx(2);
+			NewBlock->SetYIdx(0);
 			m_vecBlocks[Index] = NewBlock;
 			NewBlock->SetBlockInitInfo(Pos, m_SingleBlockSize, r, c, Index, m_WhiteTexture);
 
@@ -122,9 +124,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewCell->SetBoard(this);
 			NewCell->SetCellInitInfo(Pos, m_SingleBlockSize, r, c, Index);
 			NewCell->SetSize(m_SingleBlockSize);
-			NewCell->SetYIdx(-1);
 			NewCell->SetYIdx(1);
-			NewCell->SetNewYPos(Pos.x, Pos.y);
+			NewCell->SetNewPos(Pos.x, Pos.y);
 			m_vecCells[Index] = NewCell;
 
 			// DownWard Real Block
@@ -282,7 +283,6 @@ bool CBoard::Update(float DeltaTime)
 
 				// Update Cell YIdx 
 				ChangeCellYIdx(R, C);
-
 			}
 		}
 
@@ -378,7 +378,7 @@ bool CBoard::ChangeUpperCellsPos(int RowIndex, int ColIndex)
 
 		// Pos 정보 바꾸기 
 		Vector2 PrevPos = m_vecCells[CurIdx]->GetPos();
-		m_vecCells[CurIdx]->SetNewYPos(PrevPos.x, PrevPos.y + m_SingleBlockSize.y);
+		m_vecCells[CurIdx]->SetNewPos(PrevPos.x, PrevPos.y + m_SingleBlockSize.y);
 
 	}
 
@@ -436,13 +436,12 @@ void CBoard::CreateNewCells()
 	int  Index;
 	AnimalType Type;
 
-
 	for (int Col = 0; Col < m_ColCount; Col++)
 	{
 		for (int Row = 0; Row < m_NewCellNeeded[Col]; Row++)
 		{
 			// m_TopYPos
-			Pos = Vector2(Row * m_SingleBlockSize.x, m_TopYPos + Row * m_SingleBlockSize.y);
+			Pos = Vector2(Col * m_SingleBlockSize.x, m_TopYPos + (Row  * m_SingleBlockSize.y));
 			CCell* NewCell = new CCell;
 			Type = (AnimalType)(rand() % AnimalType::END);
 			Index = Row * m_ColCount + Col;
@@ -450,7 +449,8 @@ void CBoard::CreateNewCells()
 			NewCell->SetBoard(this);
 			NewCell->SetCellInitInfo(Pos, m_SingleBlockSize, Row, Col, Index);
 			NewCell->SetSize(m_SingleBlockSize);
-			NewCell->SetYIdx(-1);
+			NewCell->SetYIdx(1);
+			NewCell->SetNewPos(Pos);
 			m_vecCells[Index] = NewCell;
 		}
 	}

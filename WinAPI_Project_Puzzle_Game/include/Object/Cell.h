@@ -44,9 +44,13 @@ public :
 	{
 		m_NewlyCreated = Created;
 	}
-	void SetNewYPos(float XPos, float YPos)
+	void SetNewPos(float XPos, float YPos)
 	{
 		m_NewPos = Vector2(XPos,YPos);
+	}
+	void SetNewPos(Vector2 NewPos)
+	{
+		m_NewPos = NewPos;
 	}
 	void SetIdxInfos(int RowIdx, int ColIdx, int Index)
 	{
