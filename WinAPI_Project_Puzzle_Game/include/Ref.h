@@ -36,7 +36,7 @@ public :
 		return m_RefCount;
 	}
 public :
-	int GetRefCount() const  //
+	int GetRefCount() const  
 	{
 		return m_RefCount;
 	}
