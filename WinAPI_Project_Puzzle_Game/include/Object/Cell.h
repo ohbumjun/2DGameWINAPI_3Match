@@ -15,11 +15,14 @@ private :
 	CellType			 m_CellType;
 	AnimalType     m_AnimalType;
 	Vector2          m_Dir;
+	Vector2          m_NewPos;
 	class CBoard* m_Board;
 	float				 m_MoveSpeed;
 	float				 m_TimeScale;
+	bool               m_NewlyCreated;
 	std::vector<const char*> m_AnimalNames;
 	BlockType		 m_BlockType;
+	
 public :
 	void SetBoard(CBoard* Board)
 	{
@@ -37,10 +40,28 @@ public :
 		m_ColIndex = ColIndex;
 		m_Index = Index;
 	}
+	void SetNewlyCreated(bool Created)
+	{
+		m_NewlyCreated = Created;
+	}
+	void SetNewYPos(float XPos, float YPos)
+	{
+		m_NewPos = Vector2(XPos,YPos);
+	}
+	void SetIdxInfos(int RowIdx, int ColIdx, int Index)
+	{
+		m_RowIndex = RowIdx;
+		m_ColIndex  = ColIdx;
+		m_Index		= Index;
+	}
 public :
 	CellType GetCellType()
 	{
 		return m_CellType;
+	}
+	float GetYPos() const
+	{
+		return m_Pos.y;
 	}
 public :
 	virtual void Start() override;
@@ -51,6 +72,5 @@ public :
 	CCell* Clone();
 	void Move(const Vector2& Dir);
 	void Move(const Vector2& Dir, float Speed);
-	bool CanMove();
 };
 

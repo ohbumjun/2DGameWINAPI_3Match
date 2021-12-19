@@ -27,16 +27,16 @@ bool CStageManager::Init()
     return true;
 }
 
-void CStageManager::Update(float DeltaTime)
+bool CStageManager::Update(float DeltaTime)
 {
     m_Stage->Update(DeltaTime);
-    ChangeStage() ;
+    return ChangeStage() ;
 }
 
-void CStageManager::PostUpdate(float DeltaTime)
+bool CStageManager::PostUpdate(float DeltaTime)
 {
     m_Stage->PostUpdate(DeltaTime);
-    ChangeStage();
+    return ChangeStage();
 }
 
 void CStageManager::Render(HDC hDC)
@@ -57,7 +57,7 @@ bool CStageManager::ChangeStage()
 
         m_NextStage = nullptr;
     }
-    return false;
+    return true;
 }
 
 /*

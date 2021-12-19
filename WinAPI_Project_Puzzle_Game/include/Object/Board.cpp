@@ -17,18 +17,14 @@ CBoard::CBoard() :
 	m_ClickSecondPos{},
 	m_Start(false),
 	m_BlockCount(0),
-	m_BlockCapacity(100)
+	m_BlockCapacity(50)
 {
 	m_vecCells		   = new CCell * [m_BlockCapacity];
 	m_vecBlocks		   = new CBlock * [m_BlockCapacity];
-	m_RenderObjects.reserve(m_BlockCapacity * 2);
 }
 
 CBoard::~CBoard()
 {
-	// RenderObjects Clear 먼저 해줘야 한다. 
-	m_RenderObjects.clear();
-
 	for (int i = 0; i < m_BlockCount; i++)
 	{
 		SAFE_DELETE(m_vecCells[i]);
@@ -55,6 +51,18 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	m_Size = m_SquareSize * Vector2((float)m_ColCount, (float)m_RowCount);
 	m_BlockCount = (m_RowCount) * m_ColCount;
 
+	m_ColsDestroyed.reserve(m_ColCount);
+	m_NumColsDestroyed.reserve(m_ColCount);
+	m_ColDestroyedMinRow.reserve(m_ColCount);
+
+	for (int i = 0; i < m_ColCount; i++)
+	{
+		m_ColsDestroyed.push_back(false);
+		m_NumColsDestroyed.push_back(0);
+		m_ColDestroyedMinRow.push_back(-1);
+	}
+	
+
 	// 크기 재할당 
 	if (m_BlockCount > m_BlockCapacity)
 	{
@@ -71,7 +79,6 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 		m_vecCells   = n_vecCells;
 		m_vecBlocks = n_vecBlocks;
-		m_RenderObjects.reserve(m_BlockCapacity * 2);
 	}
 
 	// 여기에서, Random 하게 섞일 수 있는 idx 들을 마련하는 함수를 호출
@@ -82,7 +89,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 
 	// 기본 Board Texture Loading 
-	Vector2 StartOffset = Vector2(25.f, -100.f);
+	Vector2 StartOffset = Vector2(0, -m_Size.y / 2);
+	m_TopYPos = StartOffset.y;
 	int Index = -1;
 	int ObjectNums = 0;
 
@@ -104,7 +112,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewBlock->Init(); // SetBlockInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index, class CTexture* Texture)
 			NewBlock->SetBoard(this);
 			NewBlock->SetSize(m_SquareSize);
-			NewBlock->SetYIdx(0);
+			NewBlock->SetYIdx(2);
 			NewBlock->AddRef();
 			m_vecBlocks[Index] = NewBlock;
 			NewBlock->SetBlockInitInfo(Pos, m_SquareSize, r, c, Index, m_WhiteTexture);
@@ -116,21 +124,20 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
 			NewCell->SetCellInitInfo(Pos, m_SquareSize, r, c, Index);
 			NewCell->SetSize(m_SquareSize);
-			NewCell->SetYIdx(-1);
+			// NewCell->SetYIdx(-1);
+			NewCell->SetYIdx(1);
 			NewCell->AddRef();
+			NewCell->SetNewYPos(Pos.x, Pos.y);
 			m_vecCells[Index] = NewCell;
 
 			// DownWard Real Block
 			if (r >= m_RowCount / 2)
 			{
 				NewBlock->SetTexture(m_BlockTexture);
+				NewBlock->SetYIdx(0);
 				// 화면에 보여지는 Board 에서의 NewCell YIdx 
 				NewCell->SetYIdx(1);
 			}
-
-			// Render 목록에 추가하기
-			m_RenderObjects.push_back(NewBlock);
-			m_RenderObjects.push_back(NewCell);
 		}
 	}
 
@@ -152,7 +159,7 @@ void CBoard::MouseLButton(float DeltaTime)
 
 	// 선택된 Block 의 Idx 
 	int BlockIdxX = (int)(MousePos.x / m_SquareSize.x); // 열 
-	int BlockIdxY = (int)(MousePos.y / m_SquareSize.y); // 행 
+	int BlockIdxY = (int)(MousePos.y / m_SquareSize.y) + ( m_RowCount / 2 ); // 행 
 
 	// Tile 선택이 안되면, return 처리 
 	if (!m_ClickFirst)
@@ -164,12 +171,13 @@ void CBoard::MouseLButton(float DeltaTime)
 	{
 		m_ClickSecond = true;
 		m_ClickSecondPos = MousePos;
-		// 선택된 녀석 Block 상태 바꾸기 
-		int SIndex = BlockIdxY * m_RowCount + BlockIdxX ;
-		m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
-		m_vecBlocks[SIndex]->SetMoveEnable(true);
 		m_ClickFirst = false;
 	}
+
+	// 선택된 녀석 Block 상태 바꾸기 
+	int SIndex = BlockIdxY * m_ColCount + BlockIdxX ;
+	m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
+	// m_vecBlocks[SIndex]->SetMoveEnable(true);
 }
 
 void CBoard::CompareClicks()
@@ -199,7 +207,7 @@ bool CBoard::Init()
 	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
 	m_WhiteTexture = CResourceManager::GetInst()->FindTexture("WhiteTexture");
 
-	Vector2 TextureSize = Vector2(m_BlockTexture->GetWidth(), m_BlockTexture->GetHeight());
+	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
 	CreateBoard(5,5, TextureSize);
 
 	return true;
@@ -211,27 +219,46 @@ bool CBoard::Update(float DeltaTime)
 
 	if (m_BlockCount > 0)
 	{
-		for (size_t i = 0; i < m_BlockCount; i++)
+		int Index = -1;
+
+		for (int R = m_RowCount - 1; R >= 0; R--)
 		{
-			if (!m_vecCells[i])
-				continue;
-			if (!m_vecCells[i]->IsActive())
+			for (int C = m_ColCount - 1; C >= 0; C--)
 			{
-				SAFE_DELETE(m_vecCells[i]);
-				continue;
+				Index = R * m_ColCount + C;
+				if (!m_vecCells[Index])
+					continue;
+				if (!m_vecCells[Index]->IsActive())
+				{
+					// 메모리 해제
+					SAFE_DELETE(m_vecCells[Index]);
+					
+					// 해당 열 삭제 표시
+					// m_ColsDestroyed[C] = true;
+
+					// 해당 열 삭제 개수 증가
+					// m_NumColsDestroyed[C] += 1;
+
+					// 제거된 가장 낮은 Row 세팅
+					// m_ColDestroyedMinRow[C] = R;
+
+					ChangeUpperBlockStates(R, C);
+
+					continue;
+				}
+				m_vecCells[Index]->Update(DeltaTime);
 			}
-			m_vecCells[i]->Update(DeltaTime);
 		}
 
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
-		
 			m_vecBlocks[i]->Update(DeltaTime);
 		}
 	}
 	
-	CompareClicks();
-	ReceiveClicks();
+	// CompareClicks();
+	// ReceiveClicks();
+
 	return true;
 }
 
@@ -239,16 +266,33 @@ bool CBoard::PostUpdate(float DeltaTime)
 {
 	if (m_BlockCount > 0)
 	{
-		for (size_t i = 0; i < m_BlockCount; i++)
+		int Index = -1;
+
+		// 제거된 Cell이 있는 Column 확인 + 새로 생성하기 
+		/*
+		for (int C = 0; C < m_ColCount; C++)
 		{
-			if (!m_vecCells[i])
+			if (!m_ColsDestroyed[C])
 				continue;
-			if (!m_vecCells[i]->IsActive())
+			int LowestRow = m_ColDestroyedMinRow[C];
+			if (ChangeUpperBlockStates(LowestRow, C))
 			{
-				SAFE_DELETE(m_vecCells[i]);
-				continue;
+				CreateNewCells(C, m_NumColsDestroyed[C]);
 			}
-			m_vecCells[i]->PostUpdate(DeltaTime);
+		}
+		*/
+
+		// for (int R = 0; R < m_RowCount; R++)
+		for (int R = m_RowCount - 1; R >= 0; R--)
+		{
+			for (int C = m_ColCount - 1; C >= 0; C--)
+			{
+				Index = R * m_ColCount + C;
+
+				if (!m_vecCells[Index])
+					continue;
+				m_vecCells[Index]->PostUpdate(DeltaTime);
+			}
 		}
 
 		for (size_t i = 0; i < m_BlockCount; i++)
@@ -262,45 +306,97 @@ bool CBoard::PostUpdate(float DeltaTime)
 
 bool CBoard::Render(HDC hDC)
 {
+	// 모든 Block, Cell들이 채워질 때만 Render
 	if (m_BlockCount > 0)
 	{
-		int RenderLength = m_RenderObjects.size();
-		// std::sort(m_RenderObjects.begin(), m_RenderObjects.end());
-		SortRenderObject(0, RenderLength - 1);
+		int RenderLength;
+		std::vector<CSharedPtr<CGameObject>> RenderObjects;
+
+		RenderObjects.reserve(m_BlockCapacity * 2);
+
+		for (int i = 0; i < m_BlockCapacity; i++)
+		{
+			if (m_vecBlocks[i])
+				RenderObjects.push_back(m_vecBlocks[i]);
+			if (m_vecCells[i])
+				RenderObjects.push_back(m_vecCells[i]);
+		}
+
+		RenderLength = (int)RenderObjects.size();
+		
+		// Sort
+		RenderLength = (int)RenderObjects.size();
+		SortRenderObject(0, RenderLength - 1, RenderObjects);
 
 		for (int i = 0; i < RenderLength; i++)
 		{
-			m_RenderObjects[i]->PrevRender();
-			m_RenderObjects[i]->Render(hDC);
+			RenderObjects[i]->PrevRender();
+			RenderObjects[i]->Render(hDC);
 		}
-		// RenderElementsInOrder(1, hDC);
-		// RenderElementsInOrder(2, hDC);
 	}
 
 	return true;
 }
 
-void CBoard::ChangeUpperBlockStates(int RowIndex, int ColIndex)
+bool CBoard::ChangeUpperBlockStates(int RowIndex, int ColIndex)
 {
-	for (int i = RowIndex - 1; i >= 0; i--)
+	int NxtIdx = -1;
+	int CurIdx = -1;
+	for (int Row = RowIndex - 1; Row >= 0; Row--)
 	{
-		m_vecBlocks[i * m_ColCount + ColIndex]->SetMoveEnable(true);
+		CurIdx = Row * m_ColCount + ColIndex;
+		NxtIdx = (Row+1) * m_ColCount + ColIndex;
+
+		// m_vecBlocks[i * m_ColCount + ColIndex]->SetMoveEnable(true);
+		// Pos 정보 바꾸기 
+		Vector2 PrevPos = m_vecCells[CurIdx]->GetPos();
+		m_vecCells[CurIdx]->SetNewYPos(PrevPos.x, PrevPos.y + m_SquareSize.y);
+		// Idx 정보 다시 세팅해주기 
+		m_vecCells[CurIdx]->SetIdxInfos(Row + 1, ColIndex, NxtIdx);
+		// 배열 내 Cell 정보 바꾸기
+		m_vecCells[NxtIdx] = m_vecCells[CurIdx];
 	}
+	return true;
 }
 
-void CBoard::CreateNewCells()
+void CBoard::CreateNewCells(int ColIdx, int NumCells)
 {
-	// 각 열마다 MoveEnable이 Setting되어 있는 요소 세팅 
+	Vector2 Pos;
+	int  Index;
+	AnimalType Type;
 
+	// 각 Real Board 열마다 MoveEnable이 true로 Setting되어 있는 요소 세팅 
+	/*
+	for (int R = 0; R < NumCells; R++)
+	{
+		// m_TopYPos
+		Pos = Vector2(R * m_SquareSize.x, m_TopYPos + R * m_SquareSize.y);
+		CCell* NewCell = new CCell;
+		Type = (AnimalType)(rand() % AnimalType::END);
+		Index = R * m_ColCount + ColIdx;
+
+		NewCell->Init(Type);
+		NewCell->SetBoard(this);
+		// SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
+		NewCell->SetCellInitInfo(Pos, m_SquareSize, R, ColIdx, Index);
+		NewCell->SetSize(m_SquareSize);
+		// NewCell->SetYIdx(-1);
+		NewCell->SetYIdx(1);
+		NewCell->AddRef();
+		NewCell->SetNewlyCreated(true);
+
+		// m_vecCells[Index] = NewCell;
+	}
+	*/
 }
 
-void CBoard::SortRenderObject(int Left, int Right)
+void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)
 {
 	if (Left < Right)
 	{
-		int Pivot = SortPartition(Left, Right, m_RenderObjects);
-		SortRenderObject(Left, Pivot - 1);
-		SortRenderObject(Pivot + 1, Right);
+		int Pivot = SortPartition(Left, Right, RenderObjects);
+		SortRenderObject(Left, Pivot - 1, RenderObjects);
+		SortRenderObject(Pivot + 1, Right, RenderObjects);
 	}
 }
 

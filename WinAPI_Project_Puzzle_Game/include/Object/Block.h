@@ -36,8 +36,8 @@ public :
 		m_Texture = Texture;
 		if (m_Texture)
 		{
-			m_Size.x = m_Texture->GetWidth();
-			m_Size.y = m_Texture->GetHeight();
+			m_Size.x = (float)m_Texture->GetWidth();
+			m_Size.y = (float)m_Texture->GetHeight();
 		}
 	}
 	void SetMoveEnable(bool Enable)

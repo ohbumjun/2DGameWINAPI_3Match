@@ -12,8 +12,8 @@ private :
 public :
 	void Start();
 	bool Init();
-	void Update(float DeltaTime);
-	void PostUpdate(float DeltaTime);
+	bool Update(float DeltaTime);
+	bool PostUpdate(float DeltaTime);
 	void Render(HDC hDC);
 private :
 	bool ChangeStage();

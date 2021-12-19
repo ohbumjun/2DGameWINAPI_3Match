@@ -10,7 +10,9 @@ CCell::CCell() :
 	m_Dir(Vector2(0.f, 1.f)),
 	m_TimeScale(1.f),
 	m_Board(nullptr),
-	m_AnimalNames{"Panda","Bear","Parrot","Elephant","Penguin","Duck"}
+	m_AnimalNames{"Panda","Bear","Parrot","Elephant","Penguin","Duck"},
+	m_NewlyCreated(false),
+	m_NewPos{}
 {
 }
 
@@ -51,41 +53,62 @@ bool CCell::Init(AnimalType Type)
 void CCell::Update(float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
-	
+
 	// Check Block State
 	m_BlockType = m_Board->GetBlock(m_RowIndex, m_ColIndex)->GetBlockType();
-	
+
 	if (m_BlockType == BlockType::EMPTY)
 	{
 		Destroy();
-		m_Board->ChangeUpperBlockStates(m_RowIndex, m_ColIndex);
 	}
-	
+		
 	// 자기 아래 Block 상태 확인 --> Empty면 계속 내려가게 세팅한다. 
-	// WM_MOUSELEAVE
-	if (CanMove())
+	// if (CanMove() && !m_NewlyCreated)
+	if (m_Pos.y < m_NewPos.y)
 	{
-		Move(Vector2(0.0f, 10.f));
+		// 아래로 이동 
+		Move(Vector2(0.0f, 50.f));
 
 		// Update Row Index
-		m_RowIndex = m_Pos.y / m_Size.y;
+		float RealBoardSize = m_Board->GetSize().y / 2;
+		float NewPosY = m_Pos.y + RealBoardSize;
+		m_RowIndex = (int)(NewPosY / m_Size.y);
 	}
+	else
+	{
+		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
+		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
 
+		// MoveEnable Settting 
+		// m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
+
+		// 새로운 Idx 세팅
+		// m_Index = m_Board->GetNewIndex(m_RowIndex, m_ColIndex);
+
+		// Board 정보 Update
+		m_Board->SetCell(m_RowIndex, m_ColIndex, this);
+	}
 }
 
 void CCell::PostUpdate(float DeltaTime)
 {
 	CGameObject::PostUpdate(DeltaTime);
-
-	if (!CanMove())
+	/*
+	if (m_Pos.y >= m_NewYPos)
 	{
 		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
+
 		// MoveEnable Settting 
-		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
+		// m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
+
 		// 새로운 Idx 세팅
 		m_Index = m_Board->GetNewIndex(m_RowIndex, m_ColIndex);
+
+		// Board 정보 Update
+		m_Board->SetCell(m_RowIndex, m_ColIndex, this);
 	}
+	*/
 }
 
 void CCell::Render(HDC hDC)
@@ -108,17 +131,4 @@ void CCell::Move(const Vector2& Dir, float Speed)
 {
 	Vector2 CurrentMove = Dir * Speed * CGameManager::GetInst()->GetDeltaTime() * m_TimeScale;
 	m_Pos += CurrentMove;
-}
-
-bool CCell::CanMove()
-{
-	int DownRow = m_RowIndex + 1;
-
-	// 맨 마지막 Idx
-	if (m_RowIndex >= (m_Board->GetSize().y / m_Size.y) - 1)
-	{
-		DownRow -= 1;
-		m_Board->GetBlock(DownRow, m_ColIndex)->SetMoveEnable(false);
-	}
-	return  m_Board->GetBlock(DownRow, m_ColIndex)->GetMoveEnable();
 }

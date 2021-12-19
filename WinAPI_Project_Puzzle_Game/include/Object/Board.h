@@ -14,9 +14,12 @@ public:
 private :
 	int m_BlockCount;
 	int m_BlockCapacity;
+	float m_TopYPos;
 	CCell** m_vecCells;
 	CBlock** m_vecBlocks;
-	std::vector<CSharedPtr<CGameObject>> m_RenderObjects;
+	std::vector<bool> m_ColsDestroyed;
+	std::vector<int> m_ColDestroyedMinRow;
+	std::vector<int>   m_NumColsDestroyed;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -90,9 +93,9 @@ public :
 		return RowIndex * m_ColCount + ColIndex;
 	}
 public :
-	void SetCell(int Index, CCell* NewCell)
+	void SetCell(int RowIndex, int ColIndex,  CCell* NewCell)
 	{
-		m_vecCells[Index] = NewCell;
+		m_vecCells[RowIndex * m_ColCount + ColIndex] = NewCell;
 	}
 	void SetPos(const Vector2& Pos)
 	{
@@ -115,9 +118,9 @@ public :
 	void MouseLButton(float DeltaTime);
 	void CompareClicks();
 	void ReceiveClicks();
-	void ChangeUpperBlockStates(int RowIndex, int ColIndex);
-	void CreateNewCells();
-	void SortRenderObject(int Left, int Right);
+	bool ChangeUpperBlockStates(int RowIndex, int ColIndex);
+	void CreateNewCells(int ColIndex, int NumCells);
+	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 public:
 	void Start();

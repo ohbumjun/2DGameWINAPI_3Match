@@ -127,8 +127,8 @@ public:
 
 private:
 	void Logic();
-	void Update(float DeltaTime);
-	void PostUpdate(float DeltaTime);
+	bool Update(float DeltaTime);
+	bool PostUpdate(float DeltaTime);
 	void Render(float DeltaTime);
 
 private:
