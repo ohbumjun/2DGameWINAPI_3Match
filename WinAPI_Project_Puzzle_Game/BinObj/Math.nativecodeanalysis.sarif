@@ -1,0 +1,400 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.30.30705.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\bin\\HostX64\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00007FF715600C80 -il C:\\Users\\dhsys\\AppData\\Local\\Temp\\_CL_7e9ef16aast -typedil -f Math.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -pc \\:/ -D_MSC_VER=1930 -D_MSC_FULL_VER=193030705 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -nologo -W 3 -diagnostics:column -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -MDd -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -Zc:wchar_t -Zc:forScope -permissive- -Fo../BinObj/Math.obj -Fd../BinObj/vc143.pdb -external:W 3 -Gd -analyze:projectdirectory C:\\Users\\dhsys\\Desktop\\Coding\\CodingProject\\C++Project_Personal\\WinApi\\WinAPI_Project_Puzzle_Game\\WinAPI_Project_Puzzle_Game\\include -analyze:rulesetdirectory ;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets; -analyze:ruleset C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:quiet -analyze:plugin C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\bin\\HostX64\\x64\\EspXEngine.dll -FC -errorreport:prompt -I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\include -I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\atlmfc\\include -I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\cppwinrt -I C:\\Users\\dhsys\\Desktop\\Coding\\CodingProject\\C++Project_Personal\\WinApi\\WinAPI_Project_Puzzle_Game\\WinAPI_Project_Puzzle_Game\\include\\Include\\um -external:I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\include -I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\include -external:I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\atlmfc\\include -I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.30.30705\\atlmfc\\include -external:I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\VS\\include -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\ucrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\um -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\winrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\cppwinrt -external:I C:\\Users\\dhsys\\Desktop\\Coding\\CodingProject\\C++Project_Personal\\WinApi\\WinAPI_Project_Puzzle_Game\\WinAPI_Project_Puzzle_Game\\include\\Include\\um -I C:\\Users\\dhsys\\Desktop\\Coding\\CodingProject\\C++Project_Personal\\WinApi\\WinAPI_Project_Puzzle_Game\\WinAPI_Project_Puzzle_Game\\include\\Include\\um",
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/ui/uiwidget.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "0aa96dd97c040bd3564adf12d92a7d7fe24a46ab5529638100d3bb32ccb1dea6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/ui/uiwidget.h"
+          },
+          "hashes": {
+            "sha-256": "39f09e13a6f79e0b788e626da0da848f748699b3029eb99d4f1cba4e0bd73bab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/ref.h"
+          },
+          "hashes": {
+            "sha-256": "fcad492fdba2c1482d3df193a0b0ffb84fe75b9c3858a9f953c5fdbc5753c2e9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/gameinfo.h"
+          },
+          "hashes": {
+            "sha-256": "acc7678c40ba12505112d4e7828c9aed62b3511ed2f89c880f6f571210557e12"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/resource.h"
+          },
+          "hashes": {
+            "sha-256": "cb348ed889b72f19a7af85a9c4454f75bc52a143bb085991f763aeac38b719eb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/sharedptr.h"
+          },
+          "hashes": {
+            "sha-256": "0d7ae29bfabe0b349eac0994769c29a7e405a68ea59498c6149d575e059a1563"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/math.h"
+          },
+          "hashes": {
+            "sha-256": "30324bbd754bccf525e6822520c0554956e6ec9cf521bb351dc7a56583252552"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/flag.h"
+          },
+          "hashes": {
+            "sha-256": "f18660346a172db034788da4b6359bbe63a6aea326956d7673884d61ae18a559"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/UI/UIImage.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "a837bb49531f35ca5ecc40b956d8f180bb04ba693c50d8ca161a5c417e976057"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/ui/uiimage.h"
+          },
+          "hashes": {
+            "sha-256": "f91b1f32bedf34c927f195054743edac503f3174673069cf3cc31887089ee105"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/resource/texture.h"
+          },
+          "hashes": {
+            "sha-256": "a4b028ba79f93cdce134a18296349e85b5684ad6d97b6ded15785955585fc199"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/ui/uiwindow.h"
+          },
+          "hashes": {
+            "sha-256": "54e3b22cc9011eba45710c1465527d40a40fe5530ada74f8f0e998a139c2d51f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/resource/resourcemanager.h"
+          },
+          "hashes": {
+            "sha-256": "491f762836adcac2fc72512469c67352b4644c9e2533c133f3fb7f295b5df68c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/resource/animationsequence.h"
+          },
+          "hashes": {
+            "sha-256": "f4dca12d9d35a3e51103ebb9df7e1d121ce4efe3c1917d34ea7302aea04331f5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/timer.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "3a8532aeef911041e2243397d982f5a83c92b84fb39c08cc4b8d835f1e077879"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/timer.h"
+          },
+          "hashes": {
+            "sha-256": "a617b648fd75f52360e55c55cd4f04122346270e72ce2a86be7f7548a9a088b5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/gamemanager.h"
+          },
+          "hashes": {
+            "sha-256": "4373beb2ae5861fca683a8c0f89d19fddc869c6992e756b9e632a0273cb416ef"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Input.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "883f460831ee1ccd54d6957667d517ad49336a9f47d319aa6021406d1d1e354f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/stage/stagemanager.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "36c7720b695508f7568f577c9ed9ffbaf1d891d1a2d96a928a8c918eeed222bc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/stage/stagemanager.h"
+          },
+          "hashes": {
+            "sha-256": "36e001fd24ca3f4c8c59f216346d1dccce9261a283b5413bc79f0b698f29f3af"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/stage/stage.h"
+          },
+          "hashes": {
+            "sha-256": "d8d2a15eb230a66658ed9e4b4f252dd534b7574a392550eae7fbee948aca88a1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/object/gameobject.h"
+          },
+          "hashes": {
+            "sha-256": "286c6b854a08c359ff7b86758398e134847ca3bd9d1441ee87dbec2817007a98"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/object/board.h"
+          },
+          "hashes": {
+            "sha-256": "b6bf86d6d3b4e415dca3a9a73493b43d0ff48a2b5dda65e07103576cef511348"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/object/cell.h"
+          },
+          "hashes": {
+            "sha-256": "981a1b561b7adee256784df9028ad9920f5d3e48b59b7edaf202fcfe7930b9e5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/object/block.h"
+          },
+          "hashes": {
+            "sha-256": "a84aa093c54782c42dba3f3d554569c1a019a8afadb93a574bf9ffe8fc759e51"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Stage/Stage.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "a903f83444d5f7548807f761d2e2fa3ed563e826d6eba8a7b3d131131ec20140"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/stage/basicstage.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "2815d46a3c9b85a172b4602fbfee1b071d298c60775949295a49828f46942461"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/stage/basicstage.h"
+          },
+          "hashes": {
+            "sha-256": "2f320f9a0a18ddcdc44514ad5ee2dbcdce613633ad3f98321fa612a41cbdfb25"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Resource/Texture.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "c38a9e956b68f0c2a87e77d9fb9b823465350e6eaef6147a1fcabdf8ec124bc0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/path/pathmanager.h"
+          },
+          "hashes": {
+            "sha-256": "a9d7afb99e2fe589cc34423907ac994aaad34da81f169484684d1efc451564f4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/resource/resourcemanager.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "a6700a39a4580e2635772483e4185b3125e64cc6b20f34ee4cb183a87adf589a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Resource/AnimationSequence.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "59b36ae368609c13f60f87529e2ab4add4615836dc1bd365a770bc7a68e10a8b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/ref.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "640d0633b98ed09f619c6855e4f7a5212da20fcc64b81e8d9a0d08571d9dcc90"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Path/PathManager.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "01dce5953b1d55c1f3daeb0d36a9ef1dc6b2f9663b6234a59981601d16d475bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Object/GameObject.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "a479b7cccf40468a0f2c602608ebede82d799f0230cee01acf026fb32f2ae929"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/animation/animation.h"
+          },
+          "hashes": {
+            "sha-256": "c4d69051de0f933e3d62ad3d5c6f0df20f902aa2d796fadf4db12e885a91b13a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/animation/animationinfo.h"
+          },
+          "hashes": {
+            "sha-256": "be5d6edf2f5c8e7822e22dcd56848d1b019a681eb539bb76b977e6a0a33a149a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/dhsys/Desktop/Coding/CodingProject/C++Project_Personal/WinApi/WinAPI_Project_Puzzle_Game/WinAPI_Project_Puzzle_Game/include/Object/Cell.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "0ae36e995cedbcee5de099ac270aead471533232c093ba9804b43e02fdad2f43"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/object/block.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "779b625196e72ffcf2620081143c958b621ac8f9368f1149a79f999cf7b118e4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/dhsys/desktop/coding/codingproject/c++project_personal/winapi/winapi_project_puzzle_game/winapi_project_puzzle_game/include/math.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "287fc4965b5f71237e644c7ff7338f880fbba6af6f32b3bc301968e12294c478"
+          }
+        }
+      ]
+    }
+  ]
+}

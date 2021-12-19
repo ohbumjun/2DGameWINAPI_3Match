@@ -70,9 +70,9 @@ void CCell::Update(float DeltaTime)
 		Move(Vector2(0.0f, 50.f));
 
 		// Update Row Index
-		float RealBoardSize = m_Board->GetSize().y / 2;
-		float NewPosY = m_Pos.y + RealBoardSize;
-		m_RowIndex = (int)(NewPosY / m_Size.y);
+		// float RealBoardSize = m_Board->GetSize().y / 2;
+		// float NewPosY = m_Pos.y + RealBoardSize;
+		// m_RowIndex = (int)(NewPosY / m_Size.y);
 	}
 	else
 	{
@@ -86,29 +86,14 @@ void CCell::Update(float DeltaTime)
 		// m_Index = m_Board->GetNewIndex(m_RowIndex, m_ColIndex);
 
 		// Board 정보 Update
-		m_Board->SetCell(m_RowIndex, m_ColIndex, this);
+		// m_Board->SetCell(m_RowIndex, m_ColIndex, this);
 	}
 }
 
 void CCell::PostUpdate(float DeltaTime)
 {
 	CGameObject::PostUpdate(DeltaTime);
-	/*
-	if (m_Pos.y >= m_NewYPos)
-	{
-		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
-		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
 
-		// MoveEnable Settting 
-		// m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
-
-		// 새로운 Idx 세팅
-		m_Index = m_Board->GetNewIndex(m_RowIndex, m_ColIndex);
-
-		// Board 정보 Update
-		m_Board->SetCell(m_RowIndex, m_ColIndex, this);
-	}
-	*/
 }
 
 void CCell::Render(HDC hDC)

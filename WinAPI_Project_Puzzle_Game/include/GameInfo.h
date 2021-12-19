@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
+#include <queue>
 #include "resource.h"
 
 // Header

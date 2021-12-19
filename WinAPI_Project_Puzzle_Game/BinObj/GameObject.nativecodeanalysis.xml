@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\dhsys\Desktop\Coding\CodingProject\C++Project_Personal\WinApi\WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game\include\Object\</FILEPATH>
+      <FILENAME>GameObject.cpp</FILENAME>
+      <LINE>5</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>'CGameObject::m_PrevIdx' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6).</DESCRIPTION>
+    <FUNCTION>CGameObject::{ctor}</FUNCTION>
+    <DECORATED>??0CGameObject@@QEAA@XZ</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>CGameObject::m_PrevIdx</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\dhsys\Desktop\Coding\CodingProject\C++Project_Personal\WinApi\WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game\include\Object\</FILEPATH>
+      <FILENAME>GameObject.cpp</FILENAME>
+      <LINE>5</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>'CGameObject::m_YIdx' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6).</DESCRIPTION>
+    <FUNCTION>CGameObject::{ctor}</FUNCTION>
+    <DECORATED>??0CGameObject@@QEAA@XZ</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>CGameObject::m_YIdx</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

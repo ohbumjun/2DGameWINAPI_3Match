@@ -15,11 +15,11 @@ private :
 	int m_BlockCount;
 	int m_BlockCapacity;
 	float m_TopYPos;
+	float m_MiddelYPos;
 	CCell** m_vecCells;
 	CBlock** m_vecBlocks;
-	std::vector<bool> m_ColsDestroyed;
-	std::vector<int> m_ColDestroyedMinRow;
-	std::vector<int>   m_NumColsDestroyed;
+	std::vector<std::vector<int>> m_ChangedCellRowInfo;
+	std::vector<int> m_NewCellNeeded;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -32,7 +32,7 @@ private :
 	// 행, 열 , 한칸 크기
 	int m_RowCount;
 	int m_ColCount;
-	Vector2 m_SquareSize;
+	Vector2 m_SingleBlockSize;
 
 	int m_StartX;
 	int m_StartY;
@@ -113,15 +113,21 @@ public :
 	{
 		m_Size = Vector2(x, y);
 	}
-public :
+public : // Init
 	bool CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize);
+public : // Call Back
 	void MouseLButton(float DeltaTime);
+public : // Updates
 	void CompareClicks();
 	void ReceiveClicks();
-	bool ChangeUpperBlockStates(int RowIndex, int ColIndex);
-	void CreateNewCells(int ColIndex, int NumCells);
+	bool ChangeUpperCellsPos(int RowIndex, int ColIndex);
+	bool ChangeUpperCellIdxInfo(int RowIndex, int ColIndex);
+	bool ChangeCellsIdx();
+	void CreateNewCells();
+	void ChangeCellYIdx(int RowIndex, int ColIndex);
+public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
-	int SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
+	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 public:
 	void Start();
 	bool Init();

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\dhsys\Desktop\Coding\CodingProject\C++Project_Personal\WinApi\WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game\include\Resource\</FILEPATH>
+      <FILENAME>Texture.cpp</FILENAME>
+      <LINE>6</LINE>
+      <COLUMN>10</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>'CTexture::m_TextureType' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6).</DESCRIPTION>
+    <FUNCTION>CTexture::{ctor}</FUNCTION>
+    <DECORATED>??0CTexture@@QEAA@XZ</DECORATED>
+    <FUNCLINE>6</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>CTexture::m_TextureType</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>
