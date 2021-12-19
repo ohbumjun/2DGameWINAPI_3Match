@@ -62,13 +62,10 @@ void CCell::Update(float DeltaTime)
 		Destroy();
 	}
 		
-	// 자기 아래 Block 상태 확인 --> Empty면 계속 내려가게 세팅한다. 
-	// if (CanMove() && !m_NewlyCreated)
-	if (m_Pos.y < m_NewPos.y)
+	if (m_Pos.y < m_NewPos.y) // 아래 이동
 	{
 		// 아래로 이동 
 		Move(Vector2(0.0f, 30.f));
-
 		m_IsMoving = true;
 
 		// Update Row Index
@@ -76,20 +73,23 @@ void CCell::Update(float DeltaTime)
 		// float NewPosY = m_Pos.y + RealBoardSize;
 		// m_RowIndex = (int)(NewPosY / m_Size.y);
 	}
+	else if (m_Pos.x < m_NewPos.x) // 오른쪽 이동 
+	{
+		// 아래로 이동 
+		Move(Vector2(30.0f, 0.f));
+		m_IsMoving = true;
+	}
+	else if (m_Pos.x > m_NewPos.x) // 왼쪽 이동 
+	{
+		// 아래로 이동 
+		Move(Vector2(30.f, 0.f));
+		m_IsMoving = true;
+	}
 	else
 	{
 		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
-
 		m_IsMoving = false;
-		// MoveEnable Settting 
-		// m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
-
-		// 새로운 Idx 세팅
-		// m_Index = m_Board->GetNewIndex(m_RowIndex, m_ColIndex);
-
-		// Board 정보 Update
-		// m_Board->SetCell(m_RowIndex, m_ColIndex, this);
 	}
 }
 

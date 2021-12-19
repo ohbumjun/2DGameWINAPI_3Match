@@ -35,15 +35,15 @@ private :
 	int m_ColCount;
 	Vector2 m_SingleBlockSize;
 
-	int m_StartX;
-	int m_StartY;
-	int m_EndX;
-	int m_EndY;
-
 	bool m_ClickFirst;
-	bool m_ClickSecond;
 	Vector2 m_ClickFirstPos;
-	Vector2 m_ClickSecondPos;
+	int m_ClickFirstIdxX; // 열
+	int m_ClickFirstIdxY; // 행 
+
+	bool m_ClickSec;
+	Vector2 m_ClickSecPos;
+	int m_ClickSecIdxX; // 열
+	int m_ClickSecIdxY; // 행
 
 	bool m_Start;
 	Vector2 m_Resolution; // Width, Height

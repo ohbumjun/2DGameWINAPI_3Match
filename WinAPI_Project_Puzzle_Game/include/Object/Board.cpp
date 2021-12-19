@@ -7,14 +7,10 @@
 CBoard::CBoard() :
 	m_RowCount(0),
 	m_ColCount(0),
-	m_EndX(-1),
-	m_EndY(-1),
-	m_StartX(-1),
-	m_StartY(-1),
 	m_ClickFirst(false),
-	m_ClickSecond(false),
+	m_ClickSec(false),
 	m_ClickFirstPos{},
-	m_ClickSecondPos{},
+	m_ClickSecPos{},
 	m_Start(false),
 	m_BlockCount(0),
 	m_BlockCapacity(50),
@@ -155,32 +151,51 @@ void CBoard::MouseLButton(float DeltaTime)
 	if (MousePos.x < 0.f || MousePos.x > m_Size.x || MousePos.y < 0.f || MousePos.y > m_Size.y)
 		return;
 
-	// 선택된 Block 의 Idx 
-	int BlockIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
-	int BlockIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 
 	// Tile 선택이 안되면, return 처리 
 	if (!m_ClickFirst)
 	{
 		m_ClickFirst = true;
 		m_ClickFirstPos = MousePos;
+
+		// 선택된 Block 의 Idx 
+		m_ClickFirstIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
+		m_ClickFirstIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 	}
 	else
 	{
-		m_ClickSecond = true;
-		m_ClickSecondPos = MousePos;
+		m_ClickSec = true;
+		m_ClickSecPos = MousePos;
 		m_ClickFirst = false;
+
+		// 선택된 Block 의 Idx 
+		m_ClickSecIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
+		m_ClickSecIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
+	
+		if ((abs(m_ClickFirstIdxX - m_ClickSecIdxX) <= 1) && (abs(m_ClickFirstIdxY - m_ClickSecIdxY) <= 1))
+		{
+			// 선택된 녀석 Block 상태 바꾸기 
+			int FirstCellIdx = m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX;
+			int SecCellIdx  = m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX;
+	
+			// New Pos 세팅 
+			m_vecCells[FirstCellIdx]->SetNewPos(m_ClickFirstPos);
+			m_vecCells[SecCellIdx]->SetNewPos(m_ClickSecPos);
+
+			m_ClickFirst = false;
+			m_ClickSec = false;
+		}
 	}
 
-	// 선택된 녀석 Block 상태 바꾸기 
-	int SIndex = BlockIdxY * m_ColCount + BlockIdxX;
-	m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
+
+
+	// m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
 	// m_vecBlocks[SIndex]->SetMoveEnable(true);
 }
 
 void CBoard::CompareClicks()
 {
-	if (!m_ClickFirst || !m_ClickSecond)
+	if (!m_ClickFirst || !m_ClickSec)
 		return;
 }
 
