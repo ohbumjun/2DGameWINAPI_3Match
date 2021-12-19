@@ -25,6 +25,10 @@ private :
 	BlockType		 m_BlockType;
 	
 public :
+	void SetMoveSpeed(float MoveSpeed)
+	{
+		m_MoveSpeed = MoveSpeed;
+	}
 	void SetSwapping(bool IsSwap)
 	{
 		m_IsSwapping = IsSwap;

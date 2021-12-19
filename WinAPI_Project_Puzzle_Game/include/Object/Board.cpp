@@ -15,7 +15,9 @@ CBoard::CBoard() :
 	m_BlockCapacity(50),
 	m_ChangedCellRowInfo{},
 	m_ClickEnable(true),
-	m_IsTwoMoving(false)
+	m_IsTwoMoving(false),
+	m_InitFirstCellDiff{},
+	m_InitSecCellDiff{}
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -121,6 +123,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewCell->SetSize(m_SingleBlockSize);
 			NewCell->SetYIdx(1);
 			NewCell->SetNewPos(Pos.x, Pos.y);
+			NewCell->SetMoveSpeed(m_SingleBlockSize.x);
 			m_vecCells[Index] = NewCell;
 
 			// DownWard Real Block
@@ -160,7 +163,6 @@ void CBoard::MouseLButton(float DeltaTime)
 		m_ClickFirstIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 		m_ClickFirstIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 		
-
 		m_ClickFirstPos = m_vecBlocks[m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX]->GetPos();
 
 		m_Click = 1;
@@ -198,6 +200,9 @@ void CBoard::MouseLButton(float DeltaTime)
 
 			m_ClickFirstCell = m_vecCells[FirstCellIdx];
 			m_ClickSecCell  = m_vecCells[SecCellIdx];
+
+			m_InitFirstCellDiff = m_vecCells[FirstCellIdx]->GetNewPos() - m_vecCells[FirstCellIdx]->GetPos();
+			m_InitSecCellDiff  = m_vecCells[SecCellIdx]->GetNewPos() - m_vecCells[SecCellIdx]->GetPos();
 
 			m_Click = 0;
 
@@ -494,6 +499,7 @@ void CBoard::CreateNewCells()
 			NewCell->SetSize(m_SingleBlockSize);
 			NewCell->SetYIdx(1);
 			NewCell->SetNewPos(Pos);
+			NewCell->SetMoveSpeed(m_SingleBlockSize.x);
 			m_vecCells[Index] = NewCell;
 		}
 	}
@@ -535,19 +541,49 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 	Vector2 FirstCellDf = m_ClickFirstCell->GetNewPos() - m_ClickFirstCell->GetPos();
 	Vector2 SecCellDf  = m_ClickSecCell->GetNewPos() - m_ClickSecCell->GetPos();
 
-	if (FirstCellDf.Length() > 0.1f)
+	if (FirstCellDf.Length() > 1.f)
 	{
-		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + FirstCellDf * DeltaTime * 4);
+		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * DeltaTime);
 	}
-	if (SecCellDf.Length() > 0.1f)
+	if (SecCellDf.Length() > 1.f)
 	{
-		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + SecCellDf * DeltaTime * 4);
+		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * DeltaTime);
 	}
-	if (FirstCellDf.Length() <= 0.1f && SecCellDf.Length() < 0.1f)
+	if (FirstCellDf.Length() <=1.f && SecCellDf.Length() <= 1.f)
 	{
-		m_IsTwoMoving = true;
+		// NewPos로 완전히 세팅 
 		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetNewPos());
 		m_ClickSecCell->SetPos(m_ClickSecCell->GetNewPos());
+
+		// Dir 세팅 
+		m_ClickFirstCell->SetDir(Vector2(0.f, 0.f));
+		m_ClickSecCell->SetDir(Vector2(0.f, 0.f));
+
+		// IsSwapping 조건 세팅
+		m_ClickFirstCell->SetSwapping(false);
+		m_ClickSecCell->SetSwapping(false);
+
+		// Cell Idx 정보 세팅
+		int FirstCellRow = -1, FirstCellCol = -1, SecondCellRow = -1, SecondCellCol = -1;
+		int FirstCellIdx = -1, SecondCellIdx = -1;
+
+		FirstCellRow      = m_ClickFirstCell->GetRowIndex();
+		FirstCellCol       = m_ClickFirstCell->GetColIndex();
+		FirstCellIdx       = FirstCellRow * m_ColCount + FirstCellCol;
+
+		SecondCellRow = m_ClickSecCell->GetRowIndex();
+		SecondCellCol  = m_ClickSecCell->GetColIndex();
+		SecondCellIdx = SecondCellRow * m_ColCount + SecondCellCol;
+
+		m_ClickFirstCell->SetIdxInfos(SecondCellRow, SecondCellCol, SecondCellIdx);
+		m_ClickSecCell->SetIdxInfos(FirstCellRow, FirstCellCol, FirstCellIdx);
+
+		// 실제 vecCell 내의 정보 세팅 
+		CCell* tempCell					= m_vecCells[FirstCellIdx];
+		m_vecCells[FirstCellIdx]	    = m_vecCells[SecondCellIdx];
+		m_vecCells[SecondCellIdx] = tempCell;
+
+		m_IsTwoMoving = false;
 	}
 
 }

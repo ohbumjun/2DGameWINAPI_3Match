@@ -76,7 +76,7 @@ void CCell::Update(float DeltaTime)
 	// 아래 이동 
 	if (m_Pos.y < m_NewPos.y)
 	{
-		Move(Vector2(0.f, 30.f));
+		Move(Vector2(0.f, 1.f));
 		m_IsMoving = true;
 	}
 	else

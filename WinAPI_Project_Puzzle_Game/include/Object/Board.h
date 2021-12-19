@@ -52,6 +52,9 @@ private :
 	int   m_ClickSecIdxX; // ї­
 	int   m_ClickSecIdxY; // За
 
+	Vector2 m_InitFirstCellDiff;
+	Vector2 m_InitSecCellDiff;
+
 	// Etc.
 	bool m_Start;
 	Vector2 m_Resolution; // Width, Height
