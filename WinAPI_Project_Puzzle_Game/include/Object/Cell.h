@@ -19,18 +19,27 @@ private :
 	class CBoard* m_Board;
 	float				 m_MoveSpeed;
 	float				 m_TimeScale;
+	bool               m_IsSwapping;
 	bool               m_IsMoving;
 	std::vector<const char*> m_AnimalNames;
 	BlockType		 m_BlockType;
 	
 public :
-	void SetBoard(CBoard* Board)
+	void SetSwapping(bool IsSwap)
 	{
-		m_Board = Board;
+		m_IsSwapping = IsSwap;
 	}
-	void SetCellType(CellType Type)
+	void SetBoard(const CBoard* Board)
+	{
+		m_Board = const_cast<CBoard*>(Board);
+	}
+	void SetCellType(const CellType Type)
 	{
 		m_CellType = Type;
+	}
+	void SetDir(const Vector2& Dir)
+	{
+		m_Dir = Dir;
 	}
 	void SetCellInitInfo(const Vector2 Pos, const Vector2& Size, int RowIndex, int ColIndex, int Index)
 	{
@@ -55,6 +64,10 @@ public :
 		m_Index		= Index;
 	}
 public :
+	bool IsSwapping() const
+	{
+		return m_IsSwapping;
+	}
 	CellType GetCellType()
 	{
 		return m_CellType;
@@ -62,6 +75,10 @@ public :
 	float GetYPos() const
 	{
 		return m_Pos.y;
+	}
+	Vector2 GetNewPos() const
+	{
+		return m_NewPos;
 	}
 	bool IsMoving() const
 	{
@@ -74,7 +91,7 @@ public :
 	virtual void PostUpdate(float DeltaTime) override;
 	virtual void Render(HDC hDC) override;
 	CCell* Clone();
-	void Move(const Vector2& Dir);
-	void Move(const Vector2& Dir, float Speed);
+	bool Move(const Vector2& Dir);
+	bool Move(const Vector2& Dir, float Speed);
 };
 

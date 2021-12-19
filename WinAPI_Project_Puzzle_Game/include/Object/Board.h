@@ -12,11 +12,11 @@ public:
 	CBoard();
 	~CBoard();
 private :
+	// 초기 Block 개수, 및 Allocator  , Pos 정보 
 	int m_BlockCount;
 	int m_BlockCapacity;
 	float m_TopYPos;
 	float m_MiddelYPos;
-	bool m_ClickEnable;
 	CCell** m_vecCells;
 	CBlock** m_vecBlocks;
 	std::vector<std::vector<int>> m_ChangedCellRowInfo;
@@ -28,31 +28,35 @@ private :
 
 	// Board 전체 크기
 	Vector2 m_Size;
+
 	// Board 위치
 	Vector2 m_Pos;
+
 	// 행, 열 , 한칸 크기
 	int m_RowCount;
 	int m_ColCount;
 	Vector2 m_SingleBlockSize;
 
-	int m_Click;
+	// Click
+	bool m_ClickEnable;
+	bool m_IsTwoMoving;
+	int   m_Click;
+
+	CCell* m_ClickFirstCell;
 	Vector2 m_ClickFirstPos;
-	int m_ClickFirstIdxX; // 열
-	int m_ClickFirstIdxY; // 행 
+	int   m_ClickFirstIdxX; // 열
+	int   m_ClickFirstIdxY; // 행 
 
+	CCell* m_ClickSecCell;
 	Vector2 m_ClickSecPos;
-	int m_ClickSecIdxX; // 열
-	int m_ClickSecIdxY; // 행
+	int   m_ClickSecIdxX; // 열
+	int   m_ClickSecIdxY; // 행
 
+	// Etc.
 	bool m_Start;
 	Vector2 m_Resolution; // Width, Height
 
-	/*
-	std::list<CSharedPtr<CGameObject>> m_ObjList;
-	int m_RenderCount;
-	int m_RenderCapacity;
-	CGameObject** m_RenderArray;
-	*/
+
 public :
 	int GetRowCount() const
 	{
@@ -122,10 +126,11 @@ public : // Updates
 	void ReceiveClicks();
 	bool ChangeUpperCellsPos(int RowIndex, int ColIndex);
 	bool ChangeUpperCellIdxInfo(int RowIndex, int ColIndex);
-	bool ChangeCellsIdx();
+	bool ChangeCellsInfos();
 	void CreateNewCells();
 	void ChangeCellYIdx(int RowIndex, int ColIndex);
 	bool CheckClickEnable();
+	void MoveTwoClickedCells(float DeltaTime);
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);

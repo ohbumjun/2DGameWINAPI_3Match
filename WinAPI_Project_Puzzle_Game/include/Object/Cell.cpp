@@ -12,7 +12,8 @@ CCell::CCell() :
 	m_Board(nullptr),
 	m_AnimalNames{"Panda","Bear","Parrot","Elephant","Penguin","Duck"},
 	m_IsMoving(false),
-	m_NewPos{}
+	m_NewPos{},
+	m_IsSwapping(false)
 {
 }
 
@@ -62,12 +63,20 @@ void CCell::Update(float DeltaTime)
 		Destroy();
 	}
 
-	/*
+	if (m_IsSwapping) // 바뀌는 중이라면, 
+		return;
+	
+	// 멈추게 끔 세팅해줘야 한다. 
+	// 분기처리를 어떻게 해줘야 하는가 
+	// 현재 중요한 것은, 마우스 클릭으로 이동하는 애들, 그냥 아래가 비어서
+	// 떨이지는 애들을 분리해서 작업해야 한다.
+	// 먼저 , 클릭하면 없애줘서, 애들을 내려보자. 
+	// 먼저, 현재 Dir가 0,0 이면 멈춘 상태 
+	
 	// 아래 이동 
-	if (m_Pos.y < m_NewPos.y) // 아래 이동
+	if (m_Pos.y < m_NewPos.y)
 	{
-		// 아래로 이동 
-		Move(Vector2(0.0f, 30.f));
+		Move(Vector2(0.f, 30.f));
 		m_IsMoving = true;
 	}
 	else
@@ -75,8 +84,8 @@ void CCell::Update(float DeltaTime)
 		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
 		m_IsMoving = false;
+		// m_Dir = Vector2(0.f, 0.f);
 	}
-	*/
 }
 
 void CCell::PostUpdate(float DeltaTime)
@@ -95,14 +104,21 @@ CCell* CCell::Clone()
 	return new CCell(*this);
 }
 
-void CCell::Move(const Vector2& Dir)
+bool CCell::Move(const Vector2& Dir)
 {
+	// if (Dir.x == 0.f && Dir.y == 0.f)
+	//		return false;
+		
 	Vector2 CurrentMove = Dir * m_MoveSpeed * CGameManager::GetInst()->GetDeltaTime() * m_TimeScale;
 	m_Pos += CurrentMove;
+	return true;
 }
 
-void CCell::Move(const Vector2& Dir, float Speed)
+bool CCell::Move(const Vector2& Dir, float Speed)
 {
+	// if (Dir.x == 0.f && Dir.y == 0.f)
+	//		return false;
 	Vector2 CurrentMove = Dir * Speed * CGameManager::GetInst()->GetDeltaTime() * m_TimeScale;
 	m_Pos += CurrentMove;
+	return true;
 }

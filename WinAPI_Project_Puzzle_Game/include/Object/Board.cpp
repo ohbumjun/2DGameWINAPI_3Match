@@ -14,7 +14,8 @@ CBoard::CBoard() :
 	m_BlockCount(0),
 	m_BlockCapacity(50),
 	m_ChangedCellRowInfo{},
-	m_ClickEnable(true)
+	m_ClickEnable(true),
+	m_IsTwoMoving(false)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -37,7 +38,6 @@ CBoard::~CBoard()
 
 bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 {
-
 	// 기존 Board 제거 
 	// m_vecCells.clear();
 	// m_vecBlocks.clear();
@@ -56,7 +56,6 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 		std::vector<int> vec(m_ColCount, 0);
 		m_ChangedCellRowInfo.push_back(vec);
 	}
-
 	m_NewCellNeeded.resize(m_ColCount);
 
 	// 크기 재할당 
@@ -82,7 +81,6 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	// 1) Set가 없을 때까지, 찾은 다음 , 찾으면 return 
 	// 2) (심화) 적어도 1개는 세팅될 수 있도록 세팅하기 
 	// 그 다음 구한 idx 들을 차례대로 Cell에 세팅해서 해당 idx에 맞는 Cell Type --> Texture 세팅하기 
-
 
 	// Cell, Block 세팅 
 	Vector2 StartOffset = Vector2(0, -m_Size.y / 2.f);
@@ -150,25 +148,31 @@ void CBoard::MouseLButton(float DeltaTime)
 	if (MousePos.x < 0.f || MousePos.x > m_Size.x || MousePos.y < 0.f || MousePos.y > m_Size.y)
 		return;
 
+	// Cell 을 없애보는 Test Code 
+	// int Col   = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
+	// int Row = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
+	// m_vecBlocks[Row * m_ColCount + Col]->SetBlockType(BlockType::EMPTY);
 
 	// Tile 선택이 안되면, return 처리 
 	if (m_Click == 0)
 	{
-		m_ClickFirstPos = MousePos;
-
 		// 선택된 Block 의 Idx 
 		m_ClickFirstIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 		m_ClickFirstIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 		
+
+		m_ClickFirstPos = m_vecBlocks[m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX]->GetPos();
+
 		m_Click = 1;
 	}
 	else if (m_Click == 1)
 	{
-		m_ClickSecPos = MousePos;
-
 		// 선택된 Block 의 Idx 
 		m_ClickSecIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 		m_ClickSecIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
+
+
+		m_ClickSecPos = m_vecBlocks[m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX]->GetPos();
 	
 		if ((abs(m_ClickFirstIdxX - m_ClickSecIdxX) <= 1) && (abs(m_ClickFirstIdxY - m_ClickSecIdxY) <= 1))
 		{
@@ -179,7 +183,28 @@ void CBoard::MouseLButton(float DeltaTime)
 			// New Pos 세팅 
 			m_vecCells[FirstCellIdx]->SetNewPos(m_ClickSecPos);
 			m_vecCells[SecCellIdx]->SetNewPos(m_ClickFirstPos);
+			
+			// Dir 세팅 
+			Vector2 FirstCellDir = m_ClickSecPos - m_ClickFirstPos;
+			FirstCellDir.Normalize();
+			Vector2 SecCellDir  = m_ClickFirstPos - m_ClickSecPos;
+			SecCellDir.Normalize();
 
+			m_vecCells[FirstCellIdx]->SetDir(FirstCellDir);
+			m_vecCells[FirstCellIdx]->SetSwapping(true);
+
+			m_vecCells[SecCellIdx]->SetDir(SecCellDir);
+			m_vecCells[SecCellIdx]->SetSwapping(true);
+
+			m_ClickFirstCell = m_vecCells[FirstCellIdx];
+			m_ClickSecCell  = m_vecCells[SecCellIdx];
+
+			m_Click = 0;
+
+			m_IsTwoMoving = true;
+		}
+		else
+		{
 			m_Click = 0;
 		}
 	}
@@ -281,7 +306,9 @@ bool CBoard::Update(float DeltaTime)
 				{
 					// 메모리 해제
 					SAFE_DELETE(m_vecCells[Index]);
+
 					ChangeUpperCellsPos(R, C);
+
 					ChangeUpperCellIdxInfo(R, C);
 					continue;
 				}
@@ -294,11 +321,14 @@ bool CBoard::Update(float DeltaTime)
 			}
 		}
 
-		// 3) 새로운 Idx 정보 세팅
-		ChangeCellsIdx();
+		// 3) 새로운 Idx , 방향 정보 세팅
+		ChangeCellsInfos();
 
 		// 4) 새로운 Cell 생성
 		CreateNewCells();
+
+		// 5) 클릭한 2개 Cell 들 서로 이동
+		MoveTwoClickedCells(DeltaTime);
 
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
@@ -408,7 +438,7 @@ bool CBoard::ChangeUpperCellIdxInfo(int RowIndex, int ColIndex)
 	return true;
 }
 
-bool CBoard::ChangeCellsIdx()
+bool CBoard::ChangeCellsInfos()
 {
 	int CurIdx = -1, NxtIdx = -1, AddedRow = -1;
 
@@ -424,14 +454,19 @@ bool CBoard::ChangeCellsIdx()
 			if (m_ChangedCellRowInfo[Row][Col] == 0)
 				continue;
 
+			// 방향 아래로 내려가게 세팅 
+			// m_vecCells[CurIdx]->SetDir(Vector2(0.f, 1.f));
+
 			// 새로운 Idx 구하기 
 			AddedRow = m_ChangedCellRowInfo[Row][Col];
 			NxtIdx = (Row + AddedRow) * m_ColCount + Col;
 
 			// Idx 정보 다시 세팅해주기 
 			m_vecCells[CurIdx]->SetIdxInfos(Row + AddedRow, Col, NxtIdx);
+
 			// 배열 내 Cell 정보 바꾸기
 			m_vecCells[NxtIdx] = m_vecCells[CurIdx];
+
 		}
 	};
 
@@ -478,6 +513,8 @@ void CBoard::ChangeCellYIdx(int RowIndex, int ColIndex)
 
 bool CBoard::CheckClickEnable()
 {
+	if (m_IsTwoMoving)
+		return false;
 	for (int Row = 0; Row < m_RowCount; Row++)
 	{
 		for (int Col = 0; Col < m_ColCount; Col++)
@@ -487,6 +524,32 @@ bool CBoard::CheckClickEnable()
 		}
 	}
 	return true;
+}
+
+void CBoard::MoveTwoClickedCells(float DeltaTime)
+{
+	if (!m_IsTwoMoving)
+		return;
+
+	// 현재 위치, 자신 위치 차이 계산하기 
+	Vector2 FirstCellDf = m_ClickFirstCell->GetNewPos() - m_ClickFirstCell->GetPos();
+	Vector2 SecCellDf  = m_ClickSecCell->GetNewPos() - m_ClickSecCell->GetPos();
+
+	if (FirstCellDf.Length() > 0.1f)
+	{
+		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + FirstCellDf * DeltaTime * 4);
+	}
+	if (SecCellDf.Length() > 0.1f)
+	{
+		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + SecCellDf * DeltaTime * 4);
+	}
+	if (FirstCellDf.Length() <= 0.1f && SecCellDf.Length() < 0.1f)
+	{
+		m_IsTwoMoving = true;
+		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetNewPos());
+		m_ClickSecCell->SetPos(m_ClickSecCell->GetNewPos());
+	}
+
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)
