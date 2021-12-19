@@ -11,7 +11,7 @@ CCell::CCell() :
 	m_TimeScale(1.f),
 	m_Board(nullptr),
 	m_AnimalNames{"Panda","Bear","Parrot","Elephant","Penguin","Duck"},
-	m_NewlyCreated(false),
+	m_IsMoving(false),
 	m_NewPos{}
 {
 }
@@ -69,6 +69,8 @@ void CCell::Update(float DeltaTime)
 		// 아래로 이동 
 		Move(Vector2(0.0f, 30.f));
 
+		m_IsMoving = true;
+
 		// Update Row Index
 		// float RealBoardSize = m_Board->GetSize().y / 2;
 		// float NewPosY = m_Pos.y + RealBoardSize;
@@ -79,6 +81,7 @@ void CCell::Update(float DeltaTime)
 		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
 
+		m_IsMoving = false;
 		// MoveEnable Settting 
 		// m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetMoveEnable(false);
 

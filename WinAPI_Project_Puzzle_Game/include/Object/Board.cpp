@@ -18,7 +18,8 @@ CBoard::CBoard() :
 	m_Start(false),
 	m_BlockCount(0),
 	m_BlockCapacity(50),
-	m_ChangedCellRowInfo{}
+	m_ChangedCellRowInfo{},
+	m_ClickEnable(true)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -91,6 +92,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	// Cell, Block 세팅 
 	Vector2 StartOffset = Vector2(0, -m_Size.y / 2.f);
 	// Vector2 StartOffset = Vector2(0.f, 0.f);
+
 	AnimalType Type = (AnimalType)0;
 	m_TopYPos = StartOffset.y;
 	m_MiddelYPos = 0.f;
@@ -145,10 +147,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 void CBoard::MouseLButton(float DeltaTime)
 {
-	bool MouseDown = CInput::GetInst()->GetMouseDown();
-	if (!MouseDown)
+	if (!CheckClickEnable())
 		return;
-
 	Vector2 MousePos = CInput::GetInst()->GetMousePos();
 
 	// Tile 선택
@@ -466,6 +466,19 @@ void CBoard::ChangeCellYIdx(int RowIndex, int ColIndex)
 	{
 		m_vecCells[RowIndex * m_ColCount + ColIndex]->SetYIdx(1);
 	}
+}
+
+bool CBoard::CheckClickEnable()
+{
+	for (int Row = 0; Row < m_RowCount; Row++)
+	{
+		for (int Col = 0; Col < m_ColCount; Col++)
+		{
+			if (m_vecCells[Row * m_ColCount + Col]->IsMoving())
+				return false;
+		}
+	}
+	return true;
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)

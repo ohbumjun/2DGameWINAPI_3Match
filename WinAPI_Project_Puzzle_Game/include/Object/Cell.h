@@ -19,7 +19,7 @@ private :
 	class CBoard* m_Board;
 	float				 m_MoveSpeed;
 	float				 m_TimeScale;
-	bool               m_NewlyCreated;
+	bool               m_IsMoving;
 	std::vector<const char*> m_AnimalNames;
 	BlockType		 m_BlockType;
 	
@@ -39,10 +39,6 @@ public :
 		m_RowIndex = RowIndex;
 		m_ColIndex = ColIndex;
 		m_Index = Index;
-	}
-	void SetNewlyCreated(bool Created)
-	{
-		m_NewlyCreated = Created;
 	}
 	void SetNewPos(float XPos, float YPos)
 	{
@@ -66,6 +62,10 @@ public :
 	float GetYPos() const
 	{
 		return m_Pos.y;
+	}
+	bool IsMoving() const
+	{
+		return m_IsMoving;
 	}
 public :
 	virtual void Start() override;

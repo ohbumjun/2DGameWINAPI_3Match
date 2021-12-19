@@ -61,7 +61,7 @@
     <Filter Include="05. UI\02. Window">
       <UniqueIdentifier>{418af7a4-3022-4980-b66d-7c26c95fd0a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Object\02. Block\06. SharedPtr">
+    <Filter Include="01. GameManager\06. SharedPtr">
       <UniqueIdentifier>{66411e37-27e0-4db8-97f9-18d7c27d54ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -169,7 +169,7 @@
       <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
     <ClInclude Include="SharedPtr.h">
-      <Filter>02. Object\02. Block\06. SharedPtr</Filter>
+      <Filter>01. GameManager\06. SharedPtr</Filter>
     </ClInclude>
     <ClInclude Include="Ref.h">
       <Filter>01. GameManager\02. Ref</Filter>
@@ -206,7 +206,7 @@
       <Filter>02. Object</Filter>
     </ClInclude>
     <ClInclude Include="Object\Block.h">
-      <Filter>01. GameManager</Filter>
+      <Filter>02. Object\02. Block</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

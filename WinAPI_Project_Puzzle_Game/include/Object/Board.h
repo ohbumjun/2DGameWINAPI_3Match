@@ -16,6 +16,7 @@ private :
 	int m_BlockCapacity;
 	float m_TopYPos;
 	float m_MiddelYPos;
+	bool m_ClickEnable;
 	CCell** m_vecCells;
 	CBlock** m_vecBlocks;
 	std::vector<std::vector<int>> m_ChangedCellRowInfo;
@@ -125,6 +126,7 @@ public : // Updates
 	bool ChangeCellsIdx();
 	void CreateNewCells();
 	void ChangeCellYIdx(int RowIndex, int ColIndex);
+	bool CheckClickEnable();
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
