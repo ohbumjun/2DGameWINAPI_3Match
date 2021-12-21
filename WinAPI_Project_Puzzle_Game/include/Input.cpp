@@ -268,7 +268,7 @@ void CInput::UpdateKeyState()
 			{
 				m_vecKeyState[Key].State[KeyState_Down] = false;
 				m_vecKeyState[Key].State[KeyState_Push] = false;
-				m_vecKeyState[Key].State[KeyState_Up] = false;
+				m_vecKeyState[Key].State[KeyState_Up] = false; //
 			}
 			else
 			{
