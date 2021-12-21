@@ -65,6 +65,8 @@ void CCell::Update(float DeltaTime)
 
 	if (m_IsSwapping) // 바뀌는 중이라면, 
 		return;
+	else // 바뀌는 중이 아니라면, 
+		m_IsMoving = false;
 	
 	// 멈추게 끔 세팅해줘야 한다. 
 	// 분기처리를 어떻게 해줘야 하는가 

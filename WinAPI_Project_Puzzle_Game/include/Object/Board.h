@@ -21,6 +21,7 @@ private :
 	CBlock** m_vecBlocks;
 	std::vector<std::vector<int>> m_ChangedCellRowInfo;
 	std::vector<int> m_NewCellNeeded;
+	std::vector<std::vector<bool>> m_vecDestroyedCells;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -59,6 +60,9 @@ private :
 	bool m_Start;
 	Vector2 m_Resolution; // Width, Height
 
+	// Cell Match
+	int m_DX[4]; // ї­ 
+	int m_DY[4]; // За 
 
 public :
 	int GetRowCount() const
@@ -130,10 +134,14 @@ public : // Updates
 	bool ChangeUpperCellsPos(int RowIndex, int ColIndex);
 	bool ChangeUpperCellIdxInfo(int RowIndex, int ColIndex);
 	bool ChangeCellsInfos();
+	void RemoveCells();
 	void CreateNewCells();
 	void ChangeCellYIdx(int RowIndex, int ColIndex);
-	bool CheckClickEnable();
+	bool CheckUpdateEnable();
 	void MoveTwoClickedCells(float DeltaTime);
+public : // Check Logic
+	bool CheckMatchCells();
+	Vector2   GetOppositeDirection(int curDx, int curDy);
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);

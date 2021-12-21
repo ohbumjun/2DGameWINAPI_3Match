@@ -32,6 +32,8 @@ public :
 	void SetSwapping(bool IsSwap)
 	{
 		m_IsSwapping = IsSwap;
+		if (IsSwap)
+			m_IsMoving = true;
 	}
 	void SetBoard(const CBoard* Board)
 	{
@@ -87,6 +89,10 @@ public :
 	bool IsMoving() const
 	{
 		return m_IsMoving;
+	}
+	AnimalType GetAnimalType() const
+	{
+		return m_AnimalType;
 	}
 public :
 	virtual void Start() override;

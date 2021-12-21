@@ -17,7 +17,11 @@ CBoard::CBoard() :
 	m_ClickEnable(true),
 	m_IsTwoMoving(false),
 	m_InitFirstCellDiff{},
-	m_InitSecCellDiff{}
+	m_InitSecCellDiff{},
+	m_DX{ -1, 1, 0, 0 },
+	m_DY{ 0, 0, -1, 1 },
+	m_ClickFirstCell(nullptr),
+	m_ClickSecCell(nullptr)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -58,7 +62,16 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 		std::vector<int> vec(m_ColCount, 0);
 		m_ChangedCellRowInfo.push_back(vec);
 	}
+
+	// 새로 생성될 Cell 개수 정보
 	m_NewCellNeeded.resize(m_ColCount);
+	
+	m_vecDestroyedCells.reserve(m_RowCount);
+	for (int i = 0; i < m_RowCount; i++)
+	{
+		std::vector<bool> vec(m_ColCount, false);
+		m_vecDestroyedCells.push_back(vec);
+	}
 
 	// 크기 재할당 
 	if (m_BlockCount > m_BlockCapacity)
@@ -143,7 +156,8 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 void CBoard::MouseLButton(float DeltaTime)
 {
-	if (!CheckClickEnable())
+	bool UpdateEnable = CheckUpdateEnable();
+	if (!UpdateEnable)
 		return;
 	Vector2 MousePos = CInput::GetInst()->GetMousePos();
 
@@ -176,8 +190,11 @@ void CBoard::MouseLButton(float DeltaTime)
 
 		m_ClickSecPos = m_vecBlocks[m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX]->GetPos();
 	
-		if ((abs(m_ClickFirstIdxX - m_ClickSecIdxX) <= 1) && (abs(m_ClickFirstIdxY - m_ClickSecIdxY) <= 1))
+		if (abs(m_ClickFirstIdxX - m_ClickSecIdxX) + abs(m_ClickFirstIdxY - m_ClickSecIdxY) <= 1)
 		{
+			// Move 처리
+			m_IsTwoMoving = true;
+
 			// 선택된 녀석 Block 상태 바꾸기 
 			int FirstCellIdx = m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX;
 			int SecCellIdx  = m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX;
@@ -205,12 +222,14 @@ void CBoard::MouseLButton(float DeltaTime)
 			m_InitSecCellDiff  = m_vecCells[SecCellIdx]->GetNewPos() - m_vecCells[SecCellIdx]->GetPos();
 
 			m_Click = 0;
-
-			m_IsTwoMoving = true;
 		}
 		else
 		{
+			// 범위 밖의 Cell 클릭 
 			m_Click = 0;
+			m_IsTwoMoving = false;
+			m_ClickFirstCell = nullptr;
+			m_ClickSecCell  = nullptr;
 		}
 	}
 
@@ -257,34 +276,9 @@ bool CBoard::Update(float DeltaTime)
 	if (m_BlockCount > 0)
 	{
 		// 1) 사라질 Block 표시하기 ( 알고리즘 적용하기 )
-		/*
-		for (int R = m_RowCount - 1; R >= 0; R--)
-		{
-			for (int C = m_ColCount - 1; C >= 0; C--)
-			{
-				Index = R * m_ColCount + C;
-				if (!m_vecCells[Index])
-					continue;
-				if (!m_vecCells[Index]->IsActive())
-				{
-					// 메모리 해제
-					SAFE_DELETE(m_vecCells[Index]);
-
-					// 해당 열 삭제 표시
-					// m_ColsDestroyed[C] = true;
-
-					// 해당 열 삭제 개수 증가
-					// m_NumColsDestroyed[C] += 1;
-
-					// 제거된 가장 낮은 Row 세팅
-					// m_ColDestroyedMinRow[C] = R;
-					ChangeUpperBlockStates(R, C);
-					continue;
-				}
-				// m_vecCells[Index]->Update(DeltaTime);
-			}
-		}
-		*/
+		bool UpdateEnable = CheckUpdateEnable();
+		if (UpdateEnable)
+			CheckMatchCells();
 
 		// Cells Idx 변화 정보 초기화 
 		for (int row = 0; row < m_RowCount; row++)
@@ -295,28 +289,18 @@ bool CBoard::Update(float DeltaTime)
 			}
 		}
 
-		// 2) 실제 사라지게 하기 + New Pos 세팅 
+		// 2) 실제 사라지게 하기 + New Pos 세팅 + 보여지는 Real Board만 검사 
+		RemoveCells();
+
+		// 실제 Update
 		for (int R = m_RowCount - 1; R >= 0; R--)
 		{
 			for (int C = m_ColCount - 1; C >= 0; C--)
 			{
 				Index = R * m_ColCount + C;
 
-				CCell* Cell = m_vecCells[Index];
-				// if (!m_vecCells[Index])
-				if (!Cell)
+				if (!m_vecCells[Index])
 					continue;
-
-				if (!m_vecCells[Index]->IsActive())
-				{
-					// 메모리 해제
-					SAFE_DELETE(m_vecCells[Index]);
-
-					ChangeUpperCellsPos(R, C);
-
-					ChangeUpperCellIdxInfo(R, C);
-					continue;
-				}
 
 				// Update 
 				m_vecCells[Index]->Update(DeltaTime);
@@ -333,7 +317,10 @@ bool CBoard::Update(float DeltaTime)
 		CreateNewCells();
 
 		// 5) 클릭한 2개 Cell 들 서로 이동
-		MoveTwoClickedCells(DeltaTime);
+		if (m_ClickFirstCell && m_ClickSecCell)
+		{
+			MoveTwoClickedCells(DeltaTime);
+		}
 
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
@@ -478,6 +465,34 @@ bool CBoard::ChangeCellsInfos()
 	return true;
 }
 
+void CBoard::RemoveCells()
+{
+	int Index = -1;
+	for (int R = m_RowCount - 1; R >= m_RowCount / 2; R--)
+	{
+		for (int C = m_ColCount - 1; C >= 0; C--)
+		{
+			Index = R * m_ColCount + C;
+
+			CCell* Cell = m_vecCells[Index];
+			if (!Cell)
+				continue;
+
+			if (!m_vecCells[Index]->IsActive())
+			{
+				// 메모리 해제
+				SAFE_DELETE(m_vecCells[Index]);
+
+				ChangeUpperCellsPos(R, C);
+
+				ChangeUpperCellIdxInfo(R, C);
+				continue;
+			}
+
+		}
+	}
+}
+
 void CBoard::CreateNewCells()
 {
 	Vector2 Pos;
@@ -517,10 +532,11 @@ void CBoard::ChangeCellYIdx(int RowIndex, int ColIndex)
 	}
 }
 
-bool CBoard::CheckClickEnable()
+bool CBoard::CheckUpdateEnable()
 {
 	if (m_IsTwoMoving)
 		return false;
+
 	for (int Row = 0; Row < m_RowCount; Row++)
 	{
 		for (int Col = 0; Col < m_ColCount; Col++)
@@ -534,12 +550,19 @@ bool CBoard::CheckClickEnable()
 
 void CBoard::MoveTwoClickedCells(float DeltaTime)
 {
-	if (!m_IsTwoMoving)
+	if (!m_ClickFirstCell || !m_ClickSecCell)
+		return;
+
+	if (!m_IsTwoMoving) // 2개의 Mouse가 이동 중일때만 동작하게 한다. 
 		return;
 
 	// 현재 위치, 자신 위치 차이 계산하기 
 	Vector2 FirstCellDf = m_ClickFirstCell->GetNewPos() - m_ClickFirstCell->GetPos();
 	Vector2 SecCellDf  = m_ClickSecCell->GetNewPos() - m_ClickSecCell->GetPos();
+
+	// Cell Idx 정보 세팅
+	int FirstCellRow = -1, FirstCellCol = -1, SecondCellRow = -1, SecondCellCol = -1;
+	int FirstCellIdx = -1, SecCellIdx = -1;
 
 	if (FirstCellDf.Length() > 1.f)
 	{
@@ -563,29 +586,194 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 		m_ClickFirstCell->SetSwapping(false);
 		m_ClickSecCell->SetSwapping(false);
 
-		// Cell Idx 정보 세팅
-		int FirstCellRow = -1, FirstCellCol = -1, SecondCellRow = -1, SecondCellCol = -1;
-		int FirstCellIdx = -1, SecondCellIdx = -1;
-
 		FirstCellRow      = m_ClickFirstCell->GetRowIndex();
 		FirstCellCol       = m_ClickFirstCell->GetColIndex();
 		FirstCellIdx       = FirstCellRow * m_ColCount + FirstCellCol;
 
 		SecondCellRow = m_ClickSecCell->GetRowIndex();
-		SecondCellCol  = m_ClickSecCell->GetColIndex();
-		SecondCellIdx = SecondCellRow * m_ColCount + SecondCellCol;
+		SecondCellCol = m_ClickSecCell->GetColIndex();
+		SecCellIdx = SecondCellRow * m_ColCount + SecondCellCol;
 
-		m_ClickFirstCell->SetIdxInfos(SecondCellRow, SecondCellCol, SecondCellIdx);
+		m_ClickFirstCell->SetIdxInfos(SecondCellRow, SecondCellCol, SecCellIdx);
 		m_ClickSecCell->SetIdxInfos(FirstCellRow, FirstCellCol, FirstCellIdx);
 
 		// 실제 vecCell 내의 정보 세팅 
 		CCell* tempCell					= m_vecCells[FirstCellIdx];
-		m_vecCells[FirstCellIdx]	    = m_vecCells[SecondCellIdx];
-		m_vecCells[SecondCellIdx] = tempCell;
+		m_vecCells[FirstCellIdx]	    = m_vecCells[SecCellIdx];
+		m_vecCells[SecCellIdx] = tempCell;
 
-		m_IsTwoMoving = false;
+		// 여기서 한번 검사하기
+		bool IsMatch = CheckMatchCells();
+		if (!IsMatch)
+		{
+			// 만약 맞지 않다면, 다시 반대로 시행하기 
+			FirstCellIdx = SecondCellRow * m_ColCount + SecondCellCol;
+			SecCellIdx  = FirstCellRow * m_ColCount + FirstCellCol;
+
+			// New Pos 세팅 
+			// m_vecCells[FirstCellIdx] 에는 SecondCellIdx 내용의 Cell이 들어있다. 
+			// m_vecCells[SecCellIdx] 에는 FirstCellIdx 내용의 Cell이 들어있다. 
+			m_vecCells[FirstCellIdx]->SetNewPos(m_ClickFirstPos);
+			m_vecCells[SecCellIdx]->SetNewPos(m_ClickSecPos);
+
+			// Dir 세팅 
+			Vector2 FirstCellDir = m_ClickSecPos - m_ClickFirstPos;
+			FirstCellDir.Normalize();
+			Vector2 SecCellDir = m_ClickFirstPos - m_ClickSecPos;
+			SecCellDir.Normalize();
+
+			m_vecCells[FirstCellIdx]->SetDir(SecCellDir);
+			m_vecCells[FirstCellIdx]->SetSwapping(true);
+
+			m_vecCells[SecCellIdx]->SetDir(FirstCellDir);
+			m_vecCells[SecCellIdx]->SetSwapping(true);
+
+			m_ClickFirstCell = m_vecCells[FirstCellIdx];
+			m_ClickSecCell = m_vecCells[SecCellIdx];
+
+			m_InitFirstCellDiff = m_vecCells[FirstCellIdx]->GetNewPos() - m_vecCells[FirstCellIdx]->GetPos();
+			m_InitSecCellDiff = m_vecCells[SecCellIdx]->GetNewPos() - m_vecCells[SecCellIdx]->GetPos();
+
+			m_Click = 0;
+
+			m_IsTwoMoving = true;
+		}
+		else
+		{
+			// 만약 맞다면, Mouse + Move 관련 변수들 초기화
+			m_IsTwoMoving = false;
+			m_Click = 0;
+			m_ClickFirstCell = nullptr;
+			m_ClickSecCell = nullptr;
+		}
+	}
+}
+
+bool CBoard::CheckMatchCells()
+{
+
+	// 검사 결과를 저장하는 2차원 배열 세팅 (초기화)
+	for (int Row = 0; Row < m_RowCount; Row++)
+	{
+		for (int Col = 0; Col < m_ColCount; Col++)
+		{
+			m_vecDestroyedCells[Row][Col] = false;
+		}
 	}
 
+	// 현재 row, col
+	// 이전 위치 AnimalType, 같은 개수, 방향 x, y
+	// 만약 3 이상 이고, 더이상 같은 것이 없다면 터뜨리기
+	std::queue<std::vector<int>> queue;
+	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
+	bool IsMatch = false;
+
+	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
+	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
+	{
+		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
+		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
+		{
+			for (int Col = 0; Col <= m_ColCount - RMatchLen; Col++)
+			{
+				bool AllSame = true;
+				int   NxtCellIdx = -1;
+				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+				for (int k = 0; k < RMatchLen; k++)
+				{
+					NxtCellIdx = Row * m_ColCount + Col + k;
+					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+					{
+						AllSame = false;
+						break;
+					}
+				}
+				if (AllSame)
+				{
+					for (int k = 0; k < RMatchLen; k++)
+					{
+						m_vecDestroyedCells[Row][Col + k] = true;
+					}
+				}
+			}
+		}
+	}
+
+	// Column 검사
+	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
+	{
+		// 모든 Cell 들에 대해서 검사한다.
+		for (int Col = 0; Col < m_ColCount; Col++)
+		{
+			// 각 Colum --> 세로로 검사할 예정이다. 
+			for (int Row = m_RowCount / 2; Row <= m_RowCount - CMatchLen; Row++)
+			{
+				bool AllSame = true;
+				int   NxtCellIdx = -1;
+				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+				for (int k = 0; k < CMatchLen; k++)
+				{
+					NxtCellIdx = ( Row + k ) * m_ColCount + Col;
+					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+					{
+						AllSame = false;
+						break;
+					}
+				}
+				if (AllSame)
+				{
+					for (int k = 0; k < CMatchLen; k++)
+					{
+						m_vecDestroyedCells[Row + k][Col] = true;
+					}
+				}
+			}
+		}
+	}
+
+	// 모두 검사한 다음 , 사라지는 Cell 들에 대해 Block을 Empty로 만든다.
+	for (int Row = 0; Row < m_RowCount; Row++)
+	{
+		for (int Col = 0; Col < m_ColCount; Col++)
+		{
+			if (m_vecDestroyedCells[Row][Col])
+			{
+				Index = Row * m_ColCount + Col;
+				m_vecBlocks[Index]->SetBlockType(BlockType::EMPTY);
+				IsMatch = true;
+			}
+		}
+	}                                                                                                                                               
+
+	// 만약 일치하는 Cell이 하나도 없다면, false를 return 한다.
+	if (!IsMatch)
+		return false;
+
+	return true;
+}
+
+Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
+{
+	//	int dx[4] = { -1, 1, 0, 0 };
+	// int dy[4] = { 0, 0, -1, 1 };
+	if (curDx == -1 && curDy == 0)
+	{
+		return Vector2(1.f, 0.f);
+	}
+	else if (curDx == 1 && curDy == 0)
+	{
+		return Vector2(-1.f, 0.f);
+	}
+	else if (curDx == 0 && curDy == 1)
+	{
+		return Vector2(0.f, -1.f);
+	}
+	else if (curDx == 0 && curDy == -1)
+	{
+		return Vector2(0.f, 1.f);
+	}
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)
