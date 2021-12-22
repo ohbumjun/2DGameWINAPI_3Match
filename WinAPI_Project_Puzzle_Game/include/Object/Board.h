@@ -22,6 +22,8 @@ private :
 	std::vector<std::vector<int>> m_ChangedCellRowInfo;
 	std::vector<int> m_NewCellNeeded;
 	std::vector<std::vector<bool>> m_vecDestroyedCells;
+	std::vector<std::vector<bool>> m_vecCellsPosChanged;
+	std::vector<std::vector<bool>> m_vecCellsPosChangedEnd;
 
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
@@ -62,7 +64,8 @@ private :
 
 	// Cell Match
 	int m_DX[4]; // ї­ 
-	int m_DY[4]; // За 
+	int m_DY[4]; // За
+	bool m_PrevMisMatched;
 
 public :
 	int GetRowCount() const
@@ -103,6 +106,11 @@ public :
 	{
 		return RowIndex * m_ColCount + ColIndex;
 	}
+	bool GetCellPosChanged(int RowIndex, int ColIndex)
+	{
+		return m_vecCellsPosChanged[RowIndex][ColIndex];
+	}
+
 public :
 	void SetCell(int RowIndex, int ColIndex,  CCell* NewCell)
 	{
@@ -124,6 +132,10 @@ public :
 	{
 		m_Size = Vector2(x, y);
 	}
+	void SetCellPosChangedComplete(int RowIndex, int ColIndex)
+	{
+		m_vecCellsPosChangedEnd[RowIndex][ColIndex] = true;
+	}
 public : // Init
 	bool CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize);
 public : // Call Back
@@ -135,6 +147,7 @@ public : // Updates
 	bool ChangeUpperCellIdxInfo(int RowIndex, int ColIndex);
 	bool ChangeCellsInfos();
 	void RemoveCells();
+	bool CheckRemoveEnable();
 	void CreateNewCells();
 	void ChangeCellYIdx(int RowIndex, int ColIndex);
 	bool CheckUpdateEnable();

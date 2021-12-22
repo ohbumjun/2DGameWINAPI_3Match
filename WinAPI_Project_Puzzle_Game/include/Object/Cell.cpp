@@ -6,7 +6,7 @@ CCell::CCell() :
 	m_CellType(CellType::BASIC),
 	m_BlockType(BlockType::BASIC),
 	m_AnimalType(AnimalType::PANDA),
-	m_MoveSpeed(10.f),
+	m_MoveSpeed(50.f),
 	m_Dir(Vector2(0.f, 1.f)),
 	m_TimeScale(1.f),
 	m_Board(nullptr),
@@ -86,7 +86,10 @@ void CCell::Update(float DeltaTime)
 		// 자기 다음 이동 여부 체크 --> 이동 불가능하다면, 자기가 속한 Block 의 상태를 Basic으로 바꿔준다.
 		m_Board->GetBlock(m_RowIndex, m_ColIndex)->SetBlockType(BlockType::BASIC);
 		m_IsMoving = false;
-		// m_Dir = Vector2(0.f, 0.f);
+
+		// Board 내 m_vecCellsPosChangedEnd 정보 Update
+		if (m_Board->GetCellPosChanged(m_RowIndex, m_ColIndex))
+			m_Board->SetCellPosChangedComplete(m_RowIndex, m_ColIndex);
 	}
 }
 

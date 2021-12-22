@@ -680,8 +680,9 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 		m_vecCells[FirstCellIdx]	    = m_vecCells[SecCellIdx];
 		m_vecCells[SecCellIdx] = tempCell;
 
-		if (!m_PrevMisMatched) // 처음 바꾸는 경우 ( 틀려서 되돌아오는 경우에는 Match 여부를 조사하지 않는다 )
+		/*if (!m_PrevMisMatched) // 처음 바꾸는 경우 ( 틀려서 되돌아오는 경우에는 Match 여부를 조사하지 않는다 )
 		{
+		*/
 			// 여기서 한번 검사하기
 			bool IsMatch = CheckMatchCells();
 
@@ -731,6 +732,7 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 				m_PrevMisMatched = false;
 			}
 		}
+		/*
 		// 다시 되돌아온 경우 : 무조건 관련 변수들 초기화 
 		else
 		{
@@ -741,6 +743,7 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 			m_PrevMisMatched = false;
 		}
 	}
+	*/
 }
 
 bool CBoard::CheckMatchCells()
