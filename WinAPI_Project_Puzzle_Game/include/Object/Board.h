@@ -28,6 +28,8 @@ private :
 	// Block Texture
 	CSharedPtr<CTexture> m_BlockTexture;
 	CSharedPtr<CTexture> m_WhiteTexture;
+	CSharedPtr<CTexture> m_ShuffleTexture;
+	CSharedPtr<CTexture> m_NoticeTexture;
 
 	// Board 전체 크기
 	Vector2 m_Size;

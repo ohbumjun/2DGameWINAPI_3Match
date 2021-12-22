@@ -243,8 +243,12 @@ bool CBoard::Init()
 	// Load Basic Block Texture
 	CResourceManager::GetInst()->LoadTexture("BlockTexture", TEXT("block.bmp"));
 	CResourceManager::GetInst()->LoadTexture("WhiteTexture", TEXT("white.bmp"));
+	CResourceManager::GetInst()->LoadTexture("ShuffleTexture", TEXT("shuffle.bmp"));
+	CResourceManager::GetInst()->LoadTexture("NoticeTexture", TEXT("notice.bmp"));
 	m_BlockTexture = CResourceManager::GetInst()->FindTexture("BlockTexture");
 	m_WhiteTexture = CResourceManager::GetInst()->FindTexture("WhiteTexture");
+	m_ShuffleTexture = CResourceManager::GetInst()->FindTexture("ShuffleTexture");
+	m_NoticeTexture = CResourceManager::GetInst()->FindTexture("NoticeTexture");
 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
 	CreateBoard(5, 5, TextureSize);
@@ -883,7 +887,14 @@ bool CBoard::MakeMatchableBoard()
 	if (CheckMatchPossible())
 		return true;
 
-	// 모든 Block 들을 노란색으로 만든다 == 섞는 중 ! 
+	// 모든 Block 들을 노란색으로 만든다 == 섞는 중 !
+	for (int row = m_RowCount / 2; row < m_RowCount; row ++)
+	{
+		for (int col = 0; col < m_ColCount; col++)
+		{
+			m_vecBlocks[row * m_ColCount + col]->SetTexture(m_ShuffleTexture);
+		}
+	}
 
 	while (true)
 	{
@@ -897,6 +908,14 @@ bool CBoard::MakeMatchableBoard()
 		if (CheckMatchPossible())
 		{
 			// 다시 모든 Block 들의 색상을 초록으로 만든다 
+				// 모든 Block 들을 노란색으로 만든다 == 섞는 중 !
+			for (int row = m_RowCount / 2; row < m_RowCount; row++)
+			{
+				for (int col = 0; col < m_ColCount; col++)
+				{
+					m_vecBlocks[row * m_ColCount + col]->SetTexture(m_BlockTexture);
+				}
+			}
 
 			return true;
 		}
@@ -912,7 +931,7 @@ bool CBoard::CheckMatchPossible()
 	int CurIdx = -1, NxtIdx = -1, LastIdx = -1;
 
 	// 가로 검사 
-	for (int row = 0; row <= m_RowCount; row++)
+	for (int row = m_RowCount / 2; row <= m_RowCount; row++)
 	{
 		for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
 		{
@@ -946,7 +965,7 @@ bool CBoard::CheckMatchPossible()
 	// 세로 검사
 	for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
 	{
-		for (int row = 0; row <= m_RowCount - MinMatchUnit; row++)
+		for (int row = m_RowCount / 2; row <= m_RowCount - MinMatchUnit; row++)
 		{
 			// 연속된 2개는 맞아야 한다
 			CurIdx = row * m_ColCount + col;
