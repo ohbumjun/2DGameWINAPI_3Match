@@ -155,6 +155,9 @@ public : // Updates
 public : // Check Logic
 	bool CheckMatchCells();
 	Vector2   GetOppositeDirection(int curDx, int curDy);
+	bool CheckMatchPossible();
+	bool MakeMatchableBoard();
+	void ShuffleCells();
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);

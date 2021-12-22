@@ -295,11 +295,20 @@ bool CBoard::Update(float DeltaTime)
 	if (m_BlockCount > 0)
 	{
 		// 1) 사라질 Block 표시하기 ( 알고리즘 적용하기 )
-		/*
-		*/
 		bool UpdateEnable = CheckRemoveEnable();
+		bool IsMatch = false;
+
 		if (UpdateEnable)
-			CheckMatchCells();
+		{
+			// Match 되는 Cell 들이 있는지 체크한다.
+			IsMatch = CheckMatchCells();
+		}
+
+		// Match 되는 애가 없다면 --> 해당 판이 가능한 판인지 체크한다.
+		if (!IsMatch)
+		{
+			MakeMatchableBoard();
+		}
 
 		// Cells Idx 변화 정보 초기화 
 		for (int row = 0; row < m_RowCount; row++)
@@ -866,6 +875,122 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 	else if (curDx == 0 && curDy == -1)
 	{
 		return Vector2(0.f, 1.f);
+	}
+}
+
+bool CBoard::MakeMatchableBoard()
+{
+	if (CheckMatchPossible())
+		return true;
+
+	// 모든 Block 들을 노란색으로 만든다 == 섞는 중 ! 
+
+	while (true)
+	{
+		ShuffleCells();
+
+		// 2. 만약 CheckMatchCell 이 false 라면 ( 현재 맞는 것이 없다면 검사 )
+		// 다시 Cell 들을 섞는 과정을 거친다.
+		if (CheckMatchCells())
+			continue;
+
+		if (CheckMatchPossible())
+		{
+			// 다시 모든 Block 들의 색상을 초록으로 만든다 
+
+			return true;
+		}
+	}
+}
+
+bool CBoard::CheckMatchPossible()
+{
+	// 1. Board 가 다 내려와서 자기 위치에 도달하면 조사하는 코드
+
+	int MinMatchUnit = 3;
+
+	int CurIdx = -1, NxtIdx = -1, LastIdx = -1;
+
+	// 가로 검사 
+	for (int row = 0; row <= m_RowCount; row++)
+	{
+		for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
+		{
+			// 연속된 2개는 맞아야 한다
+			CurIdx = row * m_ColCount + col;
+			NxtIdx = row * m_ColCount + col + 1;
+			if (m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
+				continue;
+
+			// 그 다음칸 위 아래를 조사한다.
+			// 위 조사
+			if (row - 1 >= 0)
+			{
+				LastIdx = (row - 1) * m_ColCount + col + 2;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+				{
+					return true;
+				}
+			}
+
+			// 아래 조사
+			if (row + 1 < m_RowCount)
+			{
+				LastIdx = (row + 1) * m_ColCount + col + 2;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					return true;
+			}
+		}
+	}
+
+	// 세로 검사
+	for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
+	{
+		for (int row = 0; row <= m_RowCount - MinMatchUnit; row++)
+		{
+			// 연속된 2개는 맞아야 한다
+			CurIdx = row * m_ColCount + col;
+			NxtIdx = (row + 1) * m_ColCount + col;
+			if (m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
+				continue;
+
+			// 왼쪽
+			if (col - 1 >= 0)
+			{
+				LastIdx = (row + 2) * m_ColCount + col - 1;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+				{
+					return true;
+				}
+			}
+			// 오른쪽
+			if (col + 1 < m_ColCount)
+			{
+				LastIdx = (row + 2) * m_ColCount + col + 1;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+
+
+void CBoard::ShuffleCells()
+{
+	int Index = -1;
+	AnimalType Type = (AnimalType)0;
+	for (int row = 0; row < m_RowCount; row++)
+	{
+		for (int col = 0; col < m_ColCount; col++)
+		{
+			Index = row * m_ColCount + col;
+			Type = (AnimalType)(rand() % AnimalType::END);
+			m_vecCells[Index]->SetAnimalType(Type);
+		}
 	}
 }
 

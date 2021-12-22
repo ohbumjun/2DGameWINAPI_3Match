@@ -69,6 +69,8 @@ public :
 		m_ColIndex  = ColIdx;
 		m_Index		= Index;
 	}
+	void SetAnimalType(AnimalType Type);
+
 public :
 	bool IsSwapping() const
 	{
