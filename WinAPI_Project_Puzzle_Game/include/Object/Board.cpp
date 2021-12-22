@@ -276,9 +276,11 @@ bool CBoard::Update(float DeltaTime)
 	if (m_BlockCount > 0)
 	{
 		// 1) 사라질 Block 표시하기 ( 알고리즘 적용하기 )
+		/*
 		bool UpdateEnable = CheckUpdateEnable();
 		if (UpdateEnable)
 			CheckMatchCells();
+		*/
 
 		// Cells Idx 변화 정보 초기화 
 		for (int row = 0; row < m_RowCount; row++)
@@ -399,6 +401,37 @@ bool CBoard::Render(HDC hDC)
 	return true;
 }
 
+
+void CBoard::RemoveCells()
+{
+	int Index = -1;
+	for (int R = m_RowCount - 1; R >= 0; R--)
+	{
+		for (int C = m_ColCount - 1; C >= 0; C--)
+		{
+			Index = R * m_ColCount + C;
+
+			CCell* Cell = m_vecCells[Index];
+			if (!Cell)
+				continue;
+
+			// Idx 정보가 바뀐 이후에도
+			// 새롭게 세팅된 Cell 들의 Active가 False로 세팅되어버린다
+
+			if (!m_vecCells[Index]->IsActive())
+			{
+				// 메모리 해제
+				SAFE_DELETE(m_vecCells[Index]);
+
+				ChangeUpperCellsPos(R, C);
+
+				ChangeUpperCellIdxInfo(R, C);
+
+			}
+		}
+	}
+}
+
 bool CBoard::ChangeUpperCellsPos(int RowIndex, int ColIndex)
 {
 	int CurIdx = -1;
@@ -407,8 +440,10 @@ bool CBoard::ChangeUpperCellsPos(int RowIndex, int ColIndex)
 		CurIdx = Row * m_ColCount + ColIndex;
 
 		// Pos 정보 바꾸기 
-		Vector2 PrevPos = m_vecCells[CurIdx]->GetPos();
-		m_vecCells[CurIdx]->SetNewPos(PrevPos.x, PrevPos.y + m_SingleBlockSize.y);
+		// Vector2 PrevPos = m_vecCells[CurIdx]->GetPos(); X --> 실시간 New Pos 근거 Update
+		Vector2 PrevPos = m_vecCells[CurIdx]->GetNewPos();
+		float NewYPos = PrevPos.y + m_SingleBlockSize.y;
+		m_vecCells[CurIdx]->SetNewPos(PrevPos.x, NewYPos);
 
 	}
 
@@ -456,8 +491,11 @@ bool CBoard::ChangeCellsInfos()
 			// Idx 정보 다시 세팅해주기 
 			m_vecCells[CurIdx]->SetIdxInfos(Row + AddedRow, Col, NxtIdx);
 
+			bool Active = m_vecCells[CurIdx]->IsActive();
+
 			// 배열 내 Cell 정보 바꾸기
 			m_vecCells[NxtIdx] = m_vecCells[CurIdx];
+			bool NxtActive = m_vecCells[NxtIdx]->IsActive();
 
 		}
 	};
@@ -465,33 +503,6 @@ bool CBoard::ChangeCellsInfos()
 	return true;
 }
 
-void CBoard::RemoveCells()
-{
-	int Index = -1;
-	for (int R = m_RowCount - 1; R >= m_RowCount / 2; R--)
-	{
-		for (int C = m_ColCount - 1; C >= 0; C--)
-		{
-			Index = R * m_ColCount + C;
-
-			CCell* Cell = m_vecCells[Index];
-			if (!Cell)
-				continue;
-
-			if (!m_vecCells[Index]->IsActive())
-			{
-				// 메모리 해제
-				SAFE_DELETE(m_vecCells[Index]);
-
-				ChangeUpperCellsPos(R, C);
-
-				ChangeUpperCellIdxInfo(R, C);
-				continue;
-			}
-
-		}
-	}
-}
 
 void CBoard::CreateNewCells()
 {
@@ -651,7 +662,6 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 
 bool CBoard::CheckMatchCells()
 {
-
 	// 검사 결과를 저장하는 2차원 배열 세팅 (초기화)
 	for (int Row = 0; Row < m_RowCount; Row++)
 	{
