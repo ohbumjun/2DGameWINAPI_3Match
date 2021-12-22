@@ -120,7 +120,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 			NewCell->SetSize(m_SingleBlockSize);
 			NewCell->SetYIdx(1);
 			NewCell->SetNewPos(Pos.x, Pos.y);
-			NewCell->SetMoveSpeed(m_SingleBlockSize.x);
+			//  NewCell->SetMoveSpeed(m_SingleBlockSize.x * 2);
 			m_vecCells[Index] = NewCell;
 
 			// DownWard Real Block
@@ -311,7 +311,7 @@ bool CBoard::Update(float DeltaTime)
 		// Match 되는 애가 없다면 --> 해당 판이 가능한 판인지 체크한다.
 		if (!IsMatch)
 		{
-			MakeMatchableBoard();
+			// MakeMatchableBoard();
 		}
 
 		// Cells Idx 변화 정보 초기화 
@@ -605,7 +605,7 @@ void CBoard::CreateNewCells()
 			NewCell->SetSize(m_SingleBlockSize);
 			NewCell->SetYIdx(1);
 			NewCell->SetNewPos(Pos);
-			NewCell->SetMoveSpeed(m_SingleBlockSize.x);
+			// NewCell->SetMoveSpeed(m_SingleBlockSize.x);
 			m_vecCells[Index] = NewCell;
 		}
 	}
@@ -657,11 +657,13 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 
 	if (FirstCellDf.Length() > 1.f)
 	{
-		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * DeltaTime);
+		// m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * DeltaTime);
+		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * 2 * DeltaTime);
 	}
 	if (SecCellDf.Length() > 1.f)
 	{
-		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * DeltaTime);
+		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * 2 * DeltaTime);
+		// m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * DeltaTime);
 	}
 	if (FirstCellDf.Length() <=1.f && SecCellDf.Length() <= 1.f)
 	{
@@ -884,6 +886,7 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 
 bool CBoard::MakeMatchableBoard()
 {
+	// 가능한 조합이 있다면 건너뛴다.
 	if (CheckMatchPossible())
 		return true;
 
@@ -931,7 +934,7 @@ bool CBoard::CheckMatchPossible()
 	int CurIdx = -1, NxtIdx = -1, LastIdx = -1;
 
 	// 가로 검사 
-	for (int row = m_RowCount / 2; row <= m_RowCount; row++)
+	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
 		for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
 		{
@@ -1002,7 +1005,7 @@ void CBoard::ShuffleCells()
 {
 	int Index = -1;
 	AnimalType Type = (AnimalType)0;
-	for (int row = 0; row < m_RowCount; row++)
+	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
 		for (int col = 0; col < m_ColCount; col++)
 		{
