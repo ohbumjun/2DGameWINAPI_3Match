@@ -1,8 +1,8 @@
 #include "Board.h"
 #include "../Input.h"
 #include "../Resource/ResourceManager.h"
-#include "../GameManager.h"
 #include "GameObject.h"
+#include "../GameManager.h"
 
 CBoard::CBoard() :
 	m_RowCount(0),
@@ -22,7 +22,8 @@ CBoard::CBoard() :
 	m_DY{ 0, 0, -1, 1 },
 	m_ClickFirstCell(nullptr),
 	m_ClickSecCell(nullptr),
-	m_PrevMisMatched(false)
+	m_PrevMisMatched(false),
+	m_DelayTime(1000.f)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -171,6 +172,19 @@ void CBoard::MouseLButton(float DeltaTime)
 		m_ClickSecIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 		m_ClickSecIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 
+		/*
+		{
+			// Debug 용 코드 --> 동일한 애를 클릭할 때마다 새로운 Animal Type으로 바꿔주기
+			if (m_ClickFirstIdxX == m_ClickSecIdxX && m_ClickFirstIdxY == m_ClickSecIdxY)
+			{
+				CCell* CurrentCell = m_vecCells[m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX];
+				CurrentCell->SetAnimalType((AnimalType)(rand() % (int)(AnimalType::END)));
+				m_Click = 0;
+				CheckMatchCells();
+				return;
+			}
+		}
+		*/
 
 		m_ClickSecPos = m_vecBlocks[m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX]->GetPos();
 	
@@ -251,7 +265,7 @@ bool CBoard::Init()
 	m_NoticeTexture = CResourceManager::GetInst()->FindTexture("NoticeTexture");
 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
-	CreateBoard(5, 5, TextureSize);
+	CreateBoard(4, 4, TextureSize);
 
 	// 초기화
 	m_ChangedCellRowInfo.reserve(m_RowCount);
@@ -300,19 +314,21 @@ bool CBoard::Update(float DeltaTime)
 	{
 		// 1) 사라질 Block 표시하기 ( 알고리즘 적용하기 )
 		bool UpdateEnable = CheckRemoveEnable();
-		bool IsMatch = false;
 
+		// 모든 Cell 들이 내려왔을 때, 그 순간에만 Cell 들을 Match 하는지 검사 + 제거
+		bool IsMatch = true;
 		if (UpdateEnable)
 		{
-			// Match 되는 Cell 들이 있는지 체크한다.
-			IsMatch = CheckMatchCells();
+			// Match 되는 Cell 들이 있는지 체크한다. -> Match 되는Cell 들을 제거 표시해둔다.
+			bool IsMatch = CheckMatchCells();
 		}
 
 		// Match 되는 애가 없다면 --> 해당 판이 가능한 판인지 체크한다.
-		if (!IsMatch)
-		{
-			// MakeMatchableBoard();
-		}
+		// 해당 함수 안에서, Match 가능한 판이 존재하도록 판을 마련할 것이다.
+		// 1) 먼저, Match 가능한 Cell 들은 없어야 하고
+		// 2) Match 가능한 Cell + 실제 Match Cell 들이 없을 때까지 Shuffle
+		// 3) 
+		MakeMatchableBoard();
 
 		// Cells Idx 변화 정보 초기화 
 		for (int row = 0; row < m_RowCount; row++)
@@ -401,9 +417,9 @@ bool CBoard::Render(HDC hDC)
 		int RenderLength;
 		std::vector<CSharedPtr<CGameObject>> RenderObjects;
 
-		RenderObjects.reserve(m_BlockCapacity * 2);
+		RenderObjects.reserve(m_BlockCount * 2);
 
-		for (int i = 0; i < m_BlockCapacity; i++)
+		for (int i = 0; i < m_BlockCount; i++)
 		{
 			if (m_vecBlocks[i])
 			{
@@ -468,14 +484,20 @@ bool CBoard::CheckRemoveEnable()
 {
 	int N = 0;
 	bool AllChangedComplete = true;
+
 	for (int r = 0; r < m_RowCount; r++)
 	{
 		for (int c = 0; c < m_ColCount; c++)
 		{
 			if (m_vecCellsPosChanged[r][c])
+			{
 				N += 1;
+			}
 		}
 	}
+
+	// 위치가 변한 Cell이 하나도 없다면,
+	// 애초에, Remove를 해줄 필요가 없다.
 	if (N == 0)
 		return false;
 
@@ -606,6 +628,10 @@ void CBoard::CreateNewCells()
 			NewCell->SetYIdx(1);
 			NewCell->SetNewPos(Pos);
 			// NewCell->SetMoveSpeed(m_SingleBlockSize.x);
+
+			// NewCell 들은 결과적으로 아래로 내려갈 것이므로 m_IsMoving을 true로 세팅
+			NewCell->SetIsMoving(true);
+
 			m_vecCells[Index] = NewCell;
 		}
 	}
@@ -658,11 +684,11 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 	if (FirstCellDf.Length() > 1.f)
 	{
 		// m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * DeltaTime);
-		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * 2 * DeltaTime);
+		m_ClickFirstCell->SetPos(m_ClickFirstCell->GetPos() + m_InitFirstCellDiff * DeltaTime);
 	}
 	if (SecCellDf.Length() > 1.f)
 	{
-		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * 2 * DeltaTime);
+		m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * DeltaTime);
 		// m_ClickSecCell->SetPos(m_ClickSecCell->GetPos() + m_InitSecCellDiff * DeltaTime);
 	}
 	if (FirstCellDf.Length() <=1.f && SecCellDf.Length() <= 1.f)
@@ -899,19 +925,28 @@ bool CBoard::MakeMatchableBoard()
 		}
 	}
 
+	float DeltaTime = CGameManager::GetInst()->GetDeltaTime();
+	while(true)
+	{
+		m_DelayTime -= DeltaTime;
+		if (m_DelayTime < 0.f)
+			break;
+	}
+
 	while (true)
 	{
 		ShuffleCells();
 
-		// 2. 만약 CheckMatchCell 이 false 라면 ( 현재 맞는 것이 없다면 검사 )
+		// 2. 만약 CheckMatchCell 이 false 라면 ( 현재 맞는 것이 없다면 검사 ) --> 현재 맞는 놈들이 있다면 다시 Shuffle 
 		// 다시 Cell 들을 섞는 과정을 거친다.
 		if (CheckMatchCells())
 			continue;
 
+		// 만약 가능한 조합이 나왔다면, 이제 다시 원상 복구 
 		if (CheckMatchPossible())
 		{
 			// 다시 모든 Block 들의 색상을 초록으로 만든다 
-				// 모든 Block 들을 노란색으로 만든다 == 섞는 중 !
+			// 모든 Block 들을 노란색으로 만든다 == 섞는 중 !
 			for (int row = m_RowCount / 2; row < m_RowCount; row++)
 			{
 				for (int col = 0; col < m_ColCount; col++)
@@ -919,7 +954,7 @@ bool CBoard::MakeMatchableBoard()
 					m_vecBlocks[row * m_ColCount + col]->SetTexture(m_BlockTexture);
 				}
 			}
-
+			m_DelayTime = 100.f;
 			return true;
 		}
 	}
@@ -936,7 +971,7 @@ bool CBoard::CheckMatchPossible()
 	// 가로 검사 
 	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
-		for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
+		for (int col = 0; col <= m_ColCount - (MinMatchUnit - 1); col++)
 		{
 			// 연속된 2개는 맞아야 한다
 			CurIdx = row * m_ColCount + col;
@@ -944,21 +979,63 @@ bool CBoard::CheckMatchPossible()
 			if (m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
 				continue;
 
-			// 그 다음칸 위 아래를 조사한다.
+			// 오른쪽 위 아래를 조사한다.
 			// 위 조사
-			if (row - 1 >= 0)
+			if (col + 2 < m_ColCount)
 			{
-				LastIdx = (row - 1) * m_ColCount + col + 2;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+				if (row - 1 >= m_RowCount / 2)
 				{
-					return true;
+					LastIdx = (row - 1) * m_ColCount + col + 2;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						return true;
+					}
+				}
+
+				// 아래 조사
+				if (row + 1 < m_RowCount)
+				{
+					LastIdx = (row + 1) * m_ColCount + col + 2;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						return true;
 				}
 			}
 
-			// 아래 조사
-			if (row + 1 < m_RowCount)
+			// 왼쪽 방향 한칸 위, 아래를 조사한다
+			if (col - 1 >= 0)
 			{
-				LastIdx = (row + 1) * m_ColCount + col + 2;
+				// 위쪽 
+				if (row - 1 >= 0)
+				{
+					LastIdx = (row - 1) * m_ColCount + col - 1;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						return true;
+					}
+				}
+
+				// 아래 조사
+				if (row + 1 < m_RowCount)
+				{
+					LastIdx = (row + 1) * m_ColCount + col - 1;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						return true;
+				}
+			}
+
+
+			// 2칸 왼쪽, 3칸 오른쪽을 검사한다.
+			if (col - 2 >= 0)
+			{
+				LastIdx = row * m_ColCount + col - 2;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					return true;
+			}
+
+			// 2칸 왼쪽, 2칸 오른쪽을 검사한다.
+			if (col + 3 < m_ColCount)
+			{
+				LastIdx = row * m_ColCount + col + 3;
 				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					return true;
 			}
@@ -968,7 +1045,7 @@ bool CBoard::CheckMatchPossible()
 	// 세로 검사
 	for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
 	{
-		for (int row = m_RowCount / 2; row <= m_RowCount - MinMatchUnit; row++)
+		for (int row = m_RowCount / 2; row <= m_RowCount - (MinMatchUnit - 1); row++)
 		{
 			// 연속된 2개는 맞아야 한다
 			CurIdx = row * m_ColCount + col;
@@ -976,23 +1053,67 @@ bool CBoard::CheckMatchPossible()
 			if (m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
 				continue;
 
+			// 아래 방향 왼쪽 오른쪽을 비교한다. 
 			// 왼쪽
-			if (col - 1 >= 0)
+			if (row + 2 < m_RowCount)
 			{
-				LastIdx = (row + 2) * m_ColCount + col - 1;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+				if (col - 1 >= 0)
 				{
-					return true;
+					LastIdx = (row + 2) * m_ColCount + col - 1;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						return true;
+					}
+				}
+				// 오른쪽
+				if (col + 1 < m_ColCount)
+				{
+					LastIdx = (row + 2) * m_ColCount + col + 1;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						return true;
+					}
 				}
 			}
-			// 오른쪽
-			if (col + 1 < m_ColCount)
+
+
+			// 위의 방향 왼쪽 오른쪽을 비교한다. 
+			// 왼쪽
+			if (row - 1 >= m_RowCount / 2)
 			{
-				LastIdx = (row + 2) * m_ColCount + col + 1;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+				if (col - 1 >= 0)
 				{
-					return true;
+					LastIdx = (row - 1) * m_ColCount + col - 1;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						return true;
+					}
 				}
+				// 오른쪽
+				if (col + 1 < m_ColCount)
+				{
+					LastIdx = (row - 1) * m_ColCount + col + 1;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						return true;
+					}
+				}
+			}
+
+			// 위로 2칸, 아래로 2칸 짜리를 검사한다.
+			if (row - 2 >= m_RowCount / 2)
+			{
+				LastIdx = (row - 2) * m_ColCount + col;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					return true;
+			}
+
+			// 3칸 왼쪽, 2칸 오른쪽을 검사한다.
+			if (row + 3 < m_RowCount)
+			{
+				LastIdx = (row + 3) * m_ColCount + col;
+				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					return true;
 			}
 		}
 	}
@@ -1005,15 +1126,20 @@ void CBoard::ShuffleCells()
 {
 	int Index = -1;
 	AnimalType Type = (AnimalType)0;
-	for (int row = m_RowCount / 2; row < m_RowCount; row++)
+	for (int row = m_RowCount /2; row < m_RowCount; row++)
 	{
 		for (int col = 0; col < m_ColCount; col++)
 		{
 			Index = row * m_ColCount + col;
 			Type = (AnimalType)(rand() % AnimalType::END);
 			m_vecCells[Index]->SetAnimalType(Type);
+
+			// Cell 이동과 관련된 변수들도 모두 초기화 해준다
+			SetCellPosChangedComplete(row, col);
 		}
 	}
+
+	m_IsTwoMoving = false;
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)

@@ -6,7 +6,7 @@ CCell::CCell() :
 	m_CellType(CellType::BASIC),
 	m_BlockType(BlockType::BASIC),
 	m_AnimalType(AnimalType::PANDA),
-	m_MoveSpeed(500.f),
+	m_MoveSpeed(300.f),
 	m_Dir(Vector2(0.f, 1.f)),
 	m_TimeScale(1.f),
 	m_Board(nullptr),

@@ -69,6 +69,9 @@ private :
 	int m_DY[4]; // За
 	bool m_PrevMisMatched;
 
+	// Delay
+	float m_DelayTime;
+
 public :
 	int GetRowCount() const
 	{

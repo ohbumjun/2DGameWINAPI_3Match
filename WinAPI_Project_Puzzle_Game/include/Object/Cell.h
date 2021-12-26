@@ -25,6 +25,10 @@ private :
 	BlockType		 m_BlockType;
 	
 public :
+	void SetIsMoving(bool Moving)
+{
+		m_IsMoving = Moving;
+}
 	void SetMoveSpeed(float MoveSpeed)
 	{
 		m_MoveSpeed = MoveSpeed;
