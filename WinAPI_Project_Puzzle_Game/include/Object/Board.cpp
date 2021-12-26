@@ -14,7 +14,6 @@ CBoard::CBoard() :
 	m_BlockCount(0),
 	m_BlockCapacity(50),
 	m_ChangedCellRowInfo{},
-	m_ClickEnable(true),
 	m_IsTwoMoving(false),
 	m_InitFirstCellDiff{},
 	m_InitSecCellDiff{},
@@ -264,6 +263,7 @@ bool CBoard::Init()
 	m_ShuffleTexture = CResourceManager::GetInst()->FindTexture("ShuffleTexture");
 	m_NoticeTexture = CResourceManager::GetInst()->FindTexture("NoticeTexture");
 
+	// Board 생성하기 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
 	CreateBoard(4, 4, TextureSize);
 
@@ -302,6 +302,9 @@ bool CBoard::Init()
 		m_vecCellsPosChangedEnd.push_back(vec);
 	}
 
+	// 혹시 모르니, 초기 Board는 Matchable한 Board가 되도록 세팅한다.
+	MakeMatchableBoard();
+
 	return true;
 }
 
@@ -321,14 +324,16 @@ bool CBoard::Update(float DeltaTime)
 		{
 			// Match 되는 Cell 들이 있는지 체크한다. -> Match 되는Cell 들을 제거 표시해둔다.
 			bool IsMatch = CheckMatchCells();
+
+			// Match 되는 애가 없다면 --> 해당 판이 가능한 판인지 체크한다.
+			// 해당 함수 안에서, Match 가능한 판이 존재하도록 판을 마련할 것이다.
+			// 1) 먼저, Match 가능한 Cell 들은 없어야 한다
+			// 2) 그러면서, Match 가능한 Cell 들은 있되
+			// 3) 실제 Match 되는 Cell 들은 없을 때까지 Shuffle을 돌린다.
+			if (!IsMatch)
+				MakeMatchableBoard();
 		}
 
-		// Match 되는 애가 없다면 --> 해당 판이 가능한 판인지 체크한다.
-		// 해당 함수 안에서, Match 가능한 판이 존재하도록 판을 마련할 것이다.
-		// 1) 먼저, Match 가능한 Cell 들은 없어야 하고
-		// 2) Match 가능한 Cell + 실제 Match Cell 들이 없을 때까지 Shuffle
-		// 3) 
-		MakeMatchableBoard();
 
 		// Cells Idx 변화 정보 초기화 
 		for (int row = 0; row < m_RowCount; row++)
@@ -925,6 +930,7 @@ bool CBoard::MakeMatchableBoard()
 		}
 	}
 
+	/*
 	float DeltaTime = CGameManager::GetInst()->GetDeltaTime();
 	while(true)
 	{
@@ -932,6 +938,7 @@ bool CBoard::MakeMatchableBoard()
 		if (m_DelayTime < 0.f)
 			break;
 	}
+	*/
 
 	while (true)
 	{

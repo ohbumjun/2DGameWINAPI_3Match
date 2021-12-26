@@ -81,7 +81,7 @@ void CGameObject::SetAnimationPlayScale(const std::string& Name, float PlayScale
 
 void CGameObject::SetCurrentAnimation(const std::string& Name)
 {
-	if (!m_Animation)
+	if (!m_Animation || !m_Animation->m_CurrentAnimation)
 		return;
 	m_Animation->SetCurrentAnimation(Name);
 }
