@@ -179,7 +179,7 @@ void CBoard::MouseLButton(float DeltaTime)
 				CCell* CurrentCell = m_vecCells[m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX];
 				CurrentCell->SetAnimalType((AnimalType)(rand() % (int)(AnimalType::END)));
 				m_Click = 0;
-				CheckMatchCells();
+				DenoteMatchCells();
 				return;
 			}
 		}
@@ -323,7 +323,7 @@ bool CBoard::Update(float DeltaTime)
 		if (UpdateEnable)
 		{
 			// Match 되는 Cell 들이 있는지 체크한다. -> Match 되는Cell 들을 제거 표시해둔다.
-			bool IsMatch = CheckMatchCells();
+			bool IsMatch = DenoteMatchCells();
 
 			// Match 되는 애가 없다면 --> 해당 판이 가능한 판인지 체크한다.
 			// 해당 함수 안에서, Match 가능한 판이 존재하도록 판을 마련할 것이다.
@@ -729,7 +729,7 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 		if (!m_PrevMisMatched) // 처음 바꾸는 경우 ( 틀려서 되돌아오는 경우에는 Match 여부를 조사하지 않는다 )
 		{
 			// 여기서 한번 검사하기
-			bool IsMatch = CheckMatchCells();
+			bool IsMatch = DenoteMatchCells();
 
 			if (!IsMatch)
 			{
@@ -789,7 +789,7 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 	}
 }
 
-bool CBoard::CheckMatchCells()
+bool CBoard::DenoteMatchCells()
 {
 	// 검사 결과를 저장하는 2차원 배열 세팅 (초기화)
 	for (int Row = 0; Row < m_RowCount; Row++)
@@ -893,6 +893,75 @@ bool CBoard::CheckMatchCells()
 	return true;
 }
 
+bool CBoard::CheckMatchCells()
+{
+
+	// 현재 row, col
+	// 이전 위치 AnimalType, 같은 개수, 방향 x, y
+	// 만약 3 이상 이고, 더이상 같은 것이 없다면 터뜨리기
+	std::queue<std::vector<int>> queue;
+	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
+	bool IsMatch = false, AllSame = true;
+	int   NxtCellIdx = -1;
+
+	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
+	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
+	{
+		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
+		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
+		{
+			for (int Col = 0; Col <= m_ColCount - RMatchLen; Col++)
+			{
+				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+				for (int k = 0; k < RMatchLen; k++)
+				{
+					NxtCellIdx = Row * m_ColCount + Col + k;
+					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+					{
+						AllSame = false;
+						break;
+					}
+				}
+				if (AllSame)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	// Column 검사
+	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
+	{
+		// 모든 Cell 들에 대해서 검사한다.
+		for (int Col = 0; Col < m_ColCount; Col++)
+		{
+			// 각 Colum --> 세로로 검사할 예정이다. 
+			for (int Row = m_RowCount / 2; Row <= m_RowCount - CMatchLen; Row++)
+			{
+				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+				for (int k = 0; k < CMatchLen; k++)
+				{
+					NxtCellIdx = (Row + k) * m_ColCount + Col;
+					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+					{
+						AllSame = false;
+						break;
+					}
+				}
+				if (AllSame)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 {
 	//	int dx[4] = { -1, 1, 0, 0 };
@@ -917,7 +986,6 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 
 bool CBoard::MakeMatchableBoard(float DeltaTime)
 {
-
 	// 가능한 조합이 있다면 건너뛴다.
 	if (CheckMatchPossible())
 		return true;
@@ -931,6 +999,7 @@ bool CBoard::MakeMatchableBoard(float DeltaTime)
 		}
 	}
 
+	/*
 	if (DeltaTime == 0.f)
 		DeltaTime = 1.f;
 
@@ -941,6 +1010,8 @@ bool CBoard::MakeMatchableBoard(float DeltaTime)
 		if (m_DelayTime < 0.f)
 			break;
 	}
+	*/
+	
 
 	while (true)
 	{
@@ -978,7 +1049,7 @@ bool CBoard::CheckMatchPossible()
 	// 가로 검사 
 	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
-		for (int col = 0; col <= m_ColCount - (MinMatchUnit - 1); col++)
+		for (int col = 0; col < m_ColCount - MinMatchUnit; col++)
 		{
 			CurIdx = row * m_ColCount + col;
 			NxtIdx = row * m_ColCount + col + 1;
@@ -1048,6 +1119,7 @@ bool CBoard::CheckMatchPossible()
 						return true;
 				}
 			}
+
 			// 가운데 칸만 다른 경우
 			else if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[InitLastIdx]->GetAnimalType() &&
 				m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
@@ -1074,7 +1146,7 @@ bool CBoard::CheckMatchPossible()
 	// 세로 검사
 	for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
 	{
-		for (int row = m_RowCount / 2; row <= m_RowCount - (MinMatchUnit - 1); row++)
+		for (int row = m_RowCount / 2; row < m_RowCount - MinMatchUnit; row++)
 		{
 			// 연속된 2개가 같은 경우 
 			CurIdx = row * m_ColCount + col;

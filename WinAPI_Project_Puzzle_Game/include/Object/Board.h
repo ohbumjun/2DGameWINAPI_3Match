@@ -158,6 +158,7 @@ public : // Updates
 	bool CheckUpdateEnable();
 	void MoveTwoClickedCells(float DeltaTime);
 public : // Check Logic
+	bool DenoteMatchCells();
 	bool CheckMatchCells();
 	Vector2   GetOppositeDirection(int curDx, int curDy);
 	bool CheckMatchPossible();
