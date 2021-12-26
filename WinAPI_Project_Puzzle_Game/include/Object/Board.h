@@ -161,7 +161,7 @@ public : // Check Logic
 	bool CheckMatchCells();
 	Vector2   GetOppositeDirection(int curDx, int curDy);
 	bool CheckMatchPossible();
-	bool MakeMatchableBoard();
+	bool MakeMatchableBoard(float DeltaTime);
 	void ShuffleCells();
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);

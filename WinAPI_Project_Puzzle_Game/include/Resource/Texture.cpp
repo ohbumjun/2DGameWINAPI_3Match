@@ -85,6 +85,26 @@ bool CTexture::LoadTextureFullPath(const std::string& Name, const TCHAR* FullPat
 	Info->hDC = CreateCompatibleDC(CGameManager::GetInst()->GetWindowDC());
 
 	// 비트맵 속성으로 파일을 불러오고 HBTMAP으로 형변환해서 hImage에 저장한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	Info->hBmp = (HBITMAP)LoadImage(
 		CGameManager::GetInst()->GetWindowInstance(), // 블러올 이미지를 가지고 있는 실행 파일 모듈의 핸들 (프로세스의 핸들)
 		FullPath,  // 불러올 이미지 경로 

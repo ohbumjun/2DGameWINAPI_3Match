@@ -303,7 +303,7 @@ bool CBoard::Init()
 	}
 
 	// 혹시 모르니, 초기 Board는 Matchable한 Board가 되도록 세팅한다.
-	MakeMatchableBoard();
+	MakeMatchableBoard(0.f);
 
 	return true;
 }
@@ -331,7 +331,7 @@ bool CBoard::Update(float DeltaTime)
 			// 2) 그러면서, Match 가능한 Cell 들은 있되
 			// 3) 실제 Match 되는 Cell 들은 없을 때까지 Shuffle을 돌린다.
 			if (!IsMatch)
-				MakeMatchableBoard();
+				MakeMatchableBoard(DeltaTime);
 		}
 
 
@@ -915,8 +915,9 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 	}
 }
 
-bool CBoard::MakeMatchableBoard()
+bool CBoard::MakeMatchableBoard(float DeltaTime)
 {
+
 	// 가능한 조합이 있다면 건너뛴다.
 	if (CheckMatchPossible())
 		return true;
@@ -930,15 +931,16 @@ bool CBoard::MakeMatchableBoard()
 		}
 	}
 
-	/*
-	float DeltaTime = CGameManager::GetInst()->GetDeltaTime();
+	if (DeltaTime == 0.f)
+		DeltaTime = 1.f;
+
+	m_DelayTime = 10.f;
 	while(true)
 	{
 		m_DelayTime -= DeltaTime;
 		if (m_DelayTime < 0.f)
 			break;
 	}
-	*/
 
 	while (true)
 	{
@@ -961,7 +963,6 @@ bool CBoard::MakeMatchableBoard()
 					m_vecBlocks[row * m_ColCount + col]->SetTexture(m_BlockTexture);
 				}
 			}
-			m_DelayTime = 100.f;
 			return true;
 		}
 	}
@@ -970,81 +971,102 @@ bool CBoard::MakeMatchableBoard()
 bool CBoard::CheckMatchPossible()
 {
 	// 1. Board 가 다 내려와서 자기 위치에 도달하면 조사하는 코드
-
 	int MinMatchUnit = 3;
 
-	int CurIdx = -1, NxtIdx = -1, LastIdx = -1;
+	int CurIdx = -1, NxtIdx = -1, InitLastIdx = -1, LastIdx = -1;
 
 	// 가로 검사 
 	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
 		for (int col = 0; col <= m_ColCount - (MinMatchUnit - 1); col++)
 		{
-			// 연속된 2개는 맞아야 한다
 			CurIdx = row * m_ColCount + col;
 			NxtIdx = row * m_ColCount + col + 1;
-			if (m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
-				continue;
+			InitLastIdx = row * m_ColCount + col + 2;
 
-			// 오른쪽 위 아래를 조사한다.
-			// 위 조사
-			if (col + 2 < m_ColCount)
+			// 연속된 2개가 맞는 경우
+			if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[NxtIdx]->GetAnimalType())
 			{
+				// 오른쪽 위 아래를 조사한다.
+				// 위 조사
+				if (col + 2 < m_ColCount)
+				{
+					if (row - 1 >= m_RowCount / 2)
+					{
+						LastIdx = (row - 1) * m_ColCount + col + 2;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							return true;
+						}
+					}
+
+					// 아래 조사
+					if (row + 1 < m_RowCount)
+					{
+						LastIdx = (row + 1) * m_ColCount + col + 2;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+							return true;
+					}
+				}
+
+				// 왼쪽 방향 한칸 위, 아래를 조사한다
+				if (col - 1 >= 0)
+				{
+					// 위쪽 
+					if (row - 1 >= 0)
+					{
+						LastIdx = (row - 1) * m_ColCount + col - 1;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							return true;
+						}
+					}
+
+					// 아래 조사
+					if (row + 1 < m_RowCount)
+					{
+						LastIdx = (row + 1) * m_ColCount + col - 1;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+							return true;
+					}
+				}
+
+
+				// 2칸 왼쪽, 3칸 오른쪽을 검사한다.
+				if (col - 2 >= 0)
+				{
+					LastIdx = row * m_ColCount + col - 2;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						return true;
+				}
+
+				// 2칸 왼쪽, 2칸 오른쪽을 검사한다.
+				if (col + 3 < m_ColCount)
+				{
+					LastIdx = row * m_ColCount + col + 3;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						return true;
+				}
+			}
+			// 가운데 칸만 다른 경우
+			else if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[InitLastIdx]->GetAnimalType() &&
+				m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
+			{
+				// 가운데 위를 조사
 				if (row - 1 >= m_RowCount / 2)
 				{
-					LastIdx = (row - 1) * m_ColCount + col + 2;
+					LastIdx = (row - 1) * m_ColCount + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					{
 						return true;
-					}
 				}
 
-				// 아래 조사
+				// 가운데 아래를 조사
 				if (row + 1 < m_RowCount)
 				{
-					LastIdx = (row + 1) * m_ColCount + col + 2;
+					LastIdx = (row + 1) * m_ColCount + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
-			}
-
-			// 왼쪽 방향 한칸 위, 아래를 조사한다
-			if (col - 1 >= 0)
-			{
-				// 위쪽 
-				if (row - 1 >= 0)
-				{
-					LastIdx = (row - 1) * m_ColCount + col - 1;
-					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					{
-						return true;
-					}
-				}
-
-				// 아래 조사
-				if (row + 1 < m_RowCount)
-				{
-					LastIdx = (row + 1) * m_ColCount + col - 1;
-					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-						return true;
-				}
-			}
-
-
-			// 2칸 왼쪽, 3칸 오른쪽을 검사한다.
-			if (col - 2 >= 0)
-			{
-				LastIdx = row * m_ColCount + col - 2;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					return true;
-			}
-
-			// 2칸 왼쪽, 2칸 오른쪽을 검사한다.
-			if (col + 3 < m_ColCount)
-			{
-				LastIdx = row * m_ColCount + col + 3;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					return true;
 			}
 		}
 	}
@@ -1054,73 +1076,92 @@ bool CBoard::CheckMatchPossible()
 	{
 		for (int row = m_RowCount / 2; row <= m_RowCount - (MinMatchUnit - 1); row++)
 		{
-			// 연속된 2개는 맞아야 한다
+			// 연속된 2개가 같은 경우 
 			CurIdx = row * m_ColCount + col;
 			NxtIdx = (row + 1) * m_ColCount + col;
-			if (m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
-				continue;
-
-			// 아래 방향 왼쪽 오른쪽을 비교한다. 
-			// 왼쪽
-			if (row + 2 < m_RowCount)
+			InitLastIdx = (row + 2) * m_ColCount + col;
+			if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[NxtIdx]->GetAnimalType())
 			{
+				// 아래 방향 왼쪽 오른쪽을 비교한다. 
+				// 왼쪽
+				if (row + 2 < m_RowCount)
+				{
+					if (col - 1 >= 0)
+					{
+						LastIdx = (row + 2) * m_ColCount + col - 1;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							return true;
+						}
+					}
+					// 오른쪽
+					if (col + 1 < m_ColCount)
+					{
+						LastIdx = (row + 2) * m_ColCount + col + 1;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							return true;
+						}
+					}
+				}
+				// 위의 방향 왼쪽 오른쪽을 비교한다. 
+				// 왼쪽
+				if (row - 1 >= m_RowCount / 2)
+				{
+					if (col - 1 >= 0)
+					{
+						LastIdx = (row - 1) * m_ColCount + col - 1;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							return true;
+						}
+					}
+					// 오른쪽
+					if (col + 1 < m_ColCount)
+					{
+						LastIdx = (row - 1) * m_ColCount + col + 1;
+						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							return true;
+						}
+					}
+				}
+
+				// 위로 2칸, 아래로 2칸 짜리를 검사한다.
+				if (row - 2 >= m_RowCount / 2)
+				{
+					LastIdx = (row - 2) * m_ColCount + col;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						return true;
+				}
+
+				// 3칸 왼쪽, 2칸 오른쪽을 검사한다.
+				if (row + 3 < m_RowCount)
+				{
+					LastIdx = (row + 3) * m_ColCount + col;
+					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						return true;
+				}
+			}
+			// 가운데 칸만 다른 경우
+			else if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[InitLastIdx]->GetAnimalType() &&
+				m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
+			{
+				// 가운데 왼쪽을 조사
 				if (col - 1 >= 0)
 				{
-					LastIdx = (row + 2) * m_ColCount + col - 1;
+					LastIdx = (row + 1) * m_ColCount + col - 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					{
 						return true;
-					}
 				}
-				// 오른쪽
+
+				// 가운데 아래를 조사
 				if (col + 1 < m_ColCount)
 				{
-					LastIdx = (row + 2) * m_ColCount + col + 1;
+					LastIdx = (row + 1) * m_ColCount + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					{
 						return true;
-					}
 				}
-			}
-
-
-			// 위의 방향 왼쪽 오른쪽을 비교한다. 
-			// 왼쪽
-			if (row - 1 >= m_RowCount / 2)
-			{
-				if (col - 1 >= 0)
-				{
-					LastIdx = (row - 1) * m_ColCount + col - 1;
-					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					{
-						return true;
-					}
-				}
-				// 오른쪽
-				if (col + 1 < m_ColCount)
-				{
-					LastIdx = (row - 1) * m_ColCount + col + 1;
-					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					{
-						return true;
-					}
-				}
-			}
-
-			// 위로 2칸, 아래로 2칸 짜리를 검사한다.
-			if (row - 2 >= m_RowCount / 2)
-			{
-				LastIdx = (row - 2) * m_ColCount + col;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					return true;
-			}
-
-			// 3칸 왼쪽, 2칸 오른쪽을 검사한다.
-			if (row + 3 < m_RowCount)
-			{
-				LastIdx = (row + 3) * m_ColCount + col;
-				if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
-					return true;
 			}
 		}
 	}
