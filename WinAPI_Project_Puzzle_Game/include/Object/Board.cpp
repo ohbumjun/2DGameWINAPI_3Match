@@ -23,7 +23,11 @@ CBoard::CBoard() :
 	m_ClickSecCell(nullptr),
 	m_PrevMisMatched(false),
 	m_ShuffleDelayTime(1.f),
-	m_ShuffleDelay(false)
+	m_ShuffleDelay(false),
+	m_NoClickTime(0.f),
+	m_PossibleIdxs{},
+	m_NoClickTimeMax(2.f),
+	m_NoticeCombination(false)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -158,6 +162,9 @@ void CBoard::MouseLButton(float DeltaTime)
 	// int Row = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 	// m_vecBlocks[Row * m_ColCount + Col]->SetBlockType(BlockType::EMPTY);
 
+	// Update Notice Of Possible Cells
+	ResetPossibleIdxs();
+
 	// Tile 선택이 안되면, return 처리 
 	if (m_Click == 0)
 	{
@@ -236,13 +243,6 @@ void CBoard::MouseLButton(float DeltaTime)
 	// m_vecBlocks[SIndex]->SetMoveEnable(true);
 }
 
-void CBoard::CompareClicks()
-{
-}
-
-void CBoard::ReceiveClicks()
-{
-}
 
 void CBoard::Start()
 {
@@ -307,6 +307,9 @@ bool CBoard::Init()
 	// 혹시 모르니, 초기 Board는 Matchable한 Board가 되도록 세팅한다.
 	MakeMatchableBoard();
 
+	// Notice
+	m_PossibleIdxs.reserve(m_CombinationMinNums);
+
 	return true;
 }
 
@@ -333,9 +336,12 @@ bool CBoard::Update(float DeltaTime)
 			// 2) 그러면서, Match 가능한 Cell 들은 있되
 			// 3) 실제 Match 되는 Cell 들은 없을 때까지 Shuffle을 돌린다.
 			if (!IsMatch)
+			{
 				PreReMakeBoard();
+			}
 		}
 
+		// Shuffle Delay Time Update
 		UpdateShuffleDelayTime(DeltaTime);
 
 		// Cells Idx 변화 정보 초기화 
@@ -375,10 +381,10 @@ bool CBoard::Update(float DeltaTime)
 		CreateNewCells();
 
 		// 5) 클릭한 2개 Cell 들 서로 이동
-		if (m_ClickFirstCell && m_ClickSecCell)
-		{
-			MoveTwoClickedCells(DeltaTime);
-		}
+		MoveTwoClickedCells(DeltaTime);
+
+		// Notice
+		UpdatePossibleNotice(DeltaTime);
 
 		for (size_t i = 0; i < m_BlockCount; i++)
 		{
@@ -461,7 +467,9 @@ bool CBoard::Render(HDC hDC)
 
 void CBoard::RemoveCells()
 {
+
 	int Index = -1;
+	bool RemoveEnable = false;
 	for (int R = m_RowCount - 1; R >= 0; R--)
 	{
 		for (int C = m_ColCount - 1; C >= 0; C--)
@@ -484,8 +492,15 @@ void CBoard::RemoveCells()
 
 				ChangeUpperCellIdxInfo(R, C);
 
+				RemoveEnable = true;
+
 			}
 		}
+	}
+
+	if (RemoveEnable)
+	{
+		ResetPossibleIdxs();
 	}
 }
 
@@ -1095,14 +1110,15 @@ bool CBoard::CheckMatchPossible()
 
 	int CurIdx = -1, NxtIdx = -1, InitLastIdx = -1, LastIdx = -1;
 
+	// ResetPossibleIdxs();
+
 	// 가로 검사 
 	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
-		for (int col = 0; col < m_ColCount - MinMatchUnit; col++)
+		for (int col = 0; col < m_ColCount - 1; col++)
 		{
 			CurIdx = ( row * m_ColCount ) + col;
 			NxtIdx = ( row * m_ColCount ) + ( col + 1 );
-			InitLastIdx = ( row * m_ColCount ) + ( col + 2 );
 
 			// 연속된 2개가 맞는 경우
 			if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[NxtIdx]->GetAnimalType())
@@ -1116,6 +1132,7 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + ( col + 2 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1125,19 +1142,25 @@ bool CBoard::CheckMatchPossible()
 					{
 						LastIdx = ((row + 1) * m_ColCount) + ( col + 2 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
+						}
+
 					}
 				}
 
 				// 왼쪽 방향 한칸 위, 아래를 조사한다
 				if (col - 1 >= 0)
 				{
+
 					// 위쪽 
 					if (row - 1 >= 0)
 					{
 						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1147,7 +1170,10 @@ bool CBoard::CheckMatchPossible()
 					{
 						LastIdx = ((row + 1) * m_ColCount) + ( col - 1 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
+						}
 					}
 				}
 
@@ -1157,19 +1183,26 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = (row * m_ColCount) + ( col - 2 );
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
+					}
 				}
 
 				if (col + 3 < m_ColCount)
 				{
 					LastIdx =  (row * m_ColCount) + ( col + 3 );
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
+					}
 				}
 			}
 
 			// 가운데 칸만 다른 경우
-			else if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[InitLastIdx]->GetAnimalType() &&
+			else if (col + 2 < m_ColCount && 
+				m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[row * m_ColCount + (col + 2)]->GetAnimalType() &&
 				m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
 			{
 				// 가운데 위를 조사
@@ -1177,7 +1210,10 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = ((row - 1) * m_ColCount) + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back(row * m_ColCount + (col + 2));
 						return true;
+					}
 				}
 
 				// 가운데 아래를 조사
@@ -1185,21 +1221,23 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = ((row + 1) * m_ColCount) + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back(row* m_ColCount + (col + 2));
 						return true;
+					}
 				}
 			}
 		}
 	}
 
 	// 세로 검사
-	for (int col = 0; col <= m_ColCount - MinMatchUnit; col++)
+	for (int col = 0; col < m_ColCount; col++)
 	{
-		for (int row = m_RowCount / 2; row < m_RowCount - MinMatchUnit; row++)
+		for (int row = m_RowCount / 2; row < m_RowCount - 1; row++)
 		{
 			// 연속된 2개가 같은 경우 
 			CurIdx = row * m_ColCount + col;
 			NxtIdx = ((row + 1) * m_ColCount) + col;
-			InitLastIdx = ((row + 2) * m_ColCount) + col;
 			if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[NxtIdx]->GetAnimalType())
 			{
 				// 아래 방향 왼쪽 오른쪽을 비교한다. 
@@ -1211,6 +1249,7 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row + 2) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1220,10 +1259,12 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row + 2) * m_ColCount) + (col + 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
 				}
+
 				// 위의 방향 왼쪽 오른쪽을 비교한다. 
 				// 왼쪽
 				if (row - 1 >= m_RowCount / 2)
@@ -1233,6 +1274,7 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1242,6 +1284,7 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + (col + 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
+							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1252,7 +1295,10 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = ((row - 2) * m_ColCount) + col;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
+					}
 				}
 
 				// 3칸 왼쪽, 2칸 오른쪽을 검사한다.
@@ -1260,11 +1306,15 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = ((row + 3) * m_ColCount) + col;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
+					}
 				}
 			}
 			// 가운데 칸만 다른 경우
-			else if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[InitLastIdx]->GetAnimalType() &&
+			else if (row + 2 < m_RowCount &&
+				m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[(row + 2) * m_ColCount + col]->GetAnimalType() &&
 				m_vecCells[CurIdx]->GetAnimalType() != m_vecCells[NxtIdx]->GetAnimalType())
 			{
 				// 가운데 왼쪽을 조사
@@ -1272,7 +1322,10 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = ((row + 1) * m_ColCount) + (col - 1);
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2) * m_ColCount + col);
 						return true;
+					}
 				}
 
 				// 가운데 아래를 조사
@@ -1280,7 +1333,10 @@ bool CBoard::CheckMatchPossible()
 				{
 					LastIdx = ((row + 1) * m_ColCount) + (col + 1);
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
+					{
+						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2)* m_ColCount + col);
 						return true;
+					}
 				}
 			}
 		}
@@ -1308,6 +1364,8 @@ void CBoard::ShuffleCells()
 	}
 
 	m_IsTwoMoving = false;
+
+	ResetPossibleIdxs();
 }
 
 void CBoard::UpdateShuffleDelayTime(float DeltaTime)
@@ -1323,6 +1381,61 @@ void CBoard::UpdateShuffleDelayTime(float DeltaTime)
 	{
 		ReMakeBoard();
 	}
+}
+
+void CBoard::UpdatePossibleNotice(float DeltaTime)
+{
+	if (m_NoticeCombination)
+		return;
+
+	if (m_ShuffleDelay)
+		return;
+
+	// 만약 현재 후보군들이 맞지 않다면 비워주고, 다시 세팅
+	if (m_PossibleIdxs.size() == m_CombinationMinNums)
+	{
+		if (m_vecCells[m_PossibleIdxs[0]]->GetAnimalType() != m_vecCells[m_PossibleIdxs[1]]->GetAnimalType() ||
+			m_vecCells[m_PossibleIdxs[0]]->GetAnimalType() != m_vecCells[m_PossibleIdxs[2]]->GetAnimalType() ||
+			m_vecCells[m_PossibleIdxs[1]]->GetAnimalType() != m_vecCells[m_PossibleIdxs[2]]->GetAnimalType())
+		{
+			ResetPossibleIdxs();
+		}
+	}
+
+	m_NoClickTime += DeltaTime;
+	if (m_NoClickTime >= m_NoClickTimeMax)
+	{
+		NoticePossibleCombinations();
+	}
+}
+
+void CBoard::NoticePossibleCombinations()
+{
+	// CheckMatchPossible();
+
+	if (m_PossibleIdxs.size() < m_CombinationMinNums)
+		return;
+
+	m_NoticeCombination = true;
+
+	for (int i = 0; i < m_PossibleIdxs.size(); i++)
+	{
+		// m_vecCells[m_PossibleIdxs[i]]->SetTexture(m_NoticeTexture);
+		m_vecBlocks[m_PossibleIdxs[i]]->SetTexture(m_NoticeTexture);
+	}
+}
+
+void CBoard::ResetPossibleIdxs()
+{
+	for (size_t i = 0; i < m_PossibleIdxs.size(); i++)
+	{
+		m_vecCells[m_PossibleIdxs[i]]->SetTexture(m_BlockTexture);
+	}
+
+	m_NoClickTime = 0.f;
+	m_NoticeCombination = false;
+
+	m_PossibleIdxs.clear();
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)

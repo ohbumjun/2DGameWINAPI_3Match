@@ -68,13 +68,21 @@ private :
 	Vector2 m_Resolution; // Width, Height
 
 	// Cell Match
-	int m_DX[4]; // 열 
-	int m_DY[4]; // 행
+	static const int Direction = 4;
+	int m_DX[Direction]; // 열 
+	int m_DY[Direction]; // 행
 	bool m_PrevMisMatched;
 
 	// Delay
 	float m_ShuffleDelayTime;
 	bool m_ShuffleDelay;
+
+	// Notice Possible Cells
+	static const int m_CombinationMinNums = 3;
+	float m_NoClickTime;
+	float m_NoClickTimeMax;
+	bool m_NoticeCombination;
+	std::vector<int> m_PossibleIdxs;
 
 public :
 	int GetRowCount() const
@@ -151,11 +159,9 @@ public :
 	}
 public : // Init
 	bool CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize);
-public : // Call Back
+public : // Click
 	void MouseLButton(float DeltaTime);
 public : // Updates
-	void CompareClicks();
-	void ReceiveClicks();
 	bool ChangeUpperCellsPos(int RowIndex, int ColIndex);
 	bool ChangeUpperCellIdxInfo(int RowIndex, int ColIndex);
 	bool ChangeCellsInfos();
@@ -175,6 +181,10 @@ public : // Check Logic
 	void ReMakeBoard();
 	void ShuffleCells();
 	void UpdateShuffleDelayTime(float DeltaTime);
+public : // Notice
+	void UpdatePossibleNotice(float DeltaTime);
+	void NoticePossibleCombinations();
+	void ResetPossibleIdxs();
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
