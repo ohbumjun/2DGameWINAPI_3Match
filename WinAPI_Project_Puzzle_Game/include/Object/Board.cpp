@@ -1348,7 +1348,7 @@ bool CBoard::CheckMatchPossible()
 
 void CBoard::ShuffleCells()
 {
-	int Index = -1;
+	int Index = -1;//
 	AnimalType Type = (AnimalType)0;
 	for (int row = m_RowCount /2; row < m_RowCount; row++)
 	{
