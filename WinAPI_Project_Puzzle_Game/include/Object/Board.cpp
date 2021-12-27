@@ -1166,7 +1166,7 @@ bool CBoard::CheckMatchPossible()
 				{
 
 					// À§ÂÊ 
-					if (row - 1 >= 0)
+					if (row - 1 >= m_RowCount / 2)
 					{
 						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
@@ -1359,7 +1359,7 @@ bool CBoard::CheckMatchPossible()
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
 						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = LastIdx; m_PossibleIdxs[2] = (row + 2) * m_ColCount + col;
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2)* m_ColCount + col);
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2)* m_ColCount + col);
 						return true;
 					}
 				}
