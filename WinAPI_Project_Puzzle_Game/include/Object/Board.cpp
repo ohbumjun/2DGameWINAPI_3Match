@@ -165,6 +165,13 @@ void CBoard::MouseLButton(float DeltaTime)
 	// Update Notice Of Possible Cells
 	ResetPossibleIdxs();
 
+	for (int i = 0; i < m_CombinationMinNums; i++)
+	{
+		m_vecCells[m_PossibleIdxs[i]]->SetTexture(m_BlockTexture);
+	}
+	m_NoClickTime = 0.f;
+	m_NoticeCombination = false;
+
 	// Tile 선택이 안되면, return 처리 
 	if (m_Click == 0)
 	{
@@ -304,11 +311,11 @@ bool CBoard::Init()
 		m_vecCellsPosChangedEnd.push_back(vec);
 	}
 
+	// Notice
+	m_PossibleIdxs.resize(m_CombinationMinNums);
+
 	// 혹시 모르니, 초기 Board는 Matchable한 Board가 되도록 세팅한다.
 	MakeMatchableBoard();
-
-	// Notice
-	m_PossibleIdxs.reserve(m_CombinationMinNums);
 
 	return true;
 }
@@ -498,10 +505,12 @@ void CBoard::RemoveCells()
 		}
 	}
 
+	/*
 	if (RemoveEnable)
 	{
 		ResetPossibleIdxs();
 	}
+	*/
 }
 
 bool CBoard::CheckRemoveEnable()
@@ -1005,6 +1014,8 @@ bool CBoard::MakeMatchableBoard()
 	if (CheckMatchCells())
 		return true;
 
+
+
 	// 가능한 조합이 있다면 건너뛴다.
 	if (CheckMatchPossible())
 		return true;
@@ -1109,9 +1120,7 @@ bool CBoard::CheckMatchPossible()
 	int MinMatchUnit = 3;
 
 	int CurIdx = -1, NxtIdx = -1, InitLastIdx = -1, LastIdx = -1;
-
-	// ResetPossibleIdxs();
-
+	
 	// 가로 검사 
 	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
@@ -1132,7 +1141,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + ( col + 2 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1143,7 +1153,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row + 1) * m_ColCount) + ( col + 2 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 
@@ -1160,7 +1171,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1171,7 +1183,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row + 1) * m_ColCount) + ( col - 1 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1184,7 +1197,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = (row * m_ColCount) + ( col - 2 );
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
 					}
 				}
@@ -1194,7 +1208,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx =  (row * m_ColCount) + ( col + 3 );
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
 					}
 				}
@@ -1211,7 +1226,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = ((row - 1) * m_ColCount) + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back(row * m_ColCount + (col + 2));
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = LastIdx; m_PossibleIdxs[2] = row * m_ColCount + (col + 2);
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back(row * m_ColCount + (col + 2));
 						return true;
 					}
 				}
@@ -1222,7 +1238,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = ((row + 1) * m_ColCount) + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back(row* m_ColCount + (col + 2));
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = LastIdx; m_PossibleIdxs[2] = row * m_ColCount + (col + 2);
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back(row* m_ColCount + (col + 2));
 						return true;
 					}
 				}
@@ -1249,7 +1266,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row + 2) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1259,7 +1277,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row + 2) * m_ColCount) + (col + 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1274,7 +1293,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1284,7 +1304,8 @@ bool CBoard::CheckMatchPossible()
 						LastIdx = ((row - 1) * m_ColCount) + (col + 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
-							m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+							m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+							// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 							return true;
 						}
 					}
@@ -1296,7 +1317,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = ((row - 2) * m_ColCount) + col;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
 					}
 				}
@@ -1307,7 +1329,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = ((row + 3) * m_ColCount) + col;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = NxtIdx; m_PossibleIdxs[2] = LastIdx;
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(NxtIdx); m_PossibleIdxs.push_back(LastIdx);
 						return true;
 					}
 				}
@@ -1323,7 +1346,8 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = ((row + 1) * m_ColCount) + (col - 1);
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
-						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2) * m_ColCount + col);
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = LastIdx; m_PossibleIdxs[2] = (row + 2) * m_ColCount + col;
+						// m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2) * m_ColCount + col);
 						return true;
 					}
 				}
@@ -1334,6 +1358,7 @@ bool CBoard::CheckMatchPossible()
 					LastIdx = ((row + 1) * m_ColCount) + (col + 1);
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 					{
+						m_PossibleIdxs[0] = CurIdx; m_PossibleIdxs[1] = LastIdx; m_PossibleIdxs[2] = (row + 2) * m_ColCount + col;
 						m_PossibleIdxs.push_back(CurIdx); m_PossibleIdxs.push_back(LastIdx); m_PossibleIdxs.push_back((row + 2)* m_ColCount + col);
 						return true;
 					}
@@ -1348,7 +1373,7 @@ bool CBoard::CheckMatchPossible()
 
 void CBoard::ShuffleCells()
 {
-	int Index = -1;///
+	int Index = -1;
 	AnimalType Type = (AnimalType)0;
 	for (int row = m_RowCount /2; row < m_RowCount; row++)
 	{
@@ -1364,8 +1389,6 @@ void CBoard::ShuffleCells()
 	}
 
 	m_IsTwoMoving = false;
-
-	ResetPossibleIdxs();
 }
 
 void CBoard::UpdateShuffleDelayTime(float DeltaTime)
@@ -1385,13 +1408,22 @@ void CBoard::UpdateShuffleDelayTime(float DeltaTime)
 
 void CBoard::UpdatePossibleNotice(float DeltaTime)
 {
+	// 이미 Combiation이 보여지는 중이라면 
 	if (m_NoticeCombination)
 		return;
 
+	// Shuffle 중이라면 
 	if (m_ShuffleDelay)
 		return;
 
+	// Cell 들이 이동중이라면
+	if (!CheckUpdateEnable())
+		return;
+
+	// CheckMatchPossible();
+
 	// 만약 현재 후보군들이 맞지 않다면 비워주고, 다시 세팅
+	/*
 	if (m_PossibleIdxs.size() == m_CombinationMinNums)
 	{
 		if (m_vecCells[m_PossibleIdxs[0]]->GetAnimalType() != m_vecCells[m_PossibleIdxs[1]]->GetAnimalType() ||
@@ -1401,6 +1433,7 @@ void CBoard::UpdatePossibleNotice(float DeltaTime)
 			ResetPossibleIdxs();
 		}
 	}
+	*/
 
 	m_NoClickTime += DeltaTime;
 	if (m_NoClickTime >= m_NoClickTimeMax)
@@ -1411,10 +1444,10 @@ void CBoard::UpdatePossibleNotice(float DeltaTime)
 
 void CBoard::NoticePossibleCombinations()
 {
-	// CheckMatchPossible();
+	// if (m_PossibleIdxs.size() < m_CombinationMinNums)
+	//		return;
 
-	if (m_PossibleIdxs.size() < m_CombinationMinNums)
-		return;
+	CheckMatchPossible();
 
 	m_NoticeCombination = true;
 
@@ -1435,7 +1468,7 @@ void CBoard::ResetPossibleIdxs()
 	m_NoClickTime = 0.f;
 	m_NoticeCombination = false;
 
-	m_PossibleIdxs.clear();
+	// m_PossibleIdxs.clear();
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)
