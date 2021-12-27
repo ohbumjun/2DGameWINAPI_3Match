@@ -162,9 +162,6 @@ void CBoard::MouseLButton(float DeltaTime)
 	// int Row = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // За 
 	// m_vecBlocks[Row * m_ColCount + Col]->SetBlockType(BlockType::EMPTY);
 
-	// Update Notice Of Possible Cells
-	ResetPossibleIdxs();
-
 	for (int i = 0; i < m_CombinationMinNums; i++)
 	{
 		m_vecCells[m_PossibleIdxs[i]]->SetTexture(m_BlockTexture);
@@ -182,6 +179,9 @@ void CBoard::MouseLButton(float DeltaTime)
 		m_ClickFirstPos = m_vecBlocks[m_ClickFirstIdxY * m_ColCount + m_ClickFirstIdxX]->GetPos();
 
 		m_Click = 1;
+
+		// Update Notice Of Possible Cells
+		ResetPossibleIdxs();
 	}
 	else if (m_Click == 1)
 	{
@@ -1444,8 +1444,7 @@ void CBoard::UpdatePossibleNotice(float DeltaTime)
 
 void CBoard::NoticePossibleCombinations()
 {
-	// if (m_PossibleIdxs.size() < m_CombinationMinNums)
-	//		return;
+	ResetPossibleIdxs();
 
 	CheckMatchPossible();
 
@@ -1460,9 +1459,18 @@ void CBoard::NoticePossibleCombinations()
 
 void CBoard::ResetPossibleIdxs()
 {
+	/*
 	for (size_t i = 0; i < m_PossibleIdxs.size(); i++)
 	{
 		m_vecCells[m_PossibleIdxs[i]]->SetTexture(m_BlockTexture);
+	}
+	*/
+	for (int row = m_RowCount / 2; row < m_RowCount; row++)
+	{
+		for (int col = 0; col < m_ColCount; col++)
+		{
+			m_vecBlocks[row * m_ColCount + col]->SetTexture(m_BlockTexture);
+		}
 	}
 
 	m_NoClickTime = 0.f;
