@@ -22,7 +22,8 @@ CBoard::CBoard() :
 	m_ClickFirstCell(nullptr),
 	m_ClickSecCell(nullptr),
 	m_PrevMisMatched(false),
-	m_DelayTime(1000.f)
+	m_ShuffleDelayTime(1.f),
+	m_ShuffleDelay(false)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -140,6 +141,9 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 
 void CBoard::MouseLButton(float DeltaTime)
 {
+	if (m_ShuffleDelay)
+		return;
+
 	bool UpdateEnable = CheckUpdateEnable();
 	if (!UpdateEnable)
 		return;
@@ -149,7 +153,7 @@ void CBoard::MouseLButton(float DeltaTime)
 	if (MousePos.x < 0.f || MousePos.x > m_Size.x || MousePos.y < 0.f || MousePos.y > m_Size.y / 2)
 		return;
 
-	// Cell 을 없애보는 Test Code 
+	// Cell 을 없애보는 Test Code
 	// int Col   = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 	// int Row = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 	// m_vecBlocks[Row * m_ColCount + Col]->SetBlockType(BlockType::EMPTY);
@@ -171,7 +175,6 @@ void CBoard::MouseLButton(float DeltaTime)
 		m_ClickSecIdxX = (int)(MousePos.x / m_SingleBlockSize.x); // 열 
 		m_ClickSecIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 
-		/*
 		{
 			// Debug 용 코드 --> 동일한 애를 클릭할 때마다 새로운 Animal Type으로 바꿔주기
 			if (m_ClickFirstIdxX == m_ClickSecIdxX && m_ClickFirstIdxY == m_ClickSecIdxY)
@@ -183,7 +186,6 @@ void CBoard::MouseLButton(float DeltaTime)
 				return;
 			}
 		}
-		*/
 
 		m_ClickSecPos = m_vecBlocks[m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX]->GetPos();
 	
@@ -303,7 +305,7 @@ bool CBoard::Init()
 	}
 
 	// 혹시 모르니, 초기 Board는 Matchable한 Board가 되도록 세팅한다.
-	MakeMatchableBoard(0.f);
+	MakeMatchableBoard();
 
 	return true;
 }
@@ -331,9 +333,10 @@ bool CBoard::Update(float DeltaTime)
 			// 2) 그러면서, Match 가능한 Cell 들은 있되
 			// 3) 실제 Match 되는 Cell 들은 없을 때까지 Shuffle을 돌린다.
 			if (!IsMatch)
-				MakeMatchableBoard(DeltaTime);
+				PreReMakeBoard();
 		}
 
+		UpdateShuffleDelayTime(DeltaTime);
 
 		// Cells Idx 변화 정보 초기화 
 		for (int row = 0; row < m_RowCount; row++)
@@ -424,6 +427,7 @@ bool CBoard::Render(HDC hDC)
 
 		RenderObjects.reserve(m_BlockCount * 2);
 
+		// RenderObjects에 채워넣기 
 		for (int i = 0; i < m_BlockCount; i++)
 		{
 			if (m_vecBlocks[i])
@@ -431,7 +435,7 @@ bool CBoard::Render(HDC hDC)
 				m_vecBlocks[i]->AddRef();
 				RenderObjects.push_back(m_vecBlocks[i]);
 			}
-			if (m_vecCells[i])
+			if (m_vecCells[i] && m_vecCells[i]->GetEnable())
 			{
 				m_vecCells[i]->AddRef();
 				RenderObjects.push_back(m_vecCells[i]);
@@ -791,6 +795,8 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 
 bool CBoard::DenoteMatchCells()
 {
+	bool IsMatch = false;
+
 	// 검사 결과를 저장하는 2차원 배열 세팅 (초기화)
 	for (int Row = 0; Row < m_RowCount; Row++)
 	{
@@ -805,7 +811,6 @@ bool CBoard::DenoteMatchCells()
 	// 만약 3 이상 이고, 더이상 같은 것이 없다면 터뜨리기
 	std::queue<std::vector<int>> queue;
 	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
-	bool IsMatch = false;
 
 	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
 	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
@@ -833,6 +838,7 @@ bool CBoard::DenoteMatchCells()
 					for (int k = 0; k < RMatchLen; k++)
 					{
 						m_vecDestroyedCells[Row][Col + k] = true;
+						IsMatch = true;
 					}
 				}
 			}
@@ -866,11 +872,13 @@ bool CBoard::DenoteMatchCells()
 					for (int k = 0; k < CMatchLen; k++)
 					{
 						m_vecDestroyedCells[Row + k][Col] = true;
+						IsMatch = true;
 					}
 				}
 			}
 		}
 	}
+
 
 	// 모두 검사한 다음 , 사라지는 Cell 들에 대해 Block을 Empty로 만든다.
 	for (int Row = 0; Row < m_RowCount; Row++)
@@ -881,10 +889,9 @@ bool CBoard::DenoteMatchCells()
 			{
 				Index = Row * m_ColCount + Col;
 				m_vecBlocks[Index]->SetBlockType(BlockType::EMPTY);
-				IsMatch = true;
 			}
 		}
-	}                                                                                                                                               
+	}
 
 	// 만약 일치하는 Cell이 하나도 없다면, false를 return 한다.
 	if (!IsMatch)
@@ -895,69 +902,63 @@ bool CBoard::DenoteMatchCells()
 
 bool CBoard::CheckMatchCells()
 {
-
 	// 현재 row, col
 	// 이전 위치 AnimalType, 같은 개수, 방향 x, y
 	// 만약 3 이상 이고, 더이상 같은 것이 없다면 터뜨리기
 	std::queue<std::vector<int>> queue;
 	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
-	bool IsMatch = false, AllSame = true;
+	bool AllSame = true;
 	int   NxtCellIdx = -1;
+	int   MinMatchLength = 3;
 
-	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
-	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
+	// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
+	for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
 	{
-		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
-		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
+		for (int Col = 0; Col <= m_ColCount - MinMatchLength; Col++)
 		{
-			for (int Col = 0; Col <= m_ColCount - RMatchLen; Col++)
+			AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+			AllSame = true;
+			for (int k = 0; k < MinMatchLength; k++)
 			{
-				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
-
-				for (int k = 0; k < RMatchLen; k++)
+				NxtCellIdx = Row * m_ColCount + Col + k;
+				if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
 				{
-					NxtCellIdx = Row * m_ColCount + Col + k;
-					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
-					{
-						AllSame = false;
-						break;
-					}
+					AllSame = false;
+					break;
 				}
-				if (AllSame)
-				{
-					return true;
-				}
+			}
+			if (AllSame)
+			{
+				return true;
 			}
 		}
 	}
 
-	// Column 검사
-	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
-	{
-		// 모든 Cell 들에 대해서 검사한다.
-		for (int Col = 0; Col < m_ColCount; Col++)
-		{
-			// 각 Colum --> 세로로 검사할 예정이다. 
-			for (int Row = m_RowCount / 2; Row <= m_RowCount - CMatchLen; Row++)
-			{
-				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
 
-				for (int k = 0; k < CMatchLen; k++)
+	// 모든 Cell 들에 대해서 검사한다.
+	for (int Col = 0; Col < m_ColCount; Col++)
+	{
+		// 각 Colum --> 세로로 검사할 예정이다. 
+		for (int Row = m_RowCount / 2; Row <= m_RowCount - MinMatchLength; Row++)
+		{
+			AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+			AllSame = true;
+			for (int k = 0; k < MinMatchLength; k++)
+			{
+				NxtCellIdx = (Row + k) * m_ColCount + Col;
+				if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
 				{
-					NxtCellIdx = (Row + k) * m_ColCount + Col;
-					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
-					{
-						AllSame = false;
-						break;
-					}
+					AllSame = false;
+					break;
 				}
-				if (AllSame)
-				{
-					return true;
-				}
+			}
+			if (AllSame)
+			{
+				return true;
 			}
 		}
 	}
+
 
 	return false;
 }
@@ -984,14 +985,51 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 	}
 }
 
-bool CBoard::MakeMatchableBoard(float DeltaTime)
+bool CBoard::MakeMatchableBoard()
 {
+	if (CheckMatchCells())
+		return true;
+
 	// 가능한 조합이 있다면 건너뛴다.
 	if (CheckMatchPossible())
 		return true;
 
+	while(true)
+	{
+		ShuffleCells();
+
+		// 2. 만약 CheckMatchCell 이 false 라면 ( 현재 맞는 것이 없다면 검사 ) --> 현재 맞는 놈들이 있다면 다시 Shuffle 
+		// 다시 Cell 들을 섞는 과정을 거친다.
+		if (CheckMatchCells())
+			continue;
+
+		// 만약 가능한 조합이 나왔다면, 이제 다시 원상 복구 
+		if (CheckMatchPossible())
+		{
+			break;
+		}
+	}
+
+	return true;
+}
+
+bool CBoard::PreReMakeBoard()
+{
+	if (m_ShuffleDelay)
+		return false;
+
+	if (CheckMatchCells())
+		return true;
+
+	// 가능한 조합이 있다면 건너뛴다.
+	if (CheckMatchPossible())
+		return true;
+
+	m_ShuffleDelay = true;
+	ResetShuffleDelayTime();
+
 	// 모든 Block 들을 노란색으로 만든다 == 섞는 중 !
-	for (int row = m_RowCount / 2; row < m_RowCount; row ++)
+	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
 		for (int col = 0; col < m_ColCount; col++)
 		{
@@ -999,20 +1037,20 @@ bool CBoard::MakeMatchableBoard(float DeltaTime)
 		}
 	}
 
-	/*
-	if (DeltaTime == 0.f)
-		DeltaTime = 1.f;
-
-	m_DelayTime = 10.f;
-	while(true)
+	// 모든 Cell들을 보이지 않게 세팅한다
+	for (int row = m_RowCount / 2; row < m_RowCount; row++)
 	{
-		m_DelayTime -= DeltaTime;
-		if (m_DelayTime < 0.f)
-			break;
+		for (int col = 0; col < m_ColCount; col++)
+		{
+			m_vecCells[row * m_ColCount + col]->SetEnable(false);
+		}
 	}
-	*/
-	
 
+	return true;
+}
+
+void CBoard::ReMakeBoard()
+{
 	while (true)
 	{
 		ShuffleCells();
@@ -1025,7 +1063,6 @@ bool CBoard::MakeMatchableBoard(float DeltaTime)
 		// 만약 가능한 조합이 나왔다면, 이제 다시 원상 복구 
 		if (CheckMatchPossible())
 		{
-			// 다시 모든 Block 들의 색상을 초록으로 만든다 
 			// 모든 Block 들을 노란색으로 만든다 == 섞는 중 !
 			for (int row = m_RowCount / 2; row < m_RowCount; row++)
 			{
@@ -1034,7 +1071,19 @@ bool CBoard::MakeMatchableBoard(float DeltaTime)
 					m_vecBlocks[row * m_ColCount + col]->SetTexture(m_BlockTexture);
 				}
 			}
-			return true;
+
+			// 모든 Cell들을 보이지 않게 세팅한다
+			for (int row = m_RowCount / 2; row < m_RowCount; row++)
+			{
+				for (int col = 0; col < m_ColCount; col++)
+				{
+					m_vecCells[row * m_ColCount + col]->SetEnable(true);
+				}
+			}
+
+			m_ShuffleDelay = false;
+
+			break;
 		}
 	}
 }
@@ -1051,20 +1100,20 @@ bool CBoard::CheckMatchPossible()
 	{
 		for (int col = 0; col < m_ColCount - MinMatchUnit; col++)
 		{
-			CurIdx = row * m_ColCount + col;
-			NxtIdx = row * m_ColCount + col + 1;
-			InitLastIdx = row * m_ColCount + col + 2;
+			CurIdx = ( row * m_ColCount ) + col;
+			NxtIdx = ( row * m_ColCount ) + ( col + 1 );
+			InitLastIdx = ( row * m_ColCount ) + ( col + 2 );
 
 			// 연속된 2개가 맞는 경우
 			if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[NxtIdx]->GetAnimalType())
 			{
-				// 오른쪽 위 아래를 조사한다.
-				// 위 조사
+				// 세번째칸 위 아래를 조사한다.
 				if (col + 2 < m_ColCount)
 				{
+					// 위 조사
 					if (row - 1 >= m_RowCount / 2)
 					{
-						LastIdx = (row - 1) * m_ColCount + col + 2;
+						LastIdx = ((row - 1) * m_ColCount) + ( col + 2 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
 							return true;
@@ -1074,7 +1123,7 @@ bool CBoard::CheckMatchPossible()
 					// 아래 조사
 					if (row + 1 < m_RowCount)
 					{
-						LastIdx = (row + 1) * m_ColCount + col + 2;
+						LastIdx = ((row + 1) * m_ColCount) + ( col + 2 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 							return true;
 					}
@@ -1086,7 +1135,7 @@ bool CBoard::CheckMatchPossible()
 					// 위쪽 
 					if (row - 1 >= 0)
 					{
-						LastIdx = (row - 1) * m_ColCount + col - 1;
+						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
 							return true;
@@ -1096,7 +1145,7 @@ bool CBoard::CheckMatchPossible()
 					// 아래 조사
 					if (row + 1 < m_RowCount)
 					{
-						LastIdx = (row + 1) * m_ColCount + col - 1;
+						LastIdx = ((row + 1) * m_ColCount) + ( col - 1 );
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 							return true;
 					}
@@ -1106,15 +1155,14 @@ bool CBoard::CheckMatchPossible()
 				// 2칸 왼쪽, 3칸 오른쪽을 검사한다.
 				if (col - 2 >= 0)
 				{
-					LastIdx = row * m_ColCount + col - 2;
+					LastIdx = (row * m_ColCount) + ( col - 2 );
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
 
-				// 2칸 왼쪽, 2칸 오른쪽을 검사한다.
 				if (col + 3 < m_ColCount)
 				{
-					LastIdx = row * m_ColCount + col + 3;
+					LastIdx =  (row * m_ColCount) + ( col + 3 );
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1127,7 +1175,7 @@ bool CBoard::CheckMatchPossible()
 				// 가운데 위를 조사
 				if (row - 1 >= m_RowCount / 2)
 				{
-					LastIdx = (row - 1) * m_ColCount + col + 1;
+					LastIdx = ((row - 1) * m_ColCount) + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1135,7 +1183,7 @@ bool CBoard::CheckMatchPossible()
 				// 가운데 아래를 조사
 				if (row + 1 < m_RowCount)
 				{
-					LastIdx = (row + 1) * m_ColCount + col + 1;
+					LastIdx = ((row + 1) * m_ColCount) + col + 1;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1150,17 +1198,17 @@ bool CBoard::CheckMatchPossible()
 		{
 			// 연속된 2개가 같은 경우 
 			CurIdx = row * m_ColCount + col;
-			NxtIdx = (row + 1) * m_ColCount + col;
-			InitLastIdx = (row + 2) * m_ColCount + col;
+			NxtIdx = ((row + 1) * m_ColCount) + col;
+			InitLastIdx = ((row + 2) * m_ColCount) + col;
 			if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[NxtIdx]->GetAnimalType())
 			{
 				// 아래 방향 왼쪽 오른쪽을 비교한다. 
-				// 왼쪽
 				if (row + 2 < m_RowCount)
 				{
+					// 왼쪽
 					if (col - 1 >= 0)
 					{
-						LastIdx = (row + 2) * m_ColCount + col - 1;
+						LastIdx = ((row + 2) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
 							return true;
@@ -1169,7 +1217,7 @@ bool CBoard::CheckMatchPossible()
 					// 오른쪽
 					if (col + 1 < m_ColCount)
 					{
-						LastIdx = (row + 2) * m_ColCount + col + 1;
+						LastIdx = ((row + 2) * m_ColCount) + (col + 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
 							return true;
@@ -1182,7 +1230,7 @@ bool CBoard::CheckMatchPossible()
 				{
 					if (col - 1 >= 0)
 					{
-						LastIdx = (row - 1) * m_ColCount + col - 1;
+						LastIdx = ((row - 1) * m_ColCount) + (col - 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
 							return true;
@@ -1191,7 +1239,7 @@ bool CBoard::CheckMatchPossible()
 					// 오른쪽
 					if (col + 1 < m_ColCount)
 					{
-						LastIdx = (row - 1) * m_ColCount + col + 1;
+						LastIdx = ((row - 1) * m_ColCount) + (col + 1);
 						if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						{
 							return true;
@@ -1202,7 +1250,7 @@ bool CBoard::CheckMatchPossible()
 				// 위로 2칸, 아래로 2칸 짜리를 검사한다.
 				if (row - 2 >= m_RowCount / 2)
 				{
-					LastIdx = (row - 2) * m_ColCount + col;
+					LastIdx = ((row - 2) * m_ColCount) + col;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1210,7 +1258,7 @@ bool CBoard::CheckMatchPossible()
 				// 3칸 왼쪽, 2칸 오른쪽을 검사한다.
 				if (row + 3 < m_RowCount)
 				{
-					LastIdx = (row + 3) * m_ColCount + col;
+					LastIdx = ((row + 3) * m_ColCount) + col;
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1222,7 +1270,7 @@ bool CBoard::CheckMatchPossible()
 				// 가운데 왼쪽을 조사
 				if (col - 1 >= 0)
 				{
-					LastIdx = (row + 1) * m_ColCount + col - 1;
+					LastIdx = ((row + 1) * m_ColCount) + (col - 1);
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1230,7 +1278,7 @@ bool CBoard::CheckMatchPossible()
 				// 가운데 아래를 조사
 				if (col + 1 < m_ColCount)
 				{
-					LastIdx = (row + 1) * m_ColCount + col + 1;
+					LastIdx = ((row + 1) * m_ColCount) + (col + 1);
 					if (m_vecCells[CurIdx]->GetAnimalType() == m_vecCells[LastIdx]->GetAnimalType())
 						return true;
 				}
@@ -1251,15 +1299,30 @@ void CBoard::ShuffleCells()
 		for (int col = 0; col < m_ColCount; col++)
 		{
 			Index = row * m_ColCount + col;
-			Type = (AnimalType)(rand() % AnimalType::END);
+			Type = (AnimalType)(rand() % (int)AnimalType::END);
 			m_vecCells[Index]->SetAnimalType(Type);
 
 			// Cell 이동과 관련된 변수들도 모두 초기화 해준다
-			SetCellPosChangedComplete(row, col);
+			// SetCellPosChangedComplete(row, col);
 		}
 	}
 
 	m_IsTwoMoving = false;
+}
+
+void CBoard::UpdateShuffleDelayTime(float DeltaTime)
+{
+	if (!m_ShuffleDelay)
+		return;
+	if (m_ShuffleDelayTime > 0.f)
+	{
+		m_ShuffleDelayTime -= DeltaTime;
+		return;
+	}
+	if (m_ShuffleDelayTime < 0.f)
+	{
+		ReMakeBoard();
+	}
 }
 
 void CBoard::SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects)

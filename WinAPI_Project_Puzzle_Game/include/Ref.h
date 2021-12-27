@@ -12,6 +12,7 @@ protected :
 	int m_RefCount;
 	std::string m_Name;
 	bool m_Active;
+	bool m_RenderEnable;
 public :
 	void Destroy()
 	{
@@ -35,7 +36,15 @@ public :
 		}
 		return m_RefCount;
 	}
+	void SetEnable(bool Enable)
+{
+		m_RenderEnable = Enable;
+}
 public :
+	bool GetEnable() const
+	{
+		return m_RenderEnable;
+	}
 	int GetRefCount() const  
 	{
 		return m_RefCount;
@@ -48,4 +57,6 @@ public :
 	{
 		return m_Name;
 	}
+
+
 };

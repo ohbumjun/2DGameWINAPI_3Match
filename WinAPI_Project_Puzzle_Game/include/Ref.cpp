@@ -2,7 +2,8 @@
 
 CRef::CRef() :
 	m_Active(true),
-	m_RefCount(0)
+	m_RefCount(0),
+	m_RenderEnable(true)
 {
 }
 

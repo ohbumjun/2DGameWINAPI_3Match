@@ -8,15 +8,18 @@
 class CBoard : public CRef
 {
 	friend class CStage;
+
 public:
 	CBoard();
 	~CBoard();
+
 private :
 	// 초기 Block 개수, 및 Allocator  , Pos 정보 
 	int m_BlockCount;
 	int m_BlockCapacity;
 	float m_TopYPos;
 	float m_MiddelYPos;
+
 	CCell** m_vecCells;
 	CBlock** m_vecBlocks;
 	std::vector<std::vector<int>> m_ChangedCellRowInfo;
@@ -70,7 +73,8 @@ private :
 	bool m_PrevMisMatched;
 
 	// Delay
-	float m_DelayTime;
+	float m_ShuffleDelayTime;
+	bool m_ShuffleDelay;
 
 public :
 	int GetRowCount() const
@@ -117,6 +121,10 @@ public :
 	}
 
 public :
+	void ResetShuffleDelayTime()
+	{
+		m_ShuffleDelayTime = 1.f;
+	}
 	void SetCell(int RowIndex, int ColIndex,  CCell* NewCell)
 	{
 		m_vecCells[RowIndex * m_ColCount + ColIndex] = NewCell;
@@ -162,8 +170,11 @@ public : // Check Logic
 	bool CheckMatchCells();
 	Vector2   GetOppositeDirection(int curDx, int curDy);
 	bool CheckMatchPossible();
-	bool MakeMatchableBoard(float DeltaTime);
+	bool MakeMatchableBoard();
+	bool PreReMakeBoard();
+	void ReMakeBoard();
 	void ShuffleCells();
+	void UpdateShuffleDelayTime(float DeltaTime);
 public : // Render
 	void SortRenderObject(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
