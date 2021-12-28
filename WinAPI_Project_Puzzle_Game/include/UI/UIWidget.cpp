@@ -54,8 +54,19 @@ bool CUIWidget::CollisionMouse(const Vector2& MousePos, float DeltaTime)
 		m_Pos.y <= MousePos.y && MousePos.y <= m_Pos.y + m_Size.y)
 	{
 		if (!m_MouseHovered)
+		{
 			CollisionMouseHoveredCallback(DeltaTime);
+			m_MouseHovered = true;
+		}
 		return true;
+	}
+	else
+	{
+		if (m_MouseHovered)
+		{
+			CollisionMouseReleaseCallback(DeltaTime);
+			m_MouseHovered = false;
+		}
 	}
 	return false;
 }

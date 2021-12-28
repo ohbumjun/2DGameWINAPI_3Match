@@ -67,7 +67,7 @@ void CStage::SetCharactersAnimation()
 	{
 		CResourceManager::GetInst()->SetTextureColorKey("Bear", 255, 255, 255);
 		for (int i = 0; i < 1; ++i)
-			CResourceManager::GetInst()->AddAnimationFrameData("Bear", 0.f, i * 128.f, 128.f, 128.f);
+			CResourceManager::GetInst()->AddAnimationFrameData("Bear", 0.f, i * 80.f, 80.f, 80.f);
 	}
 
 	Exist = CResourceManager::GetInst()->CreateAnimationSequence("Duck", "Duck", TEXT("duck.bmp"));
@@ -75,7 +75,7 @@ void CStage::SetCharactersAnimation()
 	{
 		CResourceManager::GetInst()->SetTextureColorKey("Duck", 255, 255, 255);
 		for (int i = 0; i < 1; ++i)
-			CResourceManager::GetInst()->AddAnimationFrameData("Duck", 0.f, i * 128.f, 128.f, 128.f);
+			CResourceManager::GetInst()->AddAnimationFrameData("Duck", 0.f, i * 80.f, 80.f, 80.f);
 	}
 
 	Exist = CResourceManager::GetInst()->CreateAnimationSequence("Elephant", "Elephant", TEXT("elephant.bmp"));
@@ -83,7 +83,7 @@ void CStage::SetCharactersAnimation()
 	{
 		CResourceManager::GetInst()->SetTextureColorKey("Elephant", 255, 255, 255);
 		for (int i = 0; i < 1; ++i)
-			CResourceManager::GetInst()->AddAnimationFrameData("Elephant", 0.f, i * 128.f, 128.f, 128.f);
+			CResourceManager::GetInst()->AddAnimationFrameData("Elephant", 0.f, i * 80.f, 80.f, 80.f);
 	}
 
 	Exist = CResourceManager::GetInst()->CreateAnimationSequence("Panda", "Panda", TEXT("panda.bmp"));
@@ -91,7 +91,7 @@ void CStage::SetCharactersAnimation()
 	{
 		CResourceManager::GetInst()->SetTextureColorKey("Panda", 255, 255, 255);
 		for (int i = 0; i < 1; ++i)
-			CResourceManager::GetInst()->AddAnimationFrameData("Panda", 0.f, i * 128.f, 128.f, 128.f);
+			CResourceManager::GetInst()->AddAnimationFrameData("Panda", 0.f, i * 80.f, 80.f, 80.f);
 	}
 
 	Exist = CResourceManager::GetInst()->CreateAnimationSequence("Parrot", "Parrot", TEXT("parrot.bmp"));
@@ -99,7 +99,7 @@ void CStage::SetCharactersAnimation()
 	{
 		CResourceManager::GetInst()->SetTextureColorKey("Parrot", 255, 255, 255);
 		for (int i = 0; i < 1; ++i)
-			CResourceManager::GetInst()->AddAnimationFrameData("Parrot", 0.f, i * 128.f, 128.f, 128.f);
+			CResourceManager::GetInst()->AddAnimationFrameData("Parrot", 0.f, i * 80.f, 80.f, 80.f);
 	}
 
 	Exist = CResourceManager::GetInst()->CreateAnimationSequence("Penguin", "Penguin", TEXT("penguin.bmp"));
@@ -107,7 +107,7 @@ void CStage::SetCharactersAnimation()
 	{
 		CResourceManager::GetInst()->SetTextureColorKey("Penguin", 255, 255, 255);
 		for (int i = 0; i < 1; ++i)
-			CResourceManager::GetInst()->AddAnimationFrameData("Penguin", 0.f, i * 128.f, 128.f, 128.f);
+			CResourceManager::GetInst()->AddAnimationFrameData("Penguin", 0.f, i * 80.f, 80.f, 80.f);
 	}
 }
 

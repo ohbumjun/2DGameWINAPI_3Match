@@ -65,7 +65,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	// 크기 재할당 
 	if (m_BlockCount > m_BlockCapacity)
 	{
-		m_BlockCapacity *= 2;
+		m_BlockCapacity = m_BlockCount * 2;
 
 		CCell** n_vecCells = new CCell * [m_BlockCapacity];
 		CBlock** n_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -190,6 +190,7 @@ void CBoard::MouseLButton(float DeltaTime)
 		m_ClickSecIdxY = (int)(MousePos.y / m_SingleBlockSize.y) + (m_RowCount / 2); // 행 
 
 		{
+			/*
 			// Debug 용 코드 --> 동일한 애를 클릭할 때마다 새로운 Animal Type으로 바꿔주기
 			if (m_ClickFirstIdxX == m_ClickSecIdxX && m_ClickFirstIdxY == m_ClickSecIdxY)
 			{
@@ -199,6 +200,7 @@ void CBoard::MouseLButton(float DeltaTime)
 				DenoteMatchCells();
 				return;
 			}
+			*/
 		}
 
 		m_ClickSecPos = m_vecBlocks[m_ClickSecIdxY * m_ColCount + m_ClickSecIdxX]->GetPos();
@@ -274,7 +276,7 @@ bool CBoard::Init()
 
 	// Board 생성하기 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
-	CreateBoard(4, 4, TextureSize);
+	CreateBoard(10, 10, TextureSize);
 
 	// 초기화
 	m_ChangedCellRowInfo.reserve(m_RowCount);
