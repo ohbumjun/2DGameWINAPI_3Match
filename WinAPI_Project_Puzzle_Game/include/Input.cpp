@@ -199,7 +199,7 @@ void CInput::Update(float DeltaTime)
 
 void CInput::Render(HDC hDC)
 {
-	m_vecMouseImage[m_MouseType]->Render(m_MousePos, hDC);
+	m_vecMouseImage[m_MouseType]->Render(hDC, m_MousePos);
 }
 
 void CInput::UpdateMouse(float DeltaTime)

@@ -1,30 +1,30 @@
-#pragma  once
+#pragma once
 
-#include "../Ref.h"
 #include "UIWidget.h"
+#include "../Ref.h"
 
 class CUIWindow : public CRef {
+	friend class CStage;
 public :
 	CUIWindow();
-	CUIWindow(const CUIWindow& Window);
 	virtual ~CUIWindow();
 private :
 	class CStage* m_Stage;
-	int m_ZOrder;
-	bool m_Visibility;
-	Vector2 m_Size;
-	Vector2 m_Pos;
 	int m_WidgetCount;
 	int m_WidgetCapacity;
+	int m_ZOrder;
+	bool m_Visibility;
 	class CUIWidget** m_WidgetArray;
+	Vector2 m_Size;
+	Vector2 m_Pos;
 public :
-	Vector2 GetSize() const
-{
-		return m_Size;
-}
 	Vector2 GetPos() const
 {
 		return m_Pos;
+}
+	Vector2 GetSize() const
+{
+		return m_Size;
 }
 	bool GetVisibility() const
 {
@@ -36,29 +36,39 @@ public :
 }
 public :
 	void SetSize(const Vector2& Size)
-	{
+{
 		m_Size = Size;
-	}
-	void SetPost(const Vector2& Pos)
-	{
+}
+	void SetSize(float x, float y)
+{
+		m_Size = Vector2(x, y);
+}
+	void SetPos(const Vector2& Pos)
+{
 		m_Pos = Pos;
-	}
-	void SetVisibility(bool Visibility)
+}
+	void SetPos(float x, float y)
 	{
-		m_Visibility = Visibility;
+		m_Pos = Vector2(x, y);
 	}
 	void SetZOrder(int ZOrder)
-	{
+{
 		m_ZOrder = ZOrder;
-	}
+}
+	void SetVisibility(bool Visibility)
+{
+		m_Visibility = Visibility;
+}
 public :
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
 	virtual void PostUpdate(float DeltaTime);
 	virtual void Render(HDC hDC);
+	virtual void Render(HDC hDC, const Vector2& Pos);
 	virtual void Collision(float DeltaTime);
 public :
-	static int SortZ(const void* Src, const void* Dest);
+	// 내림 차순 
+	static int SortZOrder(const void* Src, const void* Dest);
 public :
 	template<typename T>
 	T* FindWidget(const std::string& Name)
@@ -68,17 +78,18 @@ public :
 		if (m_WidgetArray[i]->GetName() == Name)
 			return (T*)m_WidgetArray[i];
 	}
+	return nullptr;
 }
 	template<typename T>
 	T* CreateWidget(const std::string& Name)
 {
 		T* Widget = new T;
+		Widget->SetName(Name);
 		Widget->SetOwner(this);
-		Widget->SetStage(m_Stage);
 	if (!Widget->Init())
 	{
-		SAFE_DELETE(Widget)
-			return nullptr;
+		SAFE_DELETE(Widget);
+		return nullptr;
 	}
 	if (m_WidgetCount > m_WidgetCapacity)
 	{
@@ -88,10 +99,7 @@ public :
 		delete[] m_WidgetArray;
 		m_WidgetArray = Array;
 	}
-
-	Widget->AddRef();
 	m_WidgetArray[m_WidgetCount++] = Widget;
-	return Widget;
+	return (T*)Widget;
 }
-
 };

@@ -1,9 +1,12 @@
 #include "UIWidget.h"
+#include "UIWindow.h"
 
-CUIWidget::CUIWidget():
-m_MouseHovered(false),
+CUIWidget::CUIWidget() :
+m_Stage(nullptr),
+m_Owner(nullptr),
+m_Visibility(true),
 m_ZOrder(0),
-m_Visibility(true)
+m_MouseHovered(false)
 {}
 
 CUIWidget::CUIWidget(const CUIWidget& Widget)
@@ -15,52 +18,50 @@ CUIWidget::CUIWidget(const CUIWidget& Widget)
 CUIWidget::~CUIWidget()
 {}
 
-inline bool CUIWidget::Init()
+bool CUIWidget::Init()
 {
 	return true;
 }
 
-inline void CUIWidget::Update(float DeltaTime)
+void CUIWidget::Update(float DeltaTime)
+{
+
+}
+
+void CUIWidget::PostUpdate(float DeltaTime)
 {}
 
-inline void CUIWidget::PostUpdate(float DeltaTIme)
+void CUIWidget::Render(HDC hDC)
 {}
 
-inline void CUIWidget::Render(HDC hDC)
+void CUIWidget::Render(HDC hDC, const Vector2& Pos)
 {}
 
-inline bool CUIWidget::Collision(const Vector2& MousePos, float DeltaTime)
+void CUIWidget::Collision(float DeltaTime, const Vector2& MousePos)
 {
 	if (m_Pos.x <= MousePos.x && MousePos.x < m_Pos.x + m_Size.x &&
 		m_Pos.y <= MousePos.y && MousePos.y < m_Pos.y + m_Size.y)
 	{
 		if (!m_MouseHovered)
 		{
-			m_MouseHovered = true;
-			CollisionMouseHoveredCallback(DeltaTime);
+			CallMouseHoveredCallback(DeltaTime);
 		}
+		m_MouseHovered = true;
 	}
 	else
 	{
 		if (m_MouseHovered)
-		{
 			CallMouseReleaseCallback(DeltaTime);
-			m_MouseHovered = false;
-		}
+		m_MouseHovered = false;
 	}
 }
 
-CUIWidget* CUIWidget::Clone()
-{
-	return new CUIWidget(*this);
-}
-
-inline void CUIWidget::CollisionMouseHoveredCallback(float DeltaTime)
+void CUIWidget::CallMouseHoveredCallback(float DeltaTime)
 {
 	m_MouseHovered = true;
 }
 
-inline void CUIWidget::CallMouseReleaseCallback(float DeltaTime)
+void CUIWidget::CallMouseReleaseCallback(float DeltaTime)
 {
 	m_MouseHovered = false;
 }

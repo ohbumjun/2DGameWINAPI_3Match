@@ -839,13 +839,17 @@ bool CBoard::DenoteMatchCells()
 	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
 
 	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
-	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
+	// for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
+	for (int RMatchLen = m_ColCount - 1; RMatchLen >= 3; RMatchLen--)
 	{
 		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
 		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
 		{
 			for (int Col = 0; Col <= m_ColCount - RMatchLen; Col++)
 			{
+				if (m_vecDestroyedCells[Row][Col])
+					continue;
+
 				bool AllSame = true;
 				int   NxtCellIdx = -1;
 				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
@@ -872,7 +876,8 @@ bool CBoard::DenoteMatchCells()
 	}
 
 	// Column 검사
-	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
+	// for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
+	for (int CMatchLen = m_RowCount / 2; CMatchLen >= 3; CMatchLen--)
 	{
 		// 모든 Cell 들에 대해서 검사한다.
 		for (int Col = 0; Col < m_ColCount; Col++)
@@ -880,6 +885,9 @@ bool CBoard::DenoteMatchCells()
 			// 각 Colum --> 세로로 검사할 예정이다. 
 			for (int Row = m_RowCount / 2; Row <= m_RowCount - CMatchLen; Row++)
 			{
+				if (m_vecDestroyedCells[Row][Col])
+					continue;
+
 				bool AllSame = true;
 				int   NxtCellIdx = -1;
 				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();

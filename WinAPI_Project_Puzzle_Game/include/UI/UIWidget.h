@@ -1,78 +1,78 @@
+#pragma once
+
 #include "../Ref.h"
 
-class CUIWidget : public CRef {
-public:
+class CUIWidget: public CRef {
+public :
 	CUIWidget();
 	CUIWidget(const CUIWidget& Widget);
 	virtual ~CUIWidget();
 protected :
-	class CUIWindow* m_Owner;
 	class CStage* m_Stage;
+	class CUIWindow* m_Owner;
 	Vector2 m_Size;
 	Vector2 m_Pos;
-	int m_ZOrder;
 	bool m_Visibility;
+	int m_ZOrder;
 	bool m_MouseHovered;
 public :
-	Vector2 GetPos() const
+	bool GetVisibility() const
 {
-		return m_Pos;
-}
-	Vector2 GetSize() const
-{
-		return m_Size;
+		return m_Visibility;
 }
 	int GetZOrder() const
 {
 		return m_ZOrder;
 }
-	bool GetVisibility() const
+	Vector2 GetSize() const
 {
-		return m_Visibility;
+		return m_Size;
 }
-	bool IsMouseHovered() const
+	Vector2 GetPos() const
 {
-		return m_MouseHovered;
+		return m_Pos;
 }
 public :
-	void SetOwner(class CUIWindow* Window)
-	{
-		m_Owner = Window;
-	}
-	void SetStage(class CStage* const Stage)
-	{
+	void SetStage(class CStage* Stage)
+{
 		m_Stage = Stage;
-	}
+}
+	void SetOwner(class CUIWindow* Owner)
+{
+		m_Owner = Owner;
+}
 	void SetSize(const Vector2& Size)
 	{
 		m_Size = Size;
+	}
+	void SetSize(float x, float y)
+	{
+		m_Size = Vector2(x, y);
 	}
 	void SetPos(const Vector2& Pos)
 	{
 		m_Pos = Pos;
 	}
-	void SetZOrder(int Order)
-{
-		m_ZOrder = Order;
-}
+	void SetPos(float x, float y)
+	{
+		m_Pos = Vector2(x, y);
+	}
+	void SetZOrder(int ZOrder)
+	{
+		m_ZOrder = ZOrder;
+	}
 	void SetVisibility(bool Visibility)
-{
+	{
 		m_Visibility = Visibility;
-}
-	void SetMouseHovered(bool Hover)
-{
-		m_MouseHovered = Hover;
-}
-public:
+	}
+public :
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
-	virtual void PostUpdate(float DeltaTIme);
+	virtual void PostUpdate(float DeltaTime);
 	virtual void Render(HDC hDC);
-	virtual bool Collision(const Vector2& MousePos, float DeltaTime);
-	virtual CUIWidget* Clone();
+	virtual void Render(HDC hDC, const Vector2& Pos);
+	virtual void Collision(float DeltaTime, const Vector2& MousePos);
 public :
-	void CollisionMouseHoveredCallback(float DeltaTime);
+	void CallMouseHoveredCallback(float DeltaTime);
 	void CallMouseReleaseCallback(float DeltaTime);
 };
-
-
