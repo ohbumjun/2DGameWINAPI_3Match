@@ -130,6 +130,12 @@
     <ClCompile Include="Object\GameObject.cpp">
       <Filter>02. Object</Filter>
     </ClCompile>
+    <ClCompile Include="Stage\StartStage.cpp">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIButton.cpp">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -207,6 +213,12 @@
     </ClInclude>
     <ClInclude Include="Object\Block.h">
       <Filter>02. Object\02. Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\StartStage.h">
+      <Filter>01. GameManager\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIButton.h">
+      <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

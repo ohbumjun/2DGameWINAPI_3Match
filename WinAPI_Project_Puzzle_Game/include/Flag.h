@@ -38,3 +38,12 @@ enum  AnimalType
 	DUCK, // green bird
 	END
 };
+
+enum class EButton_State
+{
+	Normal,
+	MouseOn,
+	Click,
+	Disable,
+	End
+};

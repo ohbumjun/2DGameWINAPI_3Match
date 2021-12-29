@@ -1,46 +1,53 @@
 #include "UIWidget.h"
 
-CUIWidget::CUIWidget() :
-	m_ZOrder(0),
-	m_Visibility(true),
-	m_MouseHovered(false),
-	m_Owner(nullptr)
-{
-}
+CUIWidget::CUIWidget():
+m_MouseHovered(false),
+m_ZOrder(0),
+m_Visibility(true)
+{}
 
-CUIWidget::CUIWidget(const CUIWidget& widget)
+CUIWidget::CUIWidget(const CUIWidget& Widget)
 {
-	*this = widget;
-	m_RefCount = 0;
+	*this = Widget;
+	m_MouseHovered = false;
 }
 
 CUIWidget::~CUIWidget()
-{
-}
+{}
 
-bool CUIWidget::Init()
+inline bool CUIWidget::Init()
 {
 	return true;
 }
 
-void CUIWidget::Update(float DeltaTime)
-{
-}
+inline void CUIWidget::Update(float DeltaTime)
+{}
 
-void CUIWidget::PostUpdate(float DeltaTime)
-{
-}
+inline void CUIWidget::PostUpdate(float DeltaTIme)
+{}
 
-void CUIWidget::Collision(float DeltaTime)
-{
-}
+inline void CUIWidget::Render(HDC hDC)
+{}
 
-void CUIWidget::Render(HDC hDC)
+inline bool CUIWidget::Collision(const Vector2& MousePos, float DeltaTime)
 {
-}
-
-void CUIWidget::Render(const Vector2& Pos, HDC hDC)
-{
+	if (m_Pos.x <= MousePos.x && MousePos.x < m_Pos.x + m_Size.x &&
+		m_Pos.y <= MousePos.y && MousePos.y < m_Pos.y + m_Size.y)
+	{
+		if (!m_MouseHovered)
+		{
+			m_MouseHovered = true;
+			CollisionMouseHoveredCallback(DeltaTime);
+		}
+	}
+	else
+	{
+		if (m_MouseHovered)
+		{
+			CallMouseReleaseCallback(DeltaTime);
+			m_MouseHovered = false;
+		}
+	}
 }
 
 CUIWidget* CUIWidget::Clone()
@@ -48,42 +55,12 @@ CUIWidget* CUIWidget::Clone()
 	return new CUIWidget(*this);
 }
 
-bool CUIWidget::CollisionMouse(const Vector2& MousePos, float DeltaTime)
-{
-	if (m_Pos.x <= MousePos.x && MousePos.x <= m_Pos.x + m_Size.x &&
-		m_Pos.y <= MousePos.y && MousePos.y <= m_Pos.y + m_Size.y)
-	{
-		if (!m_MouseHovered)
-		{
-			CollisionMouseHoveredCallback(DeltaTime);
-			m_MouseHovered = true;
-		}
-		return true;
-	}
-	else
-	{
-		if (m_MouseHovered)
-		{
-			CollisionMouseReleaseCallback(DeltaTime);
-			m_MouseHovered = false;
-		}
-	}
-	return false;
-}
-
-void CUIWidget::Move(Vector2& Dir, float Speed)
-{
-	Dir.Normalize();
-	Vector2 CurrentMove = Dir * Speed;
-	m_Pos += CurrentMove;
-}
-
-void CUIWidget::CollisionMouseHoveredCallback(float DeltaTime)
+inline void CUIWidget::CollisionMouseHoveredCallback(float DeltaTime)
 {
 	m_MouseHovered = true;
 }
 
-void CUIWidget::CollisionMouseReleaseCallback(float DeltaTime)
+inline void CUIWidget::CallMouseReleaseCallback(float DeltaTime)
 {
 	m_MouseHovered = false;
 }

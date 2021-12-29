@@ -1,80 +1,78 @@
-#pragma once
-
 #include "../Ref.h"
 
-class CUIWidget : public CRef
-{
+class CUIWidget : public CRef {
 public:
 	CUIWidget();
-	CUIWidget(const  CUIWidget& widget);
+	CUIWidget(const CUIWidget& Widget);
 	virtual ~CUIWidget();
 protected :
+	class CUIWindow* m_Owner;
+	class CStage* m_Stage;
+	Vector2 m_Size;
+	Vector2 m_Pos;
 	int m_ZOrder;
 	bool m_Visibility;
-	class CUIWindow* m_Owner;
-	Vector2 m_Pos;
-	Vector2 m_Size;
 	bool m_MouseHovered;
-
 public :
 	Vector2 GetPos() const
-	{
+{
 		return m_Pos;
-	}
+}
 	Vector2 GetSize() const
-	{
+{
 		return m_Size;
-	}
-	bool GetVisibility() const
-	{
-		return m_Visibility;
-	}
+}
 	int GetZOrder() const
-	{
+{
 		return m_ZOrder;
-	}
-
+}
+	bool GetVisibility() const
+{
+		return m_Visibility;
+}
+	bool IsMouseHovered() const
+{
+		return m_MouseHovered;
+}
 public :
-	void SetPos(const Vector2& Pos)
+	void SetOwner(class CUIWindow* Window)
 	{
-		m_Pos = Pos;
+		m_Owner = Window;
 	}
-	void SetPos(float x, float y)
+	void SetStage(class CStage* const Stage)
 	{
-		m_Pos = Vector2(x, y);
+		m_Stage = Stage;
 	}
 	void SetSize(const Vector2& Size)
 	{
 		m_Size = Size;
 	}
-	void SetSize(float x, float y)
+	void SetPos(const Vector2& Pos)
 	{
-		m_Size = Vector2(x, y);
+		m_Pos = Pos;
 	}
-	void SetOwner(class CUIWindow* Owner)
-	{
-		m_Owner = Owner;
-	}
+	void SetZOrder(int Order)
+{
+		m_ZOrder = Order;
+}
 	void SetVisibility(bool Visibility)
-	{
+{
 		m_Visibility = Visibility;
-	}
-	void SetZOrder(int ZOrder)
-	{
-		m_ZOrder = ZOrder;
-	}
-public :
+}
+	void SetMouseHovered(bool Hover)
+{
+		m_MouseHovered = Hover;
+}
+public:
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
-	virtual void PostUpdate(float DeltaTime);
-	virtual void Collision(float DeltaTime);
+	virtual void PostUpdate(float DeltaTIme);
 	virtual void Render(HDC hDC);
-	virtual void Render(const Vector2& Pos, HDC hDC);
+	virtual bool Collision(const Vector2& MousePos, float DeltaTime);
 	virtual CUIWidget* Clone();
 public :
-	bool CollisionMouse(const Vector2& MousePos, float DeltaTime);
-	void Move(Vector2& Dir, float Speed);
-public :
-	virtual void CollisionMouseHoveredCallback(float DeltaTime);
-	virtual void CollisionMouseReleaseCallback(float DeltaTime);
+	void CollisionMouseHoveredCallback(float DeltaTime);
+	void CallMouseReleaseCallback(float DeltaTime);
 };
+
+

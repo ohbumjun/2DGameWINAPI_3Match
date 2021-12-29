@@ -40,7 +40,9 @@
     <ClInclude Include="Stage\BasicStage.h" />
     <ClInclude Include="Stage\Stage.h" />
     <ClInclude Include="Stage\StageManager.h" />
+    <ClInclude Include="Stage\StartStage.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UI\UIButton.h" />
     <ClInclude Include="UI\UIImage.h" />
     <ClInclude Include="UI\UIWidget.h" />
     <ClInclude Include="UI\UIWindow.h" />
@@ -63,7 +65,9 @@
     <ClCompile Include="Stage\BasicStage.cpp" />
     <ClCompile Include="Stage\Stage.cpp" />
     <ClCompile Include="Stage\StageManager.cpp" />
+    <ClCompile Include="Stage\StartStage.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UI\UIButton.cpp" />
     <ClCompile Include="UI\UIImage.cpp" />
     <ClCompile Include="UI\UIWidget.cpp" />
     <ClCompile Include="UI\UIWindow.cpp" />
