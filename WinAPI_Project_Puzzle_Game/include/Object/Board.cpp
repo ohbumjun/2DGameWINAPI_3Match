@@ -871,8 +871,8 @@ bool CBoard::DenoteMatchCells()
 					{
 						m_vecDestroyedCells[Row][Col + k] = true;
 						IsMatch = true;
-						m_MatchCount += 1;
 					}
+					m_MatchCount += 1;
 				}
 			}
 		}
@@ -910,8 +910,8 @@ bool CBoard::DenoteMatchCells()
 					{
 						m_vecDestroyedCells[Row + k][Col] = true;
 						IsMatch = true;
-						m_MatchCount += 1;
 					}
+					m_MatchCount += 1;
 				}
 			}
 		}
