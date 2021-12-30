@@ -20,6 +20,7 @@ public :
 	void SetTexture(const std::string& Name, const TCHAR* FileName, const std::string& PathName = TEXTURE_PATH);
 	void SetTextureFullPath(const std::string& Name, const TCHAR* FullPath);
 	void SetTextureColorKey(unsigned char r, unsigned char g, unsigned char b, int Index = 0);
+	void SetFrameData(EButton_State State, const Vector2& StartPos, const Vector2& Size);
 public :
 	void Enable(bool Enable);
 public :

@@ -26,6 +26,12 @@ CStage::CStage(const CStage& Stage)
 CStage::~CStage()
 {
 	SAFE_DELETE(m_Board);
+
+	for (int i = 0; i < m_UICount; i++)
+	{
+		SAFE_DELETE(m_UIArray[i]);
+	}
+	SAFE_DELETE_ARRAY(m_UIArray);
 }
 
 CGameObject* CStage::FindObject(const std::string& Name)

@@ -8,6 +8,7 @@ CBoard::CBoard() :
 	m_RowCount(0),
 	m_ColCount(0),
 	m_Click(0),
+	m_Pos(Vector2(0.f, 0.f)),
 	m_ClickFirstPos{},
 	m_ClickSecPos{},
 	m_Start(false),
@@ -276,7 +277,7 @@ bool CBoard::Init()
 
 	// Board 생성하기 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
-	CreateBoard(10, 10, TextureSize);
+	CreateBoard(7, 7, TextureSize);
 
 	// 초기화
 	m_ChangedCellRowInfo.reserve(m_RowCount);

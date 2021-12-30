@@ -106,6 +106,12 @@ void CUIButton::SetTextureColorKey(unsigned char r, unsigned char g, unsigned ch
 		m_Texture->SetColorKey(r, g, b, Index);
 }
 
+void CUIButton::SetFrameData(EButton_State State, const Vector2& StartPos, const Vector2& Size)
+{
+	m_FrameData[(int)State].StartPos = StartPos;
+	m_FrameData[(int)State].Size = Size;
+}
+
 void CUIButton::Enable(bool Enable)
 {
 	m_ButtonState = Enable ? EButton_State::Normal : EButton_State::Disable;

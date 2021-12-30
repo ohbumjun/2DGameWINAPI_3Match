@@ -119,6 +119,10 @@ public :
 	{
 		return m_Size;
 	}
+	const Vector2& GetRealBoardSize()
+	{
+		return Vector2(m_Size.x, m_Size.y / 2.f);
+	}
 	int GetNewIndex(int RowIndex, int ColIndex)
 	{
 		return RowIndex * m_ColCount + ColIndex;
