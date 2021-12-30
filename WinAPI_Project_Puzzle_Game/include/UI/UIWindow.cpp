@@ -90,6 +90,10 @@ void CUIWindow::Render(HDC hDC)
 		++i;
 	}
 
+	if (m_WidgetCount > 1)
+		qsort(m_WidgetArray, (size_t)m_WidgetCount, sizeof(CUIWidget*), CUIWindow::SortZOrder);
+
+	// z 값 기준 오름차순 정렬 --> 낮은 애부터 그린다 --> 높은 애들이 나중에 그려지게 
 	for (int i = m_WidgetCount - 1; i >= 0; i--)
 	{
 		if (!m_WidgetArray[i]->GetVisibility())
@@ -109,12 +113,13 @@ void CUIWindow::Collision(float DeltaTime)
 	}
 }
 
+// 내림차순 정렬 
 int CUIWindow::SortZOrder(const void* Src, const void* Dest)
 {
 	CUIWidget* SrcWidget  = *(CUIWidget**)Src;
 	CUIWidget* DestWidget = *(CUIWidget**)Dest;
 
-	// 내림 차순
+	// 내림차순 정렬
 	if (SrcWidget->GetZOrder() < DestWidget->GetZOrder())
 		return 1;
 	else if (SrcWidget->GetZOrder() > DestWidget->GetZOrder())

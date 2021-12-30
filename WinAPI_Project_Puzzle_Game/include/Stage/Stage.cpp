@@ -109,8 +109,11 @@ bool CStage::Render(HDC hDC)
 	{
 		if (!m_UIArray[i]->IsActive())
 		{
-			SAFE_DELETE(m_UIArray[i]);
-			++i;
+			for (int j = i; j < m_UICount - 1; j++)
+			{
+				m_UIArray[j] = m_UIArray[j + 1];
+			}
+			--m_UICount;
 			continue;
 		}
 		++i;
