@@ -2,11 +2,19 @@
 #include "../Object/Board.h"
 #include "../Resource/ResourceManager.h"
 
+
+class CUIWindow* m_UIArray;
+int m_UICapacity;
+int m_UICount;
+
 CStage::CStage(int row, int col) :
 	m_Row(row),
 	m_Col(col),
 	m_Board(nullptr),
-	m_StageLevel(0)
+	m_StageLevel(0),
+	m_UIArray(nullptr),
+	m_UICapacity(4),
+	m_UICount(0)
 {
 }
 

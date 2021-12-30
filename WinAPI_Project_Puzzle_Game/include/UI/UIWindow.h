@@ -35,6 +35,10 @@ public :
 		return m_ZOrder;
 }
 public :
+	void SetStage(class CStage* Stage)
+{
+		m_Stage = Stage;
+}
 	void SetSize(const Vector2& Size)
 {
 		m_Size = Size;
