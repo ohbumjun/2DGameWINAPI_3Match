@@ -3,19 +3,16 @@
 #include "../Resource/ResourceManager.h"
 
 
-class CUIWindow* m_UIArray;
-int m_UICapacity;
-int m_UICount;
-
 CStage::CStage(int row, int col) :
 	m_Row(row),
 	m_Col(col),
 	m_Board(nullptr),
 	m_StageLevel(0),
 	m_UIArray(nullptr),
-	m_UICapacity(4),
+	m_UICapacity(10),
 	m_UICount(0)
 {
+	m_UIArray = new CUIWindow * [m_UICapacity];
 }
 
 CStage::CStage(const CStage& Stage)
@@ -51,19 +48,97 @@ bool CStage::Init()
 bool CStage::Update(float DeltaTime)
 {
 	m_Board->Update(DeltaTime);
+
+	// UI
+	for (int i = 0; i < m_UICount;)
+	{
+		if (!m_UIArray[i]->IsActive())
+		{
+			SAFE_DELETE(m_UIArray[i]);
+			i++;
+			continue;
+		}
+		if (!m_UIArray[i]->GetVisibility())
+		{
+			++i;
+			continue;
+		}
+		m_UIArray[i]->Update(DeltaTime);
+		++i;
+	}
+
 	return true;
 }
 
 bool CStage::PostUpdate(float DeltaTime)
 {
 	m_Board->PostUpdate(DeltaTime);
+
+	// UI
+	for (int i = 0; i < m_UICount;)
+	{
+		if (!m_UIArray[i]->IsActive())
+		{
+			SAFE_DELETE(m_UIArray[i]);
+			i++;
+			continue;
+		}
+		if (!m_UIArray[i]->GetVisibility())
+		{
+			++i;
+			continue;
+		}
+		m_UIArray[i]->PostUpdate(DeltaTime);
+		++i;
+	}
+
 	return true;
 }
 
 bool CStage::Render(HDC hDC)
 {
 	m_Board->Render(hDC);
+
+	for (int i = 0; i < m_UICount;)
+	{
+		if (!m_UIArray[i]->IsActive())
+		{
+			SAFE_DELETE(m_UIArray[i]);
+			++i;
+			continue;
+		}
+		++i;
+	}
+
+	if (m_UICount > 1)
+	{
+		qsort(m_UIArray, (size_t)m_UICount, sizeof(CUIWindow*), CStage::SortZOrder);
+	}
+
+	// 오름 차순 정렬 --> 앞에서부터 그리기 --> Z Order 높은 애들이 앞에 그려질 수 있도록 
+	for (int i = 0; i < m_UICount; i ++)
+	{
+		if (!m_UIArray[i]->GetVisibility())
+			continue;
+		m_UIArray[i]->Render(hDC);
+	}
+
 	return true;
+}
+
+int CStage::SortZOrder(const void* Src, const void* Dest)
+{
+	CUIWindow* SrcWindow   = *(CUIWindow**)Src;
+	CUIWindow* DestWindow = *(CUIWindow**)Dest;
+
+	int SrcZOrder = SrcWindow->GetZOrder();
+	int DestZOrder = DestWindow->GetZOrder();
+
+	if (SrcZOrder < DestZOrder)
+		return 1;
+	else if (SrcZOrder > DestZOrder)
+		return -1;
+	return 0;
 }
 
 void CStage::SetCharactersAnimation()

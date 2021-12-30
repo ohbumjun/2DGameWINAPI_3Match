@@ -45,8 +45,10 @@ public:
 	virtual bool PostUpdate(float DeltaTime);
 	virtual bool Render(HDC hDC);
 public :
+	static int SortZOrder(const void* Src, const void* Dest);
+public :
 	template<typename T>
-	T* FindWindow(const std::string& Name)
+	T* FindUIWindow(const std::string& Name)
 	{
 		for (int i = 0; i < m_UICount; i++)
 		{
