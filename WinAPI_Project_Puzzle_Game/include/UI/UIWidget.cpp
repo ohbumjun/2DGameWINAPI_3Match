@@ -39,8 +39,9 @@ void CUIWidget::Render(HDC hDC, const Vector2& Pos)
 
 void CUIWidget::Collision(float DeltaTime, const Vector2& MousePos)
 {
-	if (m_Pos.x <= MousePos.x && MousePos.x < m_Pos.x + m_Size.x &&
-		m_Pos.y <= MousePos.y && MousePos.y < m_Pos.y + m_Size.y)
+	Vector2 Pos = m_Pos + m_Owner->GetPos();
+	if (Pos.x <= MousePos.x && MousePos.x < Pos.x + m_Size.x &&
+		Pos.y <= MousePos.y && MousePos.y < Pos.y + m_Size.y)
 	{
 		if (!m_MouseHovered)
 		{
