@@ -17,14 +17,14 @@ bool CBasicStage::Init()
 
 	// UI
 	CUIWindow* Window = CreateUIWindow<CUIWindow>("Window");
-	Window->SetPos(200.f, 0.f);
+	Window->SetPos(100.f, 0.f);
 	CUIButton* Button = Window->CreateWidget<CUIButton>("ExitButton");
 
 	// Button->SetTexture("ExitButton", TEXT("ButtonBack.bmp"), TEXTURE_PATH);
 	Button->SetTexture("ExitButton", TEXT("ButtonBack.bmp"), TEXTURE_PATH);
 	Vector2 StartPos = GetBoard()->GetPos();
 	Vector2 StartSize = GetBoard()->GetRealBoardSize();
-	Button->SetPos(StartPos + StartSize);
+	Button->SetPos(StartPos + Vector2(StartSize.x, 0.f));
 
 	return true;
 }

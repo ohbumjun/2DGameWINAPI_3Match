@@ -136,6 +136,9 @@
     <ClCompile Include="UI\UIButton.cpp">
       <Filter>05. UI\01. Widget</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UIText.cpp">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -218,6 +221,9 @@
       <Filter>01. GameManager\03. Stage</Filter>
     </ClInclude>
     <ClInclude Include="UI\UIButton.h">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIText.h">
       <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
   </ItemGroup>
