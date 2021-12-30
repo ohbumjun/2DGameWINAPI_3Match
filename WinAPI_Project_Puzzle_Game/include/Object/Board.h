@@ -84,7 +84,14 @@ private :
 	bool m_NoticeCombination;
 	std::vector<int> m_PossibleIdxs;
 
+	// Match
+	int m_MatchCount;
+
 public :
+	int GetMatchCount() const
+	{
+		return m_MatchCount;
+	}
 	int GetRowCount() const
 	{
 		return m_RowCount;

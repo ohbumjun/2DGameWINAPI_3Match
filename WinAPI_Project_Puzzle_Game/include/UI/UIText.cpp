@@ -1,4 +1,5 @@
 #include "UIText.h"
+#include "UIWindow.h"
 
 CUIText::CUIText() :
 	m_TextCapacity(22),
@@ -9,7 +10,7 @@ CUIText::CUIText() :
 	memset(m_Text, 0, sizeof(TCHAR) * m_TextCapacity);
 }
 
-CUIText::CUIText(const CUIText& Text)
+CUIText::CUIText(const CUIText& Text) : CUIWidget(Text)
 {
 	m_TextCapacity = Text.m_TextCapacity;
 	m_TextCount = Text.m_TextCount;
@@ -32,7 +33,8 @@ bool CUIText::Init()
 
 void CUIText::Render(HDC hDC)
 {
+	Vector2 Pos = m_Pos + m_Owner->GetPos();
 	SetBkColor(hDC, TRANSPARENT);
 	::SetTextColor(hDC, m_TextColor);
-	TextOut(hDC, (int)m_Pos.x, (int)m_Pos.y, m_Text, m_TextCount);
+	TextOut(hDC, (int)Pos.x, (int)Pos.y, m_Text, m_TextCount);
 }

@@ -6,7 +6,8 @@ CUIImage::CUIImage() :
 	m_Texture(nullptr),
 m_PlayTime(1.f),
 m_AnimTime(0.f),
-m_FrameIndex(0)
+m_FrameIndex(0),
+m_Offset{}
 {}
 
 CUIImage::CUIImage(const CUIImage& Image)
@@ -125,16 +126,23 @@ void CUIImage::Render(HDC hDC)
 			{
 				ImagePos = m_vecFrameData[m_FrameIndex].StartPos;
 				Size = m_vecFrameData[m_FrameIndex].Size;
-				m_Texture->Render(hDC, Pos, ImagePos, Size);
+				m_Texture->Render(hDC, Pos + m_Offset, ImagePos, Size);
 			}
 			else
 			{
-				m_Texture->Render(hDC, Pos, ImagePos, Size, m_FrameIndex);
+				m_Texture->Render(hDC, Pos + m_Offset, ImagePos, Size, m_FrameIndex);
 			}
 		}
 		else
 		{
-			m_Texture->Render(hDC, Pos, ImagePos, Size);
+			if (m_Texture->GetTextureType() == ETexture_Type::Atlas)
+			{
+				m_Texture->Render(hDC, Pos + m_Offset, ImagePos, Size);
+			}
+			else
+			{
+				m_Texture->Render(hDC, Pos + m_Offset, ImagePos, Size, m_FrameIndex);
+			}
 		}
 	}
 }

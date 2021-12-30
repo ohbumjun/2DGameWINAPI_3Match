@@ -28,7 +28,8 @@ CBoard::CBoard() :
 	m_NoClickTime(0.f),
 	m_PossibleIdxs{},
 	m_NoClickTimeMax(2.f),
-	m_NoticeCombination(false)
+	m_NoticeCombination(false),
+	m_MatchCount(0)
 {
 	m_vecCells = new CCell * [m_BlockCapacity];
 	m_vecBlocks = new CBlock * [m_BlockCapacity];
@@ -870,6 +871,7 @@ bool CBoard::DenoteMatchCells()
 					{
 						m_vecDestroyedCells[Row][Col + k] = true;
 						IsMatch = true;
+						m_MatchCount += 1;
 					}
 				}
 			}
@@ -908,6 +910,7 @@ bool CBoard::DenoteMatchCells()
 					{
 						m_vecDestroyedCells[Row + k][Col] = true;
 						IsMatch = true;
+						m_MatchCount += 1;
 					}
 				}
 			}

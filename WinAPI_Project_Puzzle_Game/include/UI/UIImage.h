@@ -7,12 +7,13 @@ public :
 	CUIImage();
 	CUIImage(const CUIImage& Image);
 	virtual ~CUIImage() override;
-private :
+protected :
 	CSharedPtr<class CTexture> m_Texture;
 	std::vector<AnimationFrameData> m_vecFrameData;
 	float m_PlayTime;
 	float m_AnimTime;
 	int m_FrameIndex;
+	Vector2 m_Offset;
 public :
 	void SetTexture(class CTexture* const Texture);
 	void SetTexture(const std::string& Name);

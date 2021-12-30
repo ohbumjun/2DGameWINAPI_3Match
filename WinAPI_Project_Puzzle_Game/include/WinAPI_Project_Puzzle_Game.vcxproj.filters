@@ -139,6 +139,9 @@
     <ClCompile Include="UI\UIText.cpp">
       <Filter>05. UI\01. Widget</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UINumberWidget.cpp">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -224,6 +227,9 @@
       <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
     <ClInclude Include="UI\UIText.h">
+      <Filter>05. UI\01. Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UINumberWidget.h">
       <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
   </ItemGroup>

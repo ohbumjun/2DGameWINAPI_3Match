@@ -10,7 +10,7 @@ m_ButtonState(EButton_State::Normal),
 m_Texture(nullptr)
 {}
 
-CUIButton::CUIButton(const CUIButton& Button)
+CUIButton::CUIButton(const CUIButton& Button) : CUIWidget(Button)
 {
 	m_Texture = Button.m_Texture;
 	m_ButtonState = Button.m_ButtonState;

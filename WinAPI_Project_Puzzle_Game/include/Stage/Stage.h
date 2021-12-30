@@ -10,12 +10,12 @@ public :
 	CStage(int row = 5, int col = 5);
 	CStage(const CStage& Stage);
 	virtual ~CStage();
-private :
+protected :
 	class CBoard* m_Board;
 	int m_Row;
 	int m_Col;
 	int m_StageLevel;
-private :
+protected:
 	class CUIWindow** m_UIArray;
 	int m_UICapacity;
 	int m_UICount;

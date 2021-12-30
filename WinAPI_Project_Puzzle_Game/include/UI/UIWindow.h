@@ -71,6 +71,8 @@ public :
 	virtual void Render(HDC hDC, const Vector2& Pos);
 	virtual void Collision(float DeltaTime);
 public :
+	void Exit();
+public :
 	// 내림 차순 
 	static int SortZOrder(const void* Src, const void* Dest);
 public :

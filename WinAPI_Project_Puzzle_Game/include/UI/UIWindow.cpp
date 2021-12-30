@@ -1,5 +1,6 @@
 #include "UIWindow.h"
 #include "../Input.h"
+#include "../GameManager.h"
 
 CUIWindow::CUIWindow():
 m_Stage(nullptr),
@@ -115,6 +116,11 @@ void CUIWindow::Collision(float DeltaTime)
 	{
 		qsort(m_WidgetArray, (size_t)m_WidgetCount, sizeof(CUIWidget*), CUIWindow::SortZOrder);
 	}
+}
+
+void CUIWindow::Exit()
+{
+	CGameManager::GetInst()->Exit();
 }
 
 // 내림차순 정렬 
