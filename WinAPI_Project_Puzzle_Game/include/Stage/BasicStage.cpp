@@ -32,7 +32,7 @@ bool CBasicStage::Init()
 	Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetButtonClickCallback(Window, &CUIWindow::Exit);
 
-	CUIText* Text = Window->CreateWidget<CUIText>("ExitText");
+	CUIText* Text = Window->CreateWidget<CUIText>("ExitText"); //
 	Text->SetPos(Button->GetPos());
 	Text->SetText(TEXT("EXIT"));
 	Text->SetTextColor(255.f, 255.f, 255.f);
