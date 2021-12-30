@@ -23,13 +23,16 @@ bool CBasicStage::Init()
 	CUIButton* Button = ButtonWindow->CreateWidget<CUIButton>("ExitButton");
 	// Button->SetTexture("ExitButton", TEXT("ButtonBack.bmp"), TEXTURE_PATH);
 	Button->SetTexture("ExitButton", TEXT("ButtonBack.bmp"), TEXTURE_PATH);
-	Vector2 StartPos = GetBoard()->GetPos();
-	Vector2 StartSize = GetBoard()->GetRealBoardSize();
-	Vector2 ButtonPos = StartPos + Vector2(StartSize.x, 0.f);
-	Button->SetPos(ButtonPos);
+	Vector2 ButtonPos = Vector2(GetBoard()->GetRealBoardSize().x, 0.f);
+	Button->SetPos(GetBoard()->GetPos() + ButtonPos);
+	Button->SetFrameData(EButton_State::Normal, Vector2(0.f, 0.f), Vector2(200.f, 100.f));
+	Button->SetFrameData(EButton_State::MouseOn, Vector2(200.f, 0.f), Vector2(200.f, 100.f));
+	Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
+	Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
 
 	CUIText* Text = ButtonWindow->CreateWidget<CUIText>("ExitText");
-	Text->SetPos(ButtonPos + ButtonWindow->GetPos() - Vector2(10.f, 0.f));
+	Vector2 TextPos = ButtonPos + Vector2(Button->GetSize().x / 4.f - 10.f , Button->GetSize().y / 2.f - 10.f);
+	Text->SetPos(TextPos);
 	Text->SetText(TEXT("EXIT"));
 	Text->SetTextColor(255.f, 255.f, 255.f);
 	Text->SetZOrder(1);

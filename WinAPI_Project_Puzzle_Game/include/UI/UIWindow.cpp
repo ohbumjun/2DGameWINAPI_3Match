@@ -1,4 +1,5 @@
 #include "UIWindow.h"
+#include "../Input.h"
 
 CUIWindow::CUIWindow():
 m_Stage(nullptr),
@@ -27,6 +28,8 @@ bool CUIWindow::Init()
 
 void CUIWindow::Update(float DeltaTime)
 {
+	Vector2 MousePos = CInput::GetInst()->GetMousePos();
+
 	for (int i = 0; i< m_WidgetCount;)
 	{
 		if (!m_WidgetArray[i]->IsActive())
@@ -45,6 +48,7 @@ void CUIWindow::Update(float DeltaTime)
 			continue;
 		}
 		m_WidgetArray[i]->Update(DeltaTime);
+		m_WidgetArray[i]->Collision(DeltaTime, MousePos);
 		++i;
 	}
 }
@@ -93,7 +97,7 @@ void CUIWindow::Render(HDC hDC)
 	if (m_WidgetCount > 1)
 		qsort(m_WidgetArray, (size_t)m_WidgetCount, sizeof(CUIWidget*), CUIWindow::SortZOrder);
 
-	// z 값 기준 오름차순 정렬 --> 낮은 애부터 그린다 --> 높은 애들이 나중에 그려지게 
+	// z 값 기준 내림차순 정렬 --> 낮은 애부터 그린다 --> 높은 애들이 나중에 그려지게 
 	for (int i = m_WidgetCount - 1; i >= 0; i--)
 	{
 		if (!m_WidgetArray[i]->GetVisibility())
