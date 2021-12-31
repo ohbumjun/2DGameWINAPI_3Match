@@ -29,7 +29,7 @@ public:
     }
     void ClearNumber()
     {
-        m_vecNumber.clear();
+        m_vecNumber.clear(); //
     }
 public:
     virtual bool Init();
