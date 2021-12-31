@@ -2,16 +2,16 @@
 #include "../Object/Board.h"
 #include "../Resource/ResourceManager.h"
 
-int CStage::s_StaticRow = 0;
-int CStage::s_StaticCol = 0;
+int CStage::s_StaticRow         = 0;
+int CStage::s_StaticCol          = 0;
+bool CStage::m_StageEnable = false;
 
 CStage::CStage() :
 	m_Board(nullptr),
 	m_StageLevel(0),
 	m_UIArray(nullptr),
 	m_UICapacity(10),
-	m_UICount(0),
-	m_StageEnable(false)
+	m_UICount(0)
 {
 	m_UIArray = new CUIWindow * [m_UICapacity];
 }
@@ -44,7 +44,7 @@ bool CStage::Init()
 	{
 		m_Board = new CBoard;
 
-		if (!m_Board->Init())
+		if (!m_Board->Init(s_StaticRow, s_StaticCol))
 			return false;
 
 		SetCharactersAnimation();

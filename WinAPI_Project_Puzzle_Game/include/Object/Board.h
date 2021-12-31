@@ -201,7 +201,7 @@ public : // Render
 	int   SortPartition(int Left, int Right, std::vector<CSharedPtr<CGameObject>>& RenderObjects);
 public:
 	void Start();
-	bool Init();
+	bool Init(int Row, int Col);
 	bool Update(float DeltaTime);
 	bool PostUpdate(float DeltaTime);
 	bool Render(HDC hDC);

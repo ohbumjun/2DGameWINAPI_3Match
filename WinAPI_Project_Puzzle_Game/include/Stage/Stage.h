@@ -13,7 +13,6 @@ public :
 protected :
 	class CBoard* m_Board;
 	int m_StageLevel;
-	bool m_StageEnable;
 protected:
 	class CUIWindow** m_UIArray;
 	int m_UICapacity;
@@ -21,6 +20,7 @@ protected:
 protected :
 	static int s_StaticRow;
 	static int s_StaticCol;
+	static bool m_StageEnable;
 public :
 	static int GetRow() 
 	{

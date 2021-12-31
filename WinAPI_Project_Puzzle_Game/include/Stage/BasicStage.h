@@ -17,5 +17,6 @@ private :
     void LoadAnimationSequence();
 public :
     virtual bool Update(float DeltaTime) override;
+    void GoBackToIntro();
 };
 

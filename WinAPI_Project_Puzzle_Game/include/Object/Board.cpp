@@ -264,7 +264,7 @@ void CBoard::Start()
 	}
 }
 
-bool CBoard::Init()
+bool CBoard::Init(int Row, int Col)
 {
 	// Load Basic Block Texture
 	CResourceManager::GetInst()->LoadTexture("BlockTexture", TEXT("block.bmp"));
@@ -278,7 +278,7 @@ bool CBoard::Init()
 
 	// Board 생성하기 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
-	CreateBoard(7, 7, TextureSize);
+	CreateBoard(Row, Col, TextureSize);
 
 	// 초기화
 	m_ChangedCellRowInfo.reserve(m_RowCount);
