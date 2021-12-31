@@ -1003,7 +1003,7 @@ bool CBoard::CheckMatchCells()
 			}
 		}
 	}
-	return true;
+	return false;
 }
 
 Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
@@ -1031,9 +1031,9 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 
 bool CBoard::MakeMatchableBoard()
 {
-	// 가능한 조합이 있다면 건너뛴다.
-	if (CheckMatchPossible())
-		return true;
+	// 맞는 애들은 없지만,  가능한 조합이 있다면 건너뛴다.
+	// if (!CheckMatchCells() || CheckMatchPossible())
+	// 	return true;
 
 	while(true)
 	{
