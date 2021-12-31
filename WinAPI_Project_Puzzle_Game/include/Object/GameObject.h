@@ -60,7 +60,8 @@ public:
 	}
 public: // Animation ==========
 	void CreateAnimation();
-	void AddAnimation(const std::string& SequenceName, bool Loop = true, float PlayTime = 1.f, float PlayScale = 1.f, bool Reverse = false);
+	void AddAnimation(const std::string& SequenceName, 
+		const std::string& AnimName, bool Loop = true, float PlayTime = 1.f, float PlayScale = 1.f, bool Reverse = false);
 	void SetAnimationPlayTime(const std::string& Name, float PlayTime);
 	void SetAnimationPlayScale(const std::string& Name, float PlayScale);
 	void SetCurrentAnimation(const std::string& Name);

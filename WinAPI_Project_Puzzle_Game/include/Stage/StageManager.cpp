@@ -30,13 +30,15 @@ bool CStageManager::Init()
 bool CStageManager::Update(float DeltaTime)
 {
     m_Stage->Update(DeltaTime);
-    return ChangeStage() ;
+    return true;
+    // return ChangeStage() ;
 }
 
 bool CStageManager::PostUpdate(float DeltaTime)
 {
     m_Stage->PostUpdate(DeltaTime);
-    return ChangeStage();
+    return true;
+    // return ChangeStage();
 }
 
 void CStageManager::Render(HDC hDC)
@@ -56,6 +58,7 @@ bool CStageManager::ChangeStage()
         m_Stage = m_NextStage;
 
         m_NextStage = nullptr;
+        return true;
     }
     return true;
 }

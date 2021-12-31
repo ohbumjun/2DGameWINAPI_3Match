@@ -24,7 +24,7 @@ CStage::CStage(const CStage& Stage)
 
 CStage::~CStage()
 {
-	SAFE_DELETE(m_Board); //
+	SAFE_DELETE(m_Board); 
 
 	for (int i = 0; i < m_UICount; i++)
 	{

@@ -53,7 +53,8 @@ void CGameObject::CreateAnimation()
 	}
 }
 
-void CGameObject::AddAnimation(const std::string& SequenceName, bool Loop, float PlayTime, float PlayScale, bool Reverse)
+void CGameObject::AddAnimation(const std::string& SequenceName, 
+	const std::string& AnimName, bool Loop, float PlayTime, float PlayScale, bool Reverse)
 {
 	if (!m_Animation)
 	{
@@ -62,7 +63,7 @@ void CGameObject::AddAnimation(const std::string& SequenceName, bool Loop, float
 		m_Animation->m_Owner = this;
 		m_Animation->m_CurrentAnimation = nullptr;
 	}
-	m_Animation->AddAnimation(SequenceName, Loop, PlayTime, PlayScale, Reverse);
+	m_Animation->AddAnimation(SequenceName, AnimName,Loop, PlayTime, PlayScale, Reverse);
 }
 
 void CGameObject::SetAnimationPlayTime(const std::string& Name, float PlayTime)

@@ -105,6 +105,8 @@ public :
 		delete[] m_WidgetArray;
 		m_WidgetArray = Array;
 	}
+
+	Widget->AddRef();
 	m_WidgetArray[m_WidgetCount++] = Widget;
 	return (T*)Widget;
 }

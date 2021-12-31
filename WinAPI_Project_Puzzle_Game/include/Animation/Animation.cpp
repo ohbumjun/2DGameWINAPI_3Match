@@ -44,12 +44,17 @@ CAnimation::~CAnimation()
 	}
 }
 
-void CAnimation::AddAnimation(const std::string& SequenceName, bool Loop, float PlayTime, float PlayScale, bool Reverse)
+void CAnimation::AddAnimation(const std::string& SequenceName, 
+	const std::string& AnimName, bool Loop, float PlayTime, float PlayScale, bool Reverse)
 {
 	// 애니메이션 제작에 필요한 Sequence 존재 여부
 	CAnimationSequence* Sequence = CResourceManager::GetInst()->FindAnimationSequence(SequenceName);
 	if (!Sequence)
 		return;
+
+	if (FindAnimation(AnimName))
+		return;
+
 	AnimationInfo* Anim = new AnimationInfo;
 	Anim->Loop = Loop;
 	Anim->PlayScale = PlayScale;
@@ -60,7 +65,7 @@ void CAnimation::AddAnimation(const std::string& SequenceName, bool Loop, float 
 
 	if (m_mapAnimation.empty())
 		m_CurrentAnimation = Anim;
-	m_mapAnimation.insert(std::make_pair(SequenceName, Anim));
+	m_mapAnimation.insert(std::make_pair(AnimName, Anim));
 }
 
 void CAnimation::SetPlayTime(const std::string& Name, float PlayTime)
@@ -212,6 +217,14 @@ void CAnimation::Update(float DeltaTime)
 		}
 	}
 
+}
+
+AnimationInfo* CAnimation::FindAnimation(const std::string& AnimName)
+{
+	auto iter = m_mapAnimation.find(AnimName);
+	if (iter == m_mapAnimation.end())
+		return nullptr;
+	return iter->second;
 }
 
 CAnimation* CAnimation::Clone()

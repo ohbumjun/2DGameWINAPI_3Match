@@ -32,6 +32,9 @@ bool CTexture::LoadTexture(const std::string& Name, const TCHAR* FileName, const
 
 bool CTexture::LoadTextureFullPath(const std::string& Name, const TCHAR* FullPath)
 {
+	if (CResourceManager::GetInst()->FindTexture(Name))
+		return true;
+
 	SetName(Name);
 
 	TCHAR FileName[MAX_PATH];

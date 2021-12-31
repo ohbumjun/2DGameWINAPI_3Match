@@ -35,7 +35,8 @@ CCell::~CCell()
 void CCell::SetAnimalType(AnimalType Type)
 {
 	m_AnimalType = Type;
-	AddAnimation(m_AnimalNames[m_AnimalType], true, 1.f);
+	AddAnimation(m_AnimalNames[m_AnimalType],
+		m_AnimalNames[m_AnimalType], true, 1.f);
 	SetCurrentAnimation(m_AnimalNames[m_AnimalType]);
 }
 
@@ -43,7 +44,8 @@ void CCell::Start()
 {
 	CGameObject::Start();
 
-	AddAnimation(m_AnimalNames[m_AnimalType], true, 1.f);
+	AddAnimation(m_AnimalNames[m_AnimalType], 
+		m_AnimalNames[m_AnimalType], true, 1.f);
 	// SetCurrentAnimation(m_AnimalNames[m_AnimalType]);
 }
 

@@ -54,7 +54,7 @@ bool CResourceManager::LoadTexture(const std::string& Name, const TCHAR* FileNam
 
 	if (!Texture->LoadTexture(Name, FileName, PathName))
 	{
-		SAFE_RELEASE(Texture);
+		SAFE_DELETE(Texture);
 		return false;
 	}
 
@@ -148,7 +148,7 @@ bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, 
 	
 	if (!Sequence->Init(SequenceName, Texture))
 	{
-		SAFE_RELEASE(Sequence);
+		SAFE_DELETE(Sequence);
 		return false;
 	}
 	m_mapAnimationSequence.insert(std::make_pair(SequenceName, Sequence));
@@ -169,7 +169,7 @@ bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, 
 	Sequence = new CAnimationSequence;
 	if (!Sequence->Init(SequenceName, Texture))
 	{
-		SAFE_RELEASE(Sequence);
+		SAFE_DELETE(Sequence);
 		return false;
 	}
 	m_mapAnimationSequence.insert(std::make_pair(SequenceName, Sequence));
@@ -189,7 +189,7 @@ bool CResourceManager::CreateAnimationSequence(const std::string& SequenceName, 
 	Sequence = new CAnimationSequence;
 	if (!Sequence->Init(SequenceName, Texture))
 	{
-		SAFE_RELEASE(Sequence);
+		SAFE_DELETE(Sequence);
 		return false;
 	}
 	m_mapAnimationSequence.insert(std::make_pair(SequenceName, Sequence));

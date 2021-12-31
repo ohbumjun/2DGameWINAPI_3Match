@@ -43,9 +43,9 @@ CGameManager::CGameManager() :
 CGameManager::~CGameManager()
 {
 	CInput::DestroyInst();
+	CStageManager::DestroyInst();
 	CResourceManager::DestroyInst();
 	CPathManager::DestroyInst();
-	CStageManager::DestroyInst();
 
 	SAFE_DELETE(m_Timer);
 

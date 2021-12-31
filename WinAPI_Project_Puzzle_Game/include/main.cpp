@@ -5,7 +5,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR lpCmdLine,
 	_In_ int nCmdShow)
 {
-	// _CrtSetBreakAlloc(380);
+	// _CrtSetBreakAlloc(6762);
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	// srand((unsigned int)GetTickCount());

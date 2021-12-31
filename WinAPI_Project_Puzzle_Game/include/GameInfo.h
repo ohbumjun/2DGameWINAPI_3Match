@@ -63,7 +63,7 @@
 	if (p)              \
 	{                   \
 		p->Release();   \
-		p = nullptr;    \
+		p = nullptr;         \
 	}
 
 // Classes

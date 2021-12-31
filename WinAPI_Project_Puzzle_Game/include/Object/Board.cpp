@@ -13,7 +13,7 @@ CBoard::CBoard() :
 	m_ClickSecPos{},
 	m_Start(false),
 	m_BlockCount(0),
-	m_BlockCapacity(50),
+	m_BlockCapacity(100),
 	m_ChangedCellRowInfo{},
 	m_IsTwoMoving(false),
 	m_InitFirstCellDiff{},
@@ -64,7 +64,7 @@ bool CBoard::CreateBoard(int RowCount, int ColCount, const Vector2& SquareSize)
 	m_Size = m_SingleBlockSize * Vector2((float)m_ColCount, (float)m_RowCount);
 	m_BlockCount = (m_RowCount)*m_ColCount;
 
-	// 크기 재할당 
+	// 크기 재할당
 	if (m_BlockCount > m_BlockCapacity)
 	{
 		m_BlockCapacity = m_BlockCount * 2;
@@ -250,8 +250,6 @@ void CBoard::MouseLButton(float DeltaTime)
 		}
 	}
 
-	// m_vecBlocks[SIndex]->SetBlockType(BlockType::EMPTY);
-	// m_vecBlocks[SIndex]->SetMoveEnable(true);
 }
 
 
@@ -278,6 +276,7 @@ bool CBoard::Init(int Row, int Col)
 
 	// Board 생성하기 
 	Vector2 TextureSize = Vector2((float)m_BlockTexture->GetWidth(), (float)m_BlockTexture->GetHeight());
+
 	CreateBoard(Row, Col, TextureSize);
 
 	// 초기화
