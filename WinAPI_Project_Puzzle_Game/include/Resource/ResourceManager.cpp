@@ -10,9 +10,10 @@ CResourceManager::CResourceManager()
 
 CResourceManager::~CResourceManager()
 {
+	/*
 	{
 		auto iter = m_mapAnimationSequence.begin();
-		auto iterEnd = m_mapAnimationSequence.begin();
+		auto iterEnd = m_mapAnimationSequence.end();
 
 		for (; iter != iterEnd; ++iter)
 		{
@@ -21,13 +22,14 @@ CResourceManager::~CResourceManager()
 	}
 	{
 		auto iter = m_mapTexture.begin();
-		auto iterEnd = m_mapTexture.begin();
+		auto iterEnd = m_mapTexture.end();
 
 		for (; iter != iterEnd; ++iter)
 		{
 			SAFE_RELEASE(iter->second);
 		}
 	}
+	*/
 
 	m_mapTexture.clear();
 	m_mapAnimationSequence.clear();
