@@ -2,10 +2,10 @@
 #include "../Object/Board.h"
 #include "../Resource/ResourceManager.h"
 
+int CStage::s_StaticRow = 0;
+int CStage::s_StaticCol = 0;
 
-CStage::CStage(int row, int col) :
-	m_Row(row),
-	m_Col(col),
+CStage::CStage() :
 	m_Board(nullptr),
 	m_StageLevel(0),
 	m_UIArray(nullptr),
@@ -18,8 +18,6 @@ CStage::CStage(int row, int col) :
 
 CStage::CStage(const CStage& Stage)
 {
-	m_Row = Stage.m_Row;
-	m_Col = Stage.m_Col;;
 	if (Stage.m_Board)
 		m_Board = Stage.m_Board;
 }

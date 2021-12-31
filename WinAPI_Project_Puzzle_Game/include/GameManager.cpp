@@ -89,8 +89,8 @@ bool CGameManager::Init(HINSTANCE hInst)
 {
 	m_hInst = hInst;
 
-	m_RS.Width  = 1000;
-	m_RS.Height = 1000;
+	m_RS.Width  = 1280;
+	m_RS.Height = 900;
 
 	Register();
 	Create();
@@ -110,6 +110,7 @@ bool CGameManager::Init(HINSTANCE hInst)
 		return false;
 
 	CStageManager::GetInst()->CreateStage<CStartStage>();
+	//CStageManager::GetInst()->CreateStage<CBasicStage>();
 
 	m_Timer = new CTimer;
 

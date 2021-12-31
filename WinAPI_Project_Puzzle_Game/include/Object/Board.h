@@ -126,7 +126,7 @@ public :
 	{
 		return m_Size;
 	}
-	const Vector2& GetRealBoardSize()
+	Vector2 GetRealBoardSize()
 	{
 		return Vector2(m_Size.x, m_Size.y / 2.f);
 	}

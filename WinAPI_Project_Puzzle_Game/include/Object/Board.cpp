@@ -972,7 +972,6 @@ bool CBoard::CheckMatchCells()
 		}
 	}
 
-
 	// 모든 Cell 들에 대해서 검사한다.
 	for (int Col = 0; Col < m_ColCount; Col++)
 	{
@@ -996,8 +995,6 @@ bool CBoard::CheckMatchCells()
 			}
 		}
 	}
-
-
 	return false;
 }
 
@@ -1021,6 +1018,7 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 	{
 		return Vector2(0.f, 1.f);
 	}
+	return Vector2(0.f, 0.f);
 }
 
 bool CBoard::MakeMatchableBoard()

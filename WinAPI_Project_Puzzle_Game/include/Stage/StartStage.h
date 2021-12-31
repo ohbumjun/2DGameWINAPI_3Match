@@ -6,6 +6,9 @@ class CStartStage :
 public :
     CStartStage();
     virtual ~CStartStage() override;
+private :
+    int m_Row;
+    int m_Col;
 public :
     virtual bool Init() override;
     void LoadAnimationSequence();

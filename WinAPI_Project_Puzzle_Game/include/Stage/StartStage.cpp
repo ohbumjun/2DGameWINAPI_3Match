@@ -4,6 +4,7 @@
 #include "../UI/UIButton.h"
 #include "../UI/UIText.h"
 #include "../GameManager.h"
+#include "../UI/UIImage.h"
 
 CStartStage::CStartStage()
 {
@@ -22,7 +23,10 @@ bool CStartStage::Init()
 
     // Window
     CUIWindow* Window = CreateUIWindow<CUIWindow>("Window");
-
+    CUIImage* Image = Window->CreateWidget<CUIImage>("3MatchTextImage");
+    Image->SetTexture("3MatchTextImage", TEXT("3match.bmp"));
+    Image->SetPos(Vector2(140.f, 0.f));
+        
     // 3 Buttons
     CUIButton* Button = Window->CreateWidget<CUIButton>("MiniStageButton");
 
@@ -37,9 +41,10 @@ bool CStartStage::Init()
 
 
     CUIText* Text = Window->CreateWidget<CUIText>("MiniStageText");
-    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f, Button->GetSize().y / 2.f - 10.f));
+    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f - 10.f, Button->GetSize().y / 2.f - 10.f));
     Text->SetZOrder(1);
-    Text->SetText(TEXT("5 * 5"));
+    Text->SetText(TEXT("5 Cells"));
+    Text->SetTextColor(0.f, 0.f, 0.f);
 
     // 
     Button = Window->CreateWidget<CUIButton>("MediumStageButton");
@@ -53,9 +58,10 @@ bool CStartStage::Init()
 
 
     Text = Window->CreateWidget<CUIText>("MediumStageText");
-    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f, Button->GetSize().y / 2.f - 10.f));
+    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f - 10.f, Button->GetSize().y / 2.f - 10.f));
     Text->SetZOrder(1);
-    Text->SetText(TEXT("5 * 5"));
+    Text->SetText(TEXT("7 Cells"));
+    Text->SetTextColor(0.f, 0.f, 0.f);
 
     //
     Button = Window->CreateWidget<CUIButton>("MaxStageButton");
@@ -69,9 +75,10 @@ bool CStartStage::Init()
 
 
     Text = Window->CreateWidget<CUIText>("MediumStageText");
-    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f, Button->GetSize().y / 2.f - 10.f));
+    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f - 10.f, Button->GetSize().y / 2.f - 10.f));
     Text->SetZOrder(1);
-    Text->SetText(TEXT("5 * 5"));
+    Text->SetText(TEXT("9 Cells"));
+    Text->SetTextColor(0.f, 0.f, 0.f);
 
     return true;
 }
@@ -87,18 +94,19 @@ void CStartStage::InitButtonUI(CUIButton*& Button, int Num)
 
 void CStartStage::SelectMiniStage()
 {
-    m_Row = 5;
-    m_Col   = 5;
+    CStage::s_StaticRow = 5;
+    CStage::s_StaticCol = 5;
+
 }
 
 void CStartStage::SelectMediumStage()
 {
-    m_Row = 7;
-    m_Col   = 7;
+    CStage::s_StaticRow = 5;
+    CStage::s_StaticCol = 5;
 }
 
 void CStartStage::SelectMaxStage()
 {
-    m_Row = 9;
-    m_Col   = 9;
+    CStage::s_StaticRow = 5;
+    CStage::s_StaticCol = 5;
 }

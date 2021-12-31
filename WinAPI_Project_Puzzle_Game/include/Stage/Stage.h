@@ -7,30 +7,32 @@
 class CStage
 {
 public :
-	CStage(int row = 5, int col = 5);
+	CStage();
 	CStage(const CStage& Stage);
 	virtual ~CStage();
 protected :
 	class CBoard* m_Board;
-	int m_Row;
-	int m_Col;
 	int m_StageLevel;
 	bool m_StageEnable;
 protected:
 	class CUIWindow** m_UIArray;
 	int m_UICapacity;
 	int m_UICount;
+protected :
+	static int s_StaticRow;
+	static int s_StaticCol;
 public :
-	int GetRow() const
+	static int GetRow() 
 	{
 		// return m_Board->GetRow();
-		return m_Row;
+		return s_StaticRow;
 	}
-	int GetCol() const
+	static int GetCol() 
 	{
 		// return m_Board->GetCol();
-		return m_Col;
+		return s_StaticCol;
 	}
+public :
 	CBoard* GetBoard() const
 	{
 		return m_Board;

@@ -45,7 +45,7 @@ bool CBasicStage::Init()
 	Text->SetZOrder(1);
 
 	m_NumberWidget = Window->CreateWidget<CUINumberWidget>("ScoreNumber");
-	m_NumberWidget->SetPos(Vector2(Button->GetPos().x * 2.f, Button->GetPos().y * 3.7));
+	m_NumberWidget->SetPos(Vector2(Button->GetPos().x * 2.f, Button->GetPos().y * 3.7f));
 
 	return true;
 }
