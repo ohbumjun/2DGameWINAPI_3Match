@@ -9,4 +9,8 @@ public :
 public :
     virtual bool Init() override;
     void LoadAnimationSequence();
+public :
+    void SelectMiniStage();
+    void SelectMediumStage();
+    void SelectMaxStage();
 };
