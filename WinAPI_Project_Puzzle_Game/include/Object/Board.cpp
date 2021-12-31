@@ -319,7 +319,10 @@ bool CBoard::Init(int Row, int Col)
 	m_PossibleIdxs.resize(m_CombinationMinNums);
 
 	// 혹시 모르니, 초기 Board는 Matchable한 Board가 되도록 세팅한다.
-	MakeMatchableBoard();
+	// 1) 맞는 조합이 있어서는 안되고
+	// 2) 동시에 , 조합은 가능해야 한다.
+	if (CheckMatchCells())
+		MakeMatchableBoard();
 
 	return true;
 }
@@ -841,17 +844,14 @@ bool CBoard::DenoteMatchCells()
 	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
 
 	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
-	// for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
-	for (int RMatchLen = m_ColCount - 1; RMatchLen >= 3; RMatchLen--)
+	// for (int RMatchLen = 3;m_ColCount - 1; RMatchLen >= 3; RMatchLen--)
+	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
 	{
 		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
 		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
 		{
 			for (int Col = 0; Col <= m_ColCount - RMatchLen; Col++)
 			{
-				if (m_vecDestroyedCells[Row][Col])
-					continue;
-
 				bool AllSame = true;
 				int   NxtCellIdx = -1;
 				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
@@ -879,8 +879,8 @@ bool CBoard::DenoteMatchCells()
 	}
 
 	// Column 검사
-	// for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
-	for (int CMatchLen = m_RowCount / 2; CMatchLen >= 3; CMatchLen--)
+	// for (int CMatchLen = m_RowCount / 2; CMatchLen >= 3; CMatchLen--)
+	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
 	{
 		// 모든 Cell 들에 대해서 검사한다.
 		for (int Col = 0; Col < m_ColCount; Col++)
@@ -888,9 +888,6 @@ bool CBoard::DenoteMatchCells()
 			// 각 Colum --> 세로로 검사할 예정이다. 
 			for (int Row = m_RowCount / 2; Row <= m_RowCount - CMatchLen; Row++)
 			{
-				if (m_vecDestroyedCells[Row][Col])
-					continue;
-
 				bool AllSame = true;
 				int   NxtCellIdx = -1;
 				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
@@ -945,57 +942,68 @@ bool CBoard::CheckMatchCells()
 	// 만약 3 이상 이고, 더이상 같은 것이 없다면 터뜨리기
 	std::queue<std::vector<int>> queue;
 	int cRow = -1, cCol = -1, nRow = -1, nCol = -1, Index = -1;
-	bool AllSame = true;
-	int   NxtCellIdx = -1;
-	int   MinMatchLength = 3;
 
-	// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
-	for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
+	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
+	// for (int RMatchLen = 3;m_ColCount - 1; RMatchLen >= 3; RMatchLen--)
+	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
 	{
-		for (int Col = 0; Col <= m_ColCount - MinMatchLength; Col++)
+		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
+		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
 		{
-			AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
-			AllSame = true;
-			for (int k = 0; k < MinMatchLength; k++)
+			for (int Col = 0; Col <= m_ColCount - RMatchLen; Col++)
 			{
-				NxtCellIdx = Row * m_ColCount + Col + k;
-				if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+				bool AllSame = true;
+				int   NxtCellIdx = -1;
+				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+				for (int k = 0; k < RMatchLen; k++)
 				{
-					AllSame = false;
-					break;
+					NxtCellIdx = Row * m_ColCount + Col + k;
+					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+					{
+						AllSame = false;
+						break;
+					}
 				}
-			}
-			if (AllSame)
-			{
-				return true;
+				if (AllSame)
+				{
+					return true;
+				}
 			}
 		}
 	}
 
-	// 모든 Cell 들에 대해서 검사한다.
-	for (int Col = 0; Col < m_ColCount; Col++)
+	// Column 검사
+	// for (int CMatchLen = m_RowCount / 2; CMatchLen >= 3; CMatchLen--)
+	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
 	{
-		// 각 Colum --> 세로로 검사할 예정이다. 
-		for (int Row = m_RowCount / 2; Row <= m_RowCount - MinMatchLength; Row++)
+		// 모든 Cell 들에 대해서 검사한다.
+		for (int Col = 0; Col < m_ColCount; Col++)
 		{
-			AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
-			AllSame = true;
-			for (int k = 0; k < MinMatchLength; k++)
+			// 각 Colum --> 세로로 검사할 예정이다. 
+			for (int Row = m_RowCount / 2; Row <= m_RowCount - CMatchLen; Row++)
 			{
-				NxtCellIdx = (Row + k) * m_ColCount + Col;
-				if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+				bool AllSame = true;
+				int   NxtCellIdx = -1;
+				AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+				for (int k = 0; k < CMatchLen; k++)
 				{
-					AllSame = false;
-					break;
+					NxtCellIdx = (Row + k) * m_ColCount + Col;
+					if (m_vecCells[NxtCellIdx]->GetAnimalType() != InitType)
+					{
+						AllSame = false;
+						break;
+					}
 				}
-			}
-			if (AllSame)
-			{
-				return true;
+				if (AllSame)
+				{
+					return true;
+				}
 			}
 		}
 	}
-	return false;
+	return true;
 }
 
 Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
@@ -1023,11 +1031,6 @@ Vector2 CBoard::GetOppositeDirection(int curDx, int curDy)
 
 bool CBoard::MakeMatchableBoard()
 {
-	if (CheckMatchCells())
-		return true;
-
-
-
 	// 가능한 조합이 있다면 건너뛴다.
 	if (CheckMatchPossible())
 		return true;
