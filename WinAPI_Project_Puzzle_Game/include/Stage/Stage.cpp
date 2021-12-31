@@ -10,7 +10,8 @@ CStage::CStage(int row, int col) :
 	m_StageLevel(0),
 	m_UIArray(nullptr),
 	m_UICapacity(10),
-	m_UICount(0)
+	m_UICount(0),
+	m_StageEnable(false)
 {
 	m_UIArray = new CUIWindow * [m_UICapacity];
 }
@@ -41,19 +42,23 @@ CGameObject* CStage::FindObject(const std::string& Name)
 
 bool CStage::Init()
 {
-	m_Board = new CBoard;
+	if (m_StageEnable)
+	{
+		m_Board = new CBoard;
 
-	if (!m_Board->Init())
-		return false;
+		if (!m_Board->Init())
+			return false;
 
-	SetCharactersAnimation();
+		SetCharactersAnimation();
+	}
 
 	return true;
 }
 
 bool CStage::Update(float DeltaTime)
 {
-	m_Board->Update(DeltaTime);
+	if (m_Board)
+		m_Board->Update(DeltaTime);
 
 	// UI
 	for (int i = 0; i < m_UICount;)
@@ -78,7 +83,8 @@ bool CStage::Update(float DeltaTime)
 
 bool CStage::PostUpdate(float DeltaTime)
 {
-	m_Board->PostUpdate(DeltaTime);
+	if (m_Board)
+		m_Board->PostUpdate(DeltaTime);
 
 	// UI
 	for (int i = 0; i < m_UICount;)
@@ -103,7 +109,8 @@ bool CStage::PostUpdate(float DeltaTime)
 
 bool CStage::Render(HDC hDC)
 {
-	m_Board->Render(hDC);
+	if (m_Board)
+		m_Board->Render(hDC);
 
 	for (int i = 0; i < m_UICount;)
 	{

@@ -25,20 +25,53 @@ bool CStartStage::Init()
 
     // 3 Buttons
     CUIButton* Button = Window->CreateWidget<CUIButton>("MiniStageButton");
+
     Button->SetButtonClickCallback(this, &CStartStage::SelectMiniStage);
-    Button->SetPos(Vector2(RS.Width / 4.f, RS.Height / 2.f));
+    Button->SetPos(Vector2((RS.Width / 4.f) * 3 - 100.f, RS.Height / 5.f));
+    Button->SetTexture("StartButton", TEXT("ButtonBack.bmp"));
+
+    Button->SetFrameData(EButton_State::Normal, Vector2(0.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::MouseOn, Vector2(200.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
+
+
     CUIText* Text = Window->CreateWidget<CUIText>("MiniStageText");
+    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f, Button->GetSize().y / 2.f - 10.f));
+    Text->SetZOrder(1);
+    Text->SetText(TEXT("5 * 5"));
 
+    // 
     Button = Window->CreateWidget<CUIButton>("MediumStageButton");
-    Button->SetButtonClickCallback(this, &CStartStage::SelectMediumStage);
-    Button->SetPos(Vector2((RS.Width / 4.f) * 2, RS.Height / 2.f));
-    Text = Window->CreateWidget<CUIText>("MediumStageText");
+    Button->SetPos(Vector2((RS.Width / 4.f) * 3 - 100.f, (RS.Height / 5.f) * 2));
+    Button->SetTexture("StartButton", TEXT("ButtonBack.bmp"));
 
+    Button->SetFrameData(EButton_State::Normal, Vector2(0.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::MouseOn, Vector2(200.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
+
+
+    Text = Window->CreateWidget<CUIText>("MediumStageText");
+    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f, Button->GetSize().y / 2.f - 10.f));
+    Text->SetZOrder(1);
+    Text->SetText(TEXT("5 * 5"));
+
+    //
     Button = Window->CreateWidget<CUIButton>("MaxStageButton");
-    Button->SetButtonClickCallback(this, &CStartStage::SelectMaxStage);
-    Button->SetPos(Vector2((RS.Width / 4.f) * 3, RS.Height / 2.f));
-    Text = Window->CreateWidget<CUIText>("MediumStageText");
+    Button->SetPos(Vector2((RS.Width / 4.f) * 3 - 100.f, (RS.Height / 5.f) * 3));
+    Button->SetTexture("StartButton", TEXT("ButtonBack.bmp"));
 
+    Button->SetFrameData(EButton_State::Normal, Vector2(0.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::MouseOn, Vector2(200.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
+
+
+    Text = Window->CreateWidget<CUIText>("MediumStageText");
+    Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f, Button->GetSize().y / 2.f - 10.f));
+    Text->SetZOrder(1);
+    Text->SetText(TEXT("5 * 5"));
 
     return true;
 }
@@ -47,20 +80,25 @@ void CStartStage::LoadAnimationSequence()
 {
 }
 
+void CStartStage::InitButtonUI(CUIButton*& Button, int Num)
+{
+    
+}
+
 void CStartStage::SelectMiniStage()
 {
-    CStage::m_StaticColCount = 5;
-    CStage::m_StaticRowCount = 5;
+    m_Row = 5;
+    m_Col   = 5;
 }
 
 void CStartStage::SelectMediumStage()
 {
-    CStage::m_StaticColCount = 7;
-    CStage::m_StaticRowCount = 7;
+    m_Row = 7;
+    m_Col   = 7;
 }
 
 void CStartStage::SelectMaxStage()
 {
-    CStage::m_StaticColCount = 9;
-    CStage::m_StaticRowCount = 9;
+    m_Row = 9;
+    m_Col   = 9;
 }

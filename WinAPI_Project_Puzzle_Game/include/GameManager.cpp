@@ -4,6 +4,7 @@
 // Stage
 #include "Stage/Stage.h"
 #include "Stage/BasicStage.h"
+#include "Stage/StartStage.h"
 #include "Stage/StageManager.h"
 // Input 
 #include "Input.h"
@@ -108,7 +109,7 @@ bool CGameManager::Init(HINSTANCE hInst)
 	if (!CStageManager::GetInst()->Init())
 		return false;
 
-	CStageManager::GetInst()->CreateStage<CBasicStage>();
+	CStageManager::GetInst()->CreateStage<CStartStage>();
 
 	m_Timer = new CTimer;
 

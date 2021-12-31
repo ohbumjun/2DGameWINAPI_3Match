@@ -15,13 +15,11 @@ protected :
 	int m_Row;
 	int m_Col;
 	int m_StageLevel;
+	bool m_StageEnable;
 protected:
 	class CUIWindow** m_UIArray;
 	int m_UICapacity;
 	int m_UICount;
-protected :
-	static int m_StaticRowCount;
-	static int m_StaticColCount;
 public :
 	int GetRow() const
 	{

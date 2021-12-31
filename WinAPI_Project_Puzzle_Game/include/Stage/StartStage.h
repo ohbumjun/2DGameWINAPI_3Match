@@ -9,6 +9,7 @@ public :
 public :
     virtual bool Init() override;
     void LoadAnimationSequence();
+    void InitButtonUI(class CUIButton* (&Button), int Num);
 public :
     void SelectMiniStage();
     void SelectMediumStage();
