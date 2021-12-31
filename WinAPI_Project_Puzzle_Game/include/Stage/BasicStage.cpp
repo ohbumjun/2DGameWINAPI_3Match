@@ -49,8 +49,8 @@ bool CBasicStage::Init()
 	m_NumberWidget = Window->CreateWidget<CUINumberWidget>("ScoreNumber");
 	m_NumberWidget->SetPos(Vector2(Button->GetPos().x * 2.f, Button->GetPos().y * 3.7f));
 
+	// Go Back To Intro Scene
 	Button = Window->CreateWidget<CUIButton>("BackButton");
-	// Button->SetTexture("ExitButton", TEXT("ButtonBack.bmp"), TEXTURE_PATH);
 	Button->SetTexture("BackButton", TEXT("ButtonBack.bmp"), TEXTURE_PATH);
 	Button->SetPos(Vector2((Button->GetSize().x / 8.f), Button->GetSize().y * 4.f));
 	Button->SetFrameData(EButton_State::Normal, Vector2(0.f, 0.f), Vector2(200.f, 100.f));
@@ -58,6 +58,13 @@ bool CBasicStage::Init()
 	Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetButtonClickCallback(this, &CBasicStage::GoBackToIntro);
+
+	Text = Window->CreateWidget<CUIText>("Intro");
+	Text->SetPos(Vector2(Button->GetPos().x + Button->GetSize().x / 8.f - 10.f, Button->GetPos().y + Button->GetSize().y / 2.f - 10.f));
+	Text->SetText(TEXT("Intro"));
+	Text->SetTextColor(0, 0, 0);
+	Text->SetZOrder(1);
+
 	return true;
 }
 
@@ -79,4 +86,5 @@ bool CBasicStage::Update(float DeltaTime)
 void CBasicStage::GoBackToIntro()
 {
 	CStageManager::GetInst()->CreateStage<CStartStage>();
+	CStage::m_StageEnable = false;
 }
