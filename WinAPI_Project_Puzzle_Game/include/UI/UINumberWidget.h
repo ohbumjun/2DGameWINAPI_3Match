@@ -4,7 +4,7 @@
 class CUINumberWidget :
     public CUIImage
 {
-public :
+public:
     CUINumberWidget();
     CUINumberWidget(const CUINumberWidget& Widget);
     virtual ~CUINumberWidget();
@@ -13,7 +13,7 @@ private:
     std::vector<int> m_vecNumber;
     std::stack<int> m_TempNumber;
     bool m_RenderEnable;
-public :
+public:
     void SetNumber(int Number)
     {
         m_Number = Number;
@@ -31,7 +31,7 @@ public :
     {
         m_vecNumber.clear();
     }
-public :
+public:
     virtual bool Init();
     virtual void Update(float DeltaTime);
     virtual void Render(HDC hDC);

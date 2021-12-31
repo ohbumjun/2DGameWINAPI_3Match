@@ -4,16 +4,16 @@
 
 class CUIText : public CUIWidget
 {
-public :
+public:
 	CUIText();
 	CUIText(const CUIText& Text);
 	virtual ~CUIText();
-private :
+private:
 	TCHAR* m_Text;
 	int m_TextCount;
 	int m_TextCapacity;
 	COLORREF m_TextColor;
-public :
+public:
 	void SetTextColor(float r, float g, float b)
 	{
 		m_TextColor = RGB(r, g, b);
@@ -33,7 +33,7 @@ public :
 	}
 	void AddText(const TCHAR* Text)
 	{
-		int Length = lstrlen(m_Text) +  lstrlen(Text);
+		int Length = lstrlen(m_Text) + lstrlen(Text);
 		if (Length + 1 > m_TextCapacity)
 		{
 			m_TextCapacity *= 2;
@@ -56,7 +56,7 @@ public :
 		m_TextCount = 0;
 		memset(m_Text, 0, sizeof(TCHAR) * m_TextCapacity);
 	}
-public :
+public:
 	virtual bool Init();
 	virtual void Render(HDC hDC);
 };
