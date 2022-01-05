@@ -64,6 +64,15 @@
     <Filter Include="01. GameManager\06. SharedPtr">
       <UniqueIdentifier>{66411e37-27e0-4db8-97f9-18d7c27d54ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Resource\03. Sound">
+      <UniqueIdentifier>{000211e1-6bf9-40fb-b4fe-15c130009104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource\04. Font">
+      <UniqueIdentifier>{a02dca24-9017-4644-bbf7-5f9d47a8594b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource\03. Sound\01. FMode">
+      <UniqueIdentifier>{02d0990f-d281-4712-9aab-36de3fb170da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameManager.cpp">
@@ -141,6 +150,9 @@
     </ClCompile>
     <ClCompile Include="UI\UINumberWidget.cpp">
       <Filter>05. UI\01. Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Sound.cpp">
+      <Filter>03. Resource\03. Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,5 +244,43 @@
     <ClInclude Include="UI\UINumberWidget.h">
       <Filter>05. UI\01. Widget</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Sound.h">
+      <Filter>03. Resource\03. Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod.hpp">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod_codec.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod_common.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod_dsp.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod_dsp_effects.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod_errors.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="fmod_output.h">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fmod.cs">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </None>
+    <None Include="fmod_dsp.cs">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </None>
+    <None Include="fmod_errors.cs">
+      <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </None>
   </ItemGroup>
 </Project>

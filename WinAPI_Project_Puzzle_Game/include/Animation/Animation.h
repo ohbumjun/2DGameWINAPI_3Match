@@ -14,7 +14,6 @@ private:
 	class CUIWidget* m_WidgetOwner;
 	std::unordered_map<std::string, AnimationInfo*> m_mapAnimation;
 	AnimationInfo* m_CurrentAnimation;
-
 public :
 	void AddAnimation(const std::string& SequenceName, 
 		const std::string& AnimName,  bool Loop = true, float PlayTime = 1.f, float PlayScale = 1.f, bool Reverse = false);

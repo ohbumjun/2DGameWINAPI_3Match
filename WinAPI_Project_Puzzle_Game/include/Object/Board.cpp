@@ -1122,7 +1122,6 @@ void CBoard::ReMakeBoard()
 			}
 
 			m_ShuffleDelay = false;
-
 			break;
 		}
 	}
