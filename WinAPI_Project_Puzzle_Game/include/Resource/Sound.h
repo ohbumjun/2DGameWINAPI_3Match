@@ -1,22 +1,19 @@
-#pragma once
+#pragma  once
 
 #include "../Ref.h"
 
-class CSound : public CRef
-{
-	friend class CResourceManager;
-private :
+class CSound : public CRef {
+public :
 	CSound();
 	~CSound();
-
 private :
 	std::string m_Name;
-	FMOD::System* m_System;
-	FMOD::Sound* m_Sound;
-	FMOD::ChannelGroup* m_Group;
+	FMOD::ChannelGroup* m_ChannelGroup;
 	FMOD::Channel* m_Channel;
-	bool m_Play;
+	FMOD::Sound* m_Sound;
+	FMOD::System* m_System;
 	bool m_Loop;
+	bool m_Play;
 public :
 	bool IsPlay() const
 {
@@ -27,12 +24,10 @@ public :
 		return m_Loop;
 }
 public :
-	bool LoadSound(FMOD::System* System, FMOD::ChannelGroup* Group,
-		bool Loop, const std::string& Name, const char* FileName,
-		const std::string& PathName = SOUND_PATH);
+	bool LoadSound(FMOD::System* System, FMOD::ChannelGroup* ChannelGroup, const std::string& SoundName,
+		bool Loop, const char* FileName, const std::string& PathName = SOUND_PATH);
 	void Play();
 	void Stop();
-	void Pause();
 	void Resume();
+	void Pause();
 };
-

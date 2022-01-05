@@ -2,7 +2,7 @@
 
 #include "Texture.h"
 #include "AnimationSequence.h"
-// #include "Sound.h"
+#include "Sound.h"
 // #include "Font.h"
 
 class CResourceManager
@@ -11,8 +11,12 @@ private:
 	CResourceManager();
 	~CResourceManager();
 private :
+	FMOD::System* m_System;
+	FMOD::ChannelGroup* m_MasterGroup;
 	std::unordered_map<std::string, CSharedPtr<CTexture>> m_mapTexture;
 	std::unordered_map<std::string, CSharedPtr<CAnimationSequence>> m_mapAnimationSequence;
+	std::unordered_map<std::string, CSharedPtr<CSound>> m_mapSound;
+	std::unordered_map<std::string, FMOD::ChannelGroup*> m_mapChannelGroup;
 
 public :
 	bool Init();
@@ -38,6 +42,19 @@ public :
 	void AddAnimationFrameData(const std::string& SequenceName, const Vector2& StartPos, const Vector2& Size);
 	void AddAnimationFrameData(const std::string& SequenceName, float StartX, float StartY, float SizeX, float SizeY);
 	CAnimationSequence* FindAnimationSequence(const std::string& Name);
+
+	// Sound -------------------------------------------------------------------------------------------------------------------------------------------------
+	bool LoadSound(const std::string& GroupName, const std::string& SoundName, bool Loop, const char* FileName, const std::string& PathName = TEXTURE_PATH);
+	bool CreateChannelGroup(const std::string& GroupName);
+	void SetVolume(int Volume);
+	void SetVolume(const std::string& GroupName, int Volume);
+	void SoundPlay(const std::string& SoundName);
+	void SoundStop(const std::string& SoundName);
+	void SoundResume(const std::string& SoundName);
+	void SoundPause(const std::string& SoundName);
+	CSound* FindSound(const std::string& SoundName);
+	FMOD::ChannelGroup* FindChannelGroup(const std::string& GroupName);
+
 private :
 	static CResourceManager* m_Inst;
 public :
