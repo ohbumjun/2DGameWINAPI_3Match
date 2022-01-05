@@ -31,18 +31,21 @@ CResourceManager::~CResourceManager()
 
 bool CResourceManager::Init()
 {
-	// Sound System 만들고
+	// Sound System을 만들고
 	FMOD_RESULT result = FMOD::System_Create(&m_System);
+
 	if (result != FMOD_OK)
 		return false;
 
-	// 초기화
-	result = m_System->init(100, FMOD_INIT_NORMAL, nullptr);
+	// System을 초기화한다.
+	result = m_System->init(4093, FMOD_INIT_NORMAL, nullptr);
+
 	if (result != FMOD_OK)
 		return false;
 
-	// Master Group 만들기
+	// Master Channel Group을 얻어온다.
 	result = m_System->getMasterChannelGroup(&m_MasterGroup);
+
 	if (result != FMOD_OK)
 		return false;
 
@@ -253,7 +256,7 @@ bool CResourceManager::LoadSound(const std::string& GroupName, const std::string
 	if (!Group)
 		return false;
 
-	if (!Sound->LoadSound(m_System, Group, SoundName, Loop, FileName, PathName))
+	if (!Sound->LoadSound(m_System, Group, Loop, SoundName, FileName, PathName))
 	{
 		SAFE_DELETE(Sound);
 		return false;
