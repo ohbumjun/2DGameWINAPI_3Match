@@ -34,8 +34,8 @@ public :
 public :
 	void SetMouseHoverSound(const std::string& SoundName);
 public:
-	void CallMouseHoveredCallback(float DeltaTime);
-	void CallMouseReleaseCallback(float DeltaTime);
+	virtual void CallMouseHoveredCallback(float DeltaTime) override;
+	virtual void CallMouseReleaseCallback(float DeltaTime) override;
 public :
 	template<typename T>
 	void SetButtonClickCallback(T* Obj, void(T::*Func)())

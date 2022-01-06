@@ -73,6 +73,6 @@ public :
 	virtual void Render(HDC hDC, const Vector2& Pos);
 	virtual void Collision(float DeltaTime, const Vector2& MousePos);
 public :
-	void CallMouseHoveredCallback(float DeltaTime);
-	void CallMouseReleaseCallback(float DeltaTime);
+	virtual void CallMouseHoveredCallback(float DeltaTime);
+	virtual void CallMouseReleaseCallback(float DeltaTime);
 };

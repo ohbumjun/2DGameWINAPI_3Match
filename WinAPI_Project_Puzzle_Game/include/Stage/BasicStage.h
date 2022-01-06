@@ -15,6 +15,7 @@ public :
     virtual bool Init() override;
 private :
     void LoadAnimationSequence();
+    void LoadSound();
 public :
     virtual bool Update(float DeltaTime) override;
     void GoBackToIntro();

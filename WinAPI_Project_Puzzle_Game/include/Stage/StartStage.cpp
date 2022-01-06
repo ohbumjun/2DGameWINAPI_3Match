@@ -63,6 +63,7 @@ bool CStartStage::Init()
     Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
     Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
     Button->SetButtonClickCallback(this, &CStartStage::SelectMediumStage);
+    Button->SetMouseHoverSound("ButtonHover");
 
     Text = Window->CreateWidget<CUIText>("MediumStageText");
     Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f - 30.f, Button->GetSize().y / 2.f - 10.f));
@@ -79,6 +80,7 @@ bool CStartStage::Init()
     Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
     Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
     Button->SetButtonClickCallback(this, &CStartStage::SelectMaxStage);
+    Button->SetMouseHoverSound("ButtonHover");
 
     Text = Window->CreateWidget<CUIText>("MediumStageText");
     Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f - 30.f, Button->GetSize().y / 2.f - 10.f));

@@ -5,6 +5,7 @@
 #include "../UI/UINumberWidget.h"
 #include "StageManager.h"
 #include "StartStage.h"
+#include "../Resource/ResourceManager.h"
 
 CBasicStage::CBasicStage() :
 	m_NumberWidget(nullptr)
@@ -20,6 +21,9 @@ bool CBasicStage::Init()
 	CStage::Init();
 	LoadAnimationSequence();
 
+	// Sound
+	LoadSound();
+
 	// UI
 	CUIWindow* Window = CreateUIWindow<CUIWindow>("Window");
 	Window->SetPos(Vector2(GetBoard()->GetRealBoardSize().x, 0.f));
@@ -33,6 +37,7 @@ bool CBasicStage::Init()
 	Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetButtonClickCallback(Window, &CUIWindow::Exit);
+	Button->SetMouseHoverSound("ButtonHover");
 
 	CUIText* Text = Window->CreateWidget<CUIText>("ExitText"); 
 	Text->SetPos(Button->GetPos() + Vector2(Button->GetSize().x / 8.f - 10.f, Button->GetSize().y / 2.f - 10.f));
@@ -58,6 +63,7 @@ bool CBasicStage::Init()
 	Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
 	Button->SetButtonClickCallback(this, &CBasicStage::GoBackToIntro);
+	Button->SetMouseHoverSound("ButtonHover");
 
 	Text = Window->CreateWidget<CUIText>("Intro");
 	Text->SetPos(Vector2(Button->GetPos().x + Button->GetSize().x / 8.f - 10.f, Button->GetPos().y + Button->GetSize().y / 2.f - 10.f));
@@ -71,6 +77,16 @@ bool CBasicStage::Init()
 void CBasicStage::LoadAnimationSequence()
 {
 	SetCharactersAnimation();
+}
+
+void CBasicStage::LoadSound()
+{
+	CResourceManager::GetInst()->CreateSound("BGMBasic", "BGM", true, "HomeBgm.wav");
+	CResourceManager::GetInst()->SoundPlay("BGMBasic");
+	m_vecSoundNames.push_back("BGMBasic");
+
+	CResourceManager::GetInst()->CreateSound("ButtonHover", "Effect", false, "UI_Hover.wav");
+	m_vecSoundNames.push_back("ButtonHover");
 }
 
 bool CBasicStage::Update(float DeltaTime)
