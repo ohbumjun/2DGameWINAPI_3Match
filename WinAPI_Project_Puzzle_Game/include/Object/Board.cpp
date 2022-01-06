@@ -514,6 +514,13 @@ void CBoard::RemoveCells()
 		}
 	}
 
+	if (RemoveEnable)
+	{
+		// Sound
+		CResourceManager::GetInst()->SoundPlay("CellRemove");
+	}
+
+
 	/*
 	if (RemoveEnable)
 	{
