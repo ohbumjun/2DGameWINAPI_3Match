@@ -51,6 +51,8 @@ bool CBasicStage::Init()
 	Text->SetTextColor(0, 0, 0);
 	Text->SetZOrder(1);
 
+	Button->SetSize(Button->GetSize().x / 4, Button->GetSize().y);
+
 	m_NumberWidget = Window->CreateWidget<CUINumberWidget>("ScoreNumber");
 	m_NumberWidget->SetPos(Vector2(Button->GetPos().x * 2.f, Button->GetPos().y * 3.7f));
 
@@ -70,6 +72,7 @@ bool CBasicStage::Init()
 	Text->SetText(TEXT("Intro"));
 	Text->SetTextColor(0, 0, 0);
 	Text->SetZOrder(1);
+	Button->SetSize(Button->GetSize().x / 4, Button->GetSize().y);
 
 	return true;
 }

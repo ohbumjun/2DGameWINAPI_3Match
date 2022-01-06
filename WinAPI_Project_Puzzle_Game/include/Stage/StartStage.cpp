@@ -52,6 +52,7 @@ bool CStartStage::Init()
     Text->SetZOrder(1);
     Text->SetText(TEXT("5 * 5 Cells"));
     Text->SetTextColor(0, 0, 0);
+    Button->SetSize(Button->GetSize().x / 4, Button->GetSize().y);
 
     // 
     Button = Window->CreateWidget<CUIButton>("MediumStageButton");
@@ -70,6 +71,7 @@ bool CStartStage::Init()
     Text->SetZOrder(1);
     Text->SetText(TEXT("7 * 7 Cells"));
     Text->SetTextColor(0, 0, 0);
+    Button->SetSize(Button->GetSize().x / 4, Button->GetSize().y);
 
     Button = Window->CreateWidget<CUIButton>("MaxStageButton");
     Button->SetPos(Vector2((RS.Width / 4.f) * 3 - 100.f, (RS.Height / 5.f) * 3));
@@ -87,6 +89,7 @@ bool CStartStage::Init()
     Text->SetZOrder(1);
     Text->SetText(TEXT("9 * 9 Cells"));
     Text->SetTextColor(0, 0, 0);
+    Button->SetSize(Button->GetSize().x / 4, Button->GetSize().y);
 
     return true;
 }
