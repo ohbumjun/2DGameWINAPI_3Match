@@ -15,6 +15,9 @@ CUIButton::CUIButton(const CUIButton& Button) : CUIWidget(Button)
 	m_Texture = Button.m_Texture;
 	m_ButtonState = Button.m_ButtonState;
 	memcpy(m_FrameData, Button.m_FrameData, sizeof(AnimationFrameData) * (int)EButton_State::End);
+
+	m_ButtonSound[0] = Button.m_ButtonSound[0];
+	m_ButtonSound[1] = Button.m_ButtonSound[1];
 }
 
 CUIButton::~CUIButton()
@@ -202,11 +205,18 @@ CUIButton* CUIButton::Clone()
 	return new CUIButton(*this);
 }
 
+void CUIButton::SetMouseHoverSound(const std::string& SoundName)
+{
+	m_ButtonSound[0] = CResourceManager::GetInst()->FindSound(SoundName);
+}
+
 void CUIButton::CallMouseHoveredCallback(float DeltaTime)
 {
 	CUIWidget::CallMouseHoveredCallback(DeltaTime);
 	if (m_ButtonHoverCallback)
 		m_ButtonHoverCallback();
+	if (m_ButtonSound[0])
+		m_ButtonSound[0]->Play();
 }
 
 void CUIButton::CallMouseReleaseCallback(float DeltaTime)

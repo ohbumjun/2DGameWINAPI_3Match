@@ -44,6 +44,7 @@ bool CStartStage::Init()
     Button->SetFrameData(EButton_State::MouseOn, Vector2(200.f, 0.f), Vector2(200.f, 100.f));
     Button->SetFrameData(EButton_State::Click, Vector2(400.f, 0.f), Vector2(200.f, 100.f));
     Button->SetFrameData(EButton_State::Disable, Vector2(600.f, 0.f), Vector2(200.f, 100.f));
+    Button->SetMouseHoverSound("ButtonHover");
 
 
     CUIText* Text = Window->CreateWidget<CUIText>("MiniStageText");
@@ -96,6 +97,10 @@ void CStartStage::LoadSound()
 {
     CResourceManager::GetInst()->CreateSound("BGMBasic", "BGM", true, "HomeBgm.wav");
     CResourceManager::GetInst()->SoundPlay("BGMBasic");
+    m_vecSoundNames.push_back("BGMBasic");
+
+    CResourceManager::GetInst()->CreateSound("ButtonHover", "Effect", false, "UI_Hover.wav");
+    m_vecSoundNames.push_back("ButtonHover");
 }
 
 

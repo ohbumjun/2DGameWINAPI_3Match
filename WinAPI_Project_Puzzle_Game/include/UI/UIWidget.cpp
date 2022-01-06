@@ -25,7 +25,6 @@ bool CUIWidget::Init()
 
 void CUIWidget::Update(float DeltaTime)
 {
-
 }
 
 void CUIWidget::PostUpdate(float DeltaTime)

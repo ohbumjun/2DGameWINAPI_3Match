@@ -13,6 +13,7 @@ private :
 	AnimationFrameData m_FrameData[(int)EButton_State::End];
 	std::function<void()> m_ButtonClickCallback;
 	std::function<void()> m_ButtonHoverCallback;
+	CSharedPtr<class CSound> m_ButtonSound[2];
 public :
 	void SetTexture(class CTexture* const Texture);
 	void SetTexture(const std::string& Name);
@@ -30,6 +31,8 @@ public :
 	virtual void Render(HDC hDC, const Vector2& Pos);
 	virtual void Render(HDC hDC);
 	virtual CUIButton* Clone();
+public :
+	void SetMouseHoverSound(const std::string& SoundName);
 public:
 	void CallMouseHoveredCallback(float DeltaTime);
 	void CallMouseReleaseCallback(float DeltaTime);

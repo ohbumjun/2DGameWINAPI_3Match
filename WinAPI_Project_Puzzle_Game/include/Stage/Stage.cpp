@@ -14,6 +14,7 @@ CStage::CStage() :
 	m_UICount(0)
 {
 	m_UIArray = new CUIWindow * [m_UICapacity];
+	m_vecSoundNames.reserve(10);
 }
 
 CStage::CStage(const CStage& Stage)
@@ -31,6 +32,13 @@ CStage::~CStage()
 		SAFE_DELETE(m_UIArray[i]);
 	}
 	SAFE_DELETE_ARRAY(m_UIArray);
+
+	// Stop All The Sounds
+	size_t Size = m_vecSoundNames.size();
+	for (size_t i = 0; i < Size; i++)
+	{
+		CResourceManager::GetInst()->SoundStop(m_vecSoundNames[i]);
+	}
 }
 
 CGameObject* CStage::FindObject(const std::string& Name)

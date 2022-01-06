@@ -21,6 +21,8 @@ protected :
 	static int s_StaticRow;
 	static int s_StaticCol;
 	static bool m_StageEnable;
+protected :
+	std::vector<std::string> m_vecSoundNames;
 public :
 	static int GetRow() 
 	{
