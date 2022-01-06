@@ -31,27 +31,17 @@ CResourceManager::~CResourceManager()
 
 bool CResourceManager::Init()
 {
-	// Sound System을 만들고
-	FMOD_RESULT result = FMOD::System_Create(&m_System);
-
+	HRESULT result = FMOD::System_Create(&m_System);
 	if (result != FMOD_OK)
 		return false;
 
-	// System을 초기화한다.
-	result = m_System->init(4093, FMOD_INIT_NORMAL, nullptr);
-
+	result = m_System->init(100, FMOD_INIT_NORMAL, nullptr);
 	if (result != FMOD_OK)
 		return false;
 
-	// Master Channel Group을 얻어온다.
 	result = m_System->getMasterChannelGroup(&m_MasterGroup);
-
 	if (result != FMOD_OK)
 		return false;
-
-	m_mapChannelGroup.insert(std::make_pair("Master", m_MasterGroup));
-
-
 
 	return true;
 }
@@ -245,27 +235,7 @@ CAnimationSequence* CResourceManager::FindAnimationSequence(const std::string& N
 	return iter->second;
 }
 
-bool CResourceManager::LoadSound(const std::string& GroupName, const std::string& SoundName, bool Loop,
-	const char* FileName, const std::string& PathName)
-{
-	CSound* Sound = FindSound(SoundName);
-	if (Sound)
-		return true;
 
-	FMOD::ChannelGroup* Group = FindChannelGroup(GroupName);
-	if (!Group)
-		return false;
-
-	if (!Sound->LoadSound(m_System, Group, Loop, SoundName, FileName, PathName))
-	{
-		SAFE_DELETE(Sound);
-		return false;
-	}
-
-	m_mapSound.insert(std::make_pair(SoundName, Sound));
-
-	return true;
-}
 
 bool CResourceManager::CreateChannelGroup(const std::string& GroupName)
 {
@@ -274,10 +244,10 @@ bool CResourceManager::CreateChannelGroup(const std::string& GroupName)
 		return true;
 
 	FMOD_RESULT result = m_System->createChannelGroup(GroupName.c_str(), &Group);
+
 	if (result != FMOD_OK)
 		return false;
 
-	// 생성한 그룹을 마스터에 추가하기
 	m_MasterGroup->addGroup(Group, false);
 
 	m_mapChannelGroup.insert(std::make_pair(GroupName, Group));
@@ -285,17 +255,23 @@ bool CResourceManager::CreateChannelGroup(const std::string& GroupName)
 	return true;
 }
 
-void CResourceManager::SetVolume(int Volume)
+bool CResourceManager::CreateSound(const std::string& SoundName, const std::string& GroupName, bool Loop, 
+	const TCHAR* FileName, const std::string& PathName)
 {
-	m_MasterGroup->setVolume((float)(Volume % 100));
-}
-
-void CResourceManager::SetVolume(const std::string& GroupName, int Volume)
-{
+	CSound* Sound = FindSound(SoundName);
+	if (Sound)
+		return true;
 	FMOD::ChannelGroup* Group = FindChannelGroup(GroupName);
 	if (!Group)
-		return;
-	Group->setVolume((float)(Volume % 100));
+		return false;
+
+	Sound = new CSound;
+	if (!Sound->LoadSound(m_System, Group, SoundName, Loop, FileName, PathName))
+		return false;
+
+	m_mapSound.insert(std::make_pair(SoundName, Sound));
+
+	return true;
 }
 
 void CResourceManager::SoundPlay(const std::string& SoundName)
@@ -306,14 +282,6 @@ void CResourceManager::SoundPlay(const std::string& SoundName)
 	Sound->Play();
 }
 
-void CResourceManager::SoundStop(const std::string& SoundName)
-{
-	CSound* Sound = FindSound(SoundName);
-	if (!Sound)
-		return;
-	Sound->Stop();
-}
-
 void CResourceManager::SoundResume(const std::string& SoundName)
 {
 	CSound* Sound = FindSound(SoundName);
@@ -322,12 +290,28 @@ void CResourceManager::SoundResume(const std::string& SoundName)
 	Sound->Resume();
 }
 
+void CResourceManager::SoundStop(const std::string& SoundName)
+{
+	CSound* Sound = FindSound(SoundName);
+	if (!Sound)
+		return;
+	Sound->Stop();
+}
+
 void CResourceManager::SoundPause(const std::string& SoundName)
 {
 	CSound* Sound = FindSound(SoundName);
 	if (!Sound)
 		return;
 	Sound->Pause();
+}
+
+void CResourceManager::SetVolume(const std::string& GroupName, int Volume)
+{
+	FMOD::ChannelGroup* Group = FindChannelGroup(GroupName);
+	if (!Group)
+		return;
+	Group->setVolume((float)(Volume % 100));
 }
 
 CSound* CResourceManager::FindSound(const std::string& SoundName)
@@ -345,4 +329,3 @@ FMOD::ChannelGroup* CResourceManager::FindChannelGroup(const std::string& GroupN
 		return nullptr;
 	return iter->second;
 }
-

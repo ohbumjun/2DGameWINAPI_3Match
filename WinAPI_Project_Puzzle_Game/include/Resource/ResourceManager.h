@@ -44,14 +44,15 @@ public :
 	CAnimationSequence* FindAnimationSequence(const std::string& Name);
 
 	// Sound -------------------------------------------------------------------------------------------------------------------------------------------------
-	bool LoadSound(const std::string& GroupName, const std::string& SoundName, bool Loop, const char* FileName, const std::string& PathName = TEXTURE_PATH);
 	bool CreateChannelGroup(const std::string& GroupName);
-	void SetVolume(int Volume);
-	void SetVolume(const std::string& GroupName, int Volume);
+	bool CreateSound(const std::string& SoundName, const std::string& GroupName,
+	bool Loop, const TCHAR* FileName, const std::string& PathName = SOUND_PATH);
 	void SoundPlay(const std::string& SoundName);
-	void SoundStop(const std::string& SoundName);
 	void SoundResume(const std::string& SoundName);
+	void SoundStop(const std::string& SoundName);
 	void SoundPause(const std::string& SoundName);
+	void SetVolume(const std::string& SoundName, int Volume);
+
 	CSound* FindSound(const std::string& SoundName);
 	FMOD::ChannelGroup* FindChannelGroup(const std::string& GroupName);
 
@@ -69,4 +70,3 @@ public :
 		SAFE_DELETE(m_Inst);
 	}
 };
-
