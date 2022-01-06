@@ -87,6 +87,8 @@ void CBasicStage::LoadSound()
 
 	CResourceManager::GetInst()->CreateSound("ButtonHover", "Effect", false, "UI_Hover.wav");
 	m_vecSoundNames.push_back("ButtonHover");
+
+	CResourceManager::GetInst()->CreateSound("CellMove", "Effect", false, "grass-step-1.ogg");
 }
 
 bool CBasicStage::Update(float DeltaTime)

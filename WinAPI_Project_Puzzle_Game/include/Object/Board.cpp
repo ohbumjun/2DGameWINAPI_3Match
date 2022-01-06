@@ -239,6 +239,9 @@ void CBoard::MouseLButton(float DeltaTime)
 			m_InitSecCellDiff  = m_vecCells[SecCellIdx]->GetNewPos() - m_vecCells[SecCellIdx]->GetPos();
 
 			m_Click = 0;
+
+			// 이동 Sound 처리해주기
+			CResourceManager::GetInst()->SoundPlay("CellMove");
 		}
 		else
 		{
@@ -800,6 +803,9 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 				m_IsTwoMoving = true;
 
 				m_PrevMisMatched = true;
+
+				// 이동 Sound 처리해주기
+				CResourceManager::GetInst()->SoundPlay("CellMove");
 			}
 			else
 			{
