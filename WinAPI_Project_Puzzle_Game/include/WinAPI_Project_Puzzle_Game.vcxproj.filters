@@ -154,6 +154,9 @@
     <ClCompile Include="Resource\Sound.cpp">
       <Filter>03. Resource\03. Sound</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\Font.cpp">
+      <Filter>03. Resource\04. Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -270,6 +273,9 @@
     </ClInclude>
     <ClInclude Include="fmod_output.h">
       <Filter>03. Resource\03. Sound\01. FMode</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Font.h">
+      <Filter>03. Resource\04. Font</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

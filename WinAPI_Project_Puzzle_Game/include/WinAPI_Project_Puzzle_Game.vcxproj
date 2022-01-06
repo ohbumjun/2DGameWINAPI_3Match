@@ -42,6 +42,7 @@
     <ClInclude Include="Ref.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Resource\AnimationSequence.h" />
+    <ClInclude Include="Resource\Font.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Resource\Sound.h" />
     <ClInclude Include="Resource\Texture.h" />
@@ -71,6 +72,7 @@
     <ClCompile Include="Path\PathManager.cpp" />
     <ClCompile Include="Ref.cpp" />
     <ClCompile Include="Resource\AnimationSequence.cpp" />
+    <ClCompile Include="Resource\Font.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Resource\Sound.cpp" />
     <ClCompile Include="Resource\Texture.cpp" />

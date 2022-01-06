@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "AnimationSequence.h"
 #include "Sound.h"
-// #include "Font.h"
+#include "Font.h"
 
 class CResourceManager
 {
@@ -17,7 +17,8 @@ private :
 	std::unordered_map<std::string, CSharedPtr<CAnimationSequence>> m_mapAnimationSequence;
 	std::unordered_map<std::string, CSharedPtr<CSound>> m_mapSound;
 	std::unordered_map<std::string, FMOD::ChannelGroup*> m_mapChannelGroup;
-
+	std::list<std::wstring> m_FontLoadList;
+	std::unordered_map<std::string, CSharedPtr<CFont>> m_mapFont;
 public :
 	bool Init();
 	void Update();
@@ -55,6 +56,11 @@ public :
 
 	CSound* FindSound(const std::string& SoundName);
 	FMOD::ChannelGroup* FindChannelGroup(const std::string& GroupName);
+
+	// Font -------------------------------------------------------------------------------------------------------------------------------------------------
+	bool LoadFontPath(const TCHAR* FileName, const std::string& PathName = TEXTURE_PATH);
+	bool LoadFont(const std::string& Name, const TCHAR* FontName, int Width = 0, int Height = 0);
+	CFont* FindFont(const std::string& FontName);
 
 private :
 	static CResourceManager* m_Inst;

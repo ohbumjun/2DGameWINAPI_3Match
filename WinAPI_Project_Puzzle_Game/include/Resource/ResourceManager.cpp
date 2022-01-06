@@ -329,3 +329,51 @@ FMOD::ChannelGroup* CResourceManager::FindChannelGroup(const std::string& GroupN
 		return nullptr;
 	return iter->second;
 }
+
+bool CResourceManager::LoadFontPath(const TCHAR* FileName, const std::string& PathName)
+{
+	TCHAR FullPath[MAX_PATH] = {};
+
+	const PathInfo* Path = CPathManager::GetInst()->FindPath(PathName);
+
+	if (Path)
+		lstrcpy(FullPath, Path->Path);
+	lstrcat(FullPath, FileName);
+
+	// 시스템에 글꼴을 등록한다
+	AddFontResource(FullPath);
+
+	m_FontLoadList.push_back(FullPath);
+
+	return true;
+}
+
+bool CResourceManager::LoadFont(const std::string& Name, const TCHAR* FontName, int Width, int Height)
+{
+	CFont* Font = FindFont(Name);
+	if (Font)
+		return true;
+
+	Font = new CFont;
+
+	if (!Font->LoadFont(FontName, Width, Height))
+	{
+		SAFE_DELETE(Font);
+		return false;
+	}
+
+	m_mapFont.insert(std::make_pair(Name, Font));
+
+	return true;
+}
+
+CFont* CResourceManager::FindFont(const std::string& FontName)
+{
+	auto iter = m_mapFont.find(FontName);
+
+	if (iter == m_mapFont.end())
+		return nullptr;
+		
+	return iter->second;
+}
+
