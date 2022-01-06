@@ -27,6 +27,8 @@ CUIText::CUIText(const CUIText& widget) :
 	memset(m_Text, 0, sizeof(TCHAR) * m_TextCapacity);
 
 	memcpy(m_Text, widget.m_Text, sizeof(TCHAR) * m_TextCount);
+
+	m_Font = widget.m_Font;
 }
 
 CUIText::~CUIText()
@@ -35,8 +37,14 @@ CUIText::~CUIText()
 }
 
 
+void CUIText::SetFont(const std::string& Name)
+{
+	m_Font = CResourceManager::GetInst()->FindFont(Name);
+}
+
 bool CUIText::Init()
 {
+	m_Font = CResourceManager::GetInst()->FindFont("DefaultFont");
 	return true;
 }
 
@@ -54,22 +62,28 @@ void CUIText::Collision(float DeltaTime)
 
 void CUIText::Render(HDC hDC)
 {
+	m_Font->SetFont(hDC);
+
 	Vector2 Pos = m_Pos + m_Owner->GetPos();
 
 	SetBkMode(hDC, TRANSPARENT);
 	// 앞에 :: 을 붙여서 전역함수 SetTextColor 를 호출한다.
 	::SetTextColor(hDC, m_TextColor);
-	TextOut(hDC, (int)Pos.x, (int)Pos.y, m_Text, m_TextCount);
+	TextOut(hDC, (int)Pos.x - 10.f, (int)Pos.y - 10.f, m_Text, m_TextCount);
+
+	m_Font->ResetFont(hDC);
 }
 
 void CUIText::Render(const Vector2& Pos, HDC hDC)
 {
+	m_Font->SetFont(hDC);
 	Vector2 NewPos = Pos + m_Owner->GetPos();
 
 	SetBkMode(hDC, TRANSPARENT);
 	// 앞에 :: 을 붙여서 전역함수 SetTextColor 를 호출한다.
 	::SetTextColor(hDC, m_TextColor);
-	TextOut(hDC, (int)NewPos.x, (int)NewPos.y, m_Text, m_TextCount);
+	TextOut(hDC, (int)NewPos.x - 10.f, (int)NewPos.y - 10.f, m_Text, m_TextCount);
+	m_Font->ResetFont(hDC);
 }
 
 CUIText* CUIText::Clone()

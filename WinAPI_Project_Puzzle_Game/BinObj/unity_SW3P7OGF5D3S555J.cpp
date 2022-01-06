@@ -35,6 +35,9 @@
 #include "C:\Users\dhsys\Desktop\Coding\CodingProject\C++Project_Personal\WinApi\WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game\include\Resource\AnimationSequence.cpp"
 
 
+#include "C:\Users\dhsys\Desktop\Coding\CodingProject\C++Project_Personal\WinApi\WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game\include\Resource\Font.cpp"
+
+
 #include "C:\Users\dhsys\Desktop\Coding\CodingProject\C++Project_Personal\WinApi\WinAPI_Project_Puzzle_Game\WinAPI_Project_Puzzle_Game\include\Resource\ResourceManager.cpp"
 
 

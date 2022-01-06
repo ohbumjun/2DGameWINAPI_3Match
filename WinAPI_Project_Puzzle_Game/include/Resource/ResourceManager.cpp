@@ -12,9 +12,16 @@ CResourceManager::~CResourceManager()
 {
 	m_mapTexture.clear();
 	m_mapAnimationSequence.clear();
+	m_mapSound.clear();
 
-	auto iter = m_mapChannelGroup.begin();
-	auto iterEnd = m_mapChannelGroup.end();
+	{
+		auto iter = m_mapChannelGroup.begin();
+		auto iterEnd = m_mapChannelGroup.end();
+		for (; iter != iterEnd; ++iter)
+		{
+			iter->second->release();
+		}
+	}
 
 	if (m_System)
 	{
@@ -22,11 +29,16 @@ CResourceManager::~CResourceManager()
 		m_System->release();
 	}
 
-	for (; iter != iterEnd; ++iter)
 	{
-		iter->second->release();
+		auto iter = m_FontLoadList.begin();
+		auto iterEnd = m_FontLoadList.end();
+
+		for (; iter != iterEnd; ++iter)
+		{
+			RemoveFontResource((*iter).c_str());
+		}
 	}
-	m_mapChannelGroup.clear();
+
 }
 
 bool CResourceManager::Init()
@@ -43,11 +55,23 @@ bool CResourceManager::Init()
 	if (result != FMOD_OK)
 		return false;
 
+	m_mapChannelGroup.insert(std::make_pair("Master", m_MasterGroup));
+
+	CreateChannelGroup("Effect");
+	CreateChannelGroup("UI");
+
+	LoadOtheFont(TEXT("NotoSansKR-Black.otf"));
+	LoadOtheFont(TEXT("NotoSansKR-Bold.otf"));
+	LoadOtheFont(TEXT("NotoSansKR-Regular.otf"));
+
+	LoadFont("DefaultFont", TEXT("NotoSansKR-Regular"));
+
 	return true;
 }
 
 void CResourceManager::Update()
 {
+	m_System->update();
 }
 
 bool CResourceManager::LoadTexture(const std::string& Name, const TCHAR* FileName, const std::string& PathName)
@@ -330,7 +354,7 @@ FMOD::ChannelGroup* CResourceManager::FindChannelGroup(const std::string& GroupN
 	return iter->second;
 }
 
-bool CResourceManager::LoadFontPath(const TCHAR* FileName, const std::string& PathName)
+bool CResourceManager::LoadOtheFont(const TCHAR* FileName, const std::string& PathName)
 {
 	TCHAR FullPath[MAX_PATH] = {};
 
@@ -351,6 +375,7 @@ bool CResourceManager::LoadFontPath(const TCHAR* FileName, const std::string& Pa
 bool CResourceManager::LoadFont(const std::string& Name, const TCHAR* FontName, int Width, int Height)
 {
 	CFont* Font = FindFont(Name);
+
 	if (Font)
 		return true;
 

@@ -15,6 +15,7 @@ protected:
 	int	m_TextCount;
 	int	m_TextCapacity;
 	COLORREF	m_TextColor;
+	CSharedPtr<class CFont> m_Font;
 
 public:
 	void SetTextColor(unsigned char r, unsigned char g, unsigned char b)

@@ -1,6 +1,9 @@
 #include "Font.h"
 
-CFont::CFont()
+CFont::CFont() :
+m_FontInfo{},
+m_Font(0),
+m_PrevFont(0)
 {}
 
 CFont::~CFont()
@@ -13,12 +16,12 @@ bool CFont::LoadFont(const TCHAR* FontName, int Width, int Height)
 {
 	m_FontInfo.lfWidth  = (LONG)Width;
 	m_FontInfo.lfHeight = (LONG)Height;
-	m_FontInfo.lfUnderline = 0;
-	m_FontInfo.lfWeight = FW_NORMAL;
-	m_FontInfo.lfStrikeOut = 0;
 	m_FontInfo.lfCharSet = HANGEUL_CHARSET;
+	m_FontInfo.lfWeight = FW_NORMAL;
 	m_FontInfo.lfItalic = 0;
-	m_FontInfo.lfPitchAndFamily = 2; // 자간
+	m_FontInfo.lfUnderline = 0;
+	m_FontInfo.lfStrikeOut = 0;
+	m_FontInfo.lfPitchAndFamily = 1; // 자간
 
 	lstrcpy(m_FontInfo.lfFaceName, FontName);
 
@@ -32,7 +35,7 @@ void CFont::SetFont(HDC hDC)
 	m_PrevFont = (HFONT)SelectObject(hDC, m_Font);
 }
 
-void CFont::ReserFont(HDC hDC)
+void CFont::ResetFont(HDC hDC)
 {
 	SelectObject(hDC, m_PrevFont);
 }

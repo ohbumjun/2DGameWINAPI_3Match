@@ -58,7 +58,7 @@ public :
 	FMOD::ChannelGroup* FindChannelGroup(const std::string& GroupName);
 
 	// Font -------------------------------------------------------------------------------------------------------------------------------------------------
-	bool LoadFontPath(const TCHAR* FileName, const std::string& PathName = TEXTURE_PATH);
+	bool LoadOtheFont(const TCHAR* FileName, const std::string& PathName = FONT_PATH);
 	bool LoadFont(const std::string& Name, const TCHAR* FontName, int Width = 0, int Height = 0);
 	CFont* FindFont(const std::string& FontName);
 
