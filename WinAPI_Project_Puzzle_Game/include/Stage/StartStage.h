@@ -12,9 +12,10 @@ private :
 public :
     virtual bool Init() override;
     void LoadAnimationSequence();
-    void InitButtonUI(class CUIButton* (&Button), int Num);
+    void LoadSound();
 public :
     void SelectMiniStage();
     void SelectMediumStage();
     void SelectMaxStage();
+    
 };

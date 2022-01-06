@@ -43,6 +43,7 @@ CResourceManager::~CResourceManager()
 
 bool CResourceManager::Init()
 {
+	// Font 
 	HRESULT result = FMOD::System_Create(&m_System);
 	if (result != FMOD_OK)
 		return false;
@@ -57,14 +58,16 @@ bool CResourceManager::Init()
 
 	m_mapChannelGroup.insert(std::make_pair("Master", m_MasterGroup));
 
-	CreateChannelGroup("Effect");
-	CreateChannelGroup("UI");
-
 	LoadOtheFont(TEXT("NotoSansKR-Black.otf"));
 	LoadOtheFont(TEXT("NotoSansKR-Bold.otf"));
 	LoadOtheFont(TEXT("NotoSansKR-Regular.otf"));
 
 	LoadFont("DefaultFont", TEXT("NotoSansKR-Regular"));
+
+	// Sound
+	CreateChannelGroup("Effect");
+	CreateChannelGroup("UI");
+	CreateChannelGroup("BGM");
 
 	return true;
 }
@@ -280,7 +283,7 @@ bool CResourceManager::CreateChannelGroup(const std::string& GroupName)
 }
 
 bool CResourceManager::CreateSound(const std::string& SoundName, const std::string& GroupName, bool Loop, 
-	const TCHAR* FileName, const std::string& PathName)
+	const char* FileName, const std::string& PathName)
 {
 	CSound* Sound = FindSound(SoundName);
 	if (Sound)

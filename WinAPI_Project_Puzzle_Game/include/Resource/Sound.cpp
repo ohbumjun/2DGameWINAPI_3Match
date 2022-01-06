@@ -20,7 +20,7 @@ CSound::~CSound()
 {}
 
 bool CSound::LoadSound(FMOD::System* System, FMOD::ChannelGroup* Group, const std::string& Name, bool Loop,
-	const TCHAR* FileName, const std::string& PathName)
+	const char* FileName, const std::string& PathName)
 {
 	m_System = System;
 	m_Group = Group;
@@ -32,7 +32,7 @@ bool CSound::LoadSound(FMOD::System* System, FMOD::ChannelGroup* Group, const st
 	const PathInfo* Path = CPathManager::GetInst()->FindPath(PathName);
 	if (Path->PathMultibyte)
 		strcpy_s(FullPath, Path->PathMultibyte);
-	strcat_s(FullPath, Path->PathMultibyte);
+	strcat_s(FullPath, FileName);
 
 
 	FMOD_MODE Mode = FMOD_DEFAULT;

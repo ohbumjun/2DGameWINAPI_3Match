@@ -47,7 +47,7 @@ public :
 	// Sound -------------------------------------------------------------------------------------------------------------------------------------------------
 	bool CreateChannelGroup(const std::string& GroupName);
 	bool CreateSound(const std::string& SoundName, const std::string& GroupName,
-	bool Loop, const TCHAR* FileName, const std::string& PathName = SOUND_PATH);
+	bool Loop, const char* FileName, const std::string& PathName = SOUND_PATH);
 	void SoundPlay(const std::string& SoundName);
 	void SoundResume(const std::string& SoundName);
 	void SoundStop(const std::string& SoundName);

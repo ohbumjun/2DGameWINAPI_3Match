@@ -18,7 +18,7 @@ private :
 	bool m_Loop;
 public :
 	bool LoadSound(FMOD::System* System, FMOD::ChannelGroup* Group, const std::string& Name,
-		bool Loop, const TCHAR* FileName, const std::string& PathName = SOUND_PATH);
+		bool Loop, const char* FileName, const std::string& PathName = SOUND_PATH);
 	void Play();
 	void Stop();
 	void Resume();

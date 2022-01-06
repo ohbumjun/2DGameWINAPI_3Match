@@ -7,6 +7,7 @@
 #include "../GameManager.h"
 #include "../UI/UIImage.h"
 #include "StageManager.h"
+#include "../Resource/ResourceManager.h"
 
 CStartStage::CStartStage()
 {
@@ -20,6 +21,9 @@ bool CStartStage::Init()
 {
     if (!CStage::Init())
         return false;
+
+    // Sound
+    LoadSound();
 
     Resolution RS = CGameManager::GetInst()->GetResolution();
 
@@ -88,10 +92,12 @@ void CStartStage::LoadAnimationSequence()
 {
 }
 
-void CStartStage::InitButtonUI(CUIButton*& Button, int Num)
+void CStartStage::LoadSound()
 {
-    
+    CResourceManager::GetInst()->CreateSound("BGMBasic", "BGM", true, "HomeBgm.wav");
+    CResourceManager::GetInst()->SoundPlay("BGMBasic");
 }
+
 
 void CStartStage::SelectMiniStage()
 {
