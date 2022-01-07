@@ -43,7 +43,6 @@ CResourceManager::~CResourceManager()
 
 bool CResourceManager::Init()
 {
-	// Font 
 	HRESULT result = FMOD::System_Create(&m_System);
 	if (result != FMOD_OK)
 		return false;
@@ -58,9 +57,11 @@ bool CResourceManager::Init()
 
 	m_mapChannelGroup.insert(std::make_pair("Master", m_MasterGroup));
 
-	LoadOtheFont(TEXT("NotoSansKR-Black.otf"));
-	LoadOtheFont(TEXT("NotoSansKR-Bold.otf"));
-	LoadOtheFont(TEXT("NotoSansKR-Regular.otf"));
+	// 
+
+	LoadOtherFont(TEXT("NotoSansKR-Black.otf"));
+	LoadOtherFont(TEXT("NotoSansKR-Bold.otf"));
+	LoadOtherFont(TEXT("NotoSansKR-Regular.otf"));
 
 	LoadFont("DefaultFont", TEXT("NotoSansKR-Regular"));
 
@@ -263,10 +264,31 @@ CAnimationSequence* CResourceManager::FindAnimationSequence(const std::string& N
 }
 
 
+bool CResourceManager::CreateSound(const std::string& SoundName, const std::string& GroupName, bool Loop, const char* FileName)
+{
+	CSound* Sound = FindSound(SoundName);
+	if (Sound)
+		return true;
+
+	FMOD::ChannelGroup* Group = FindGroup(GroupName);
+	if (!Group)
+		return false;
+
+	Sound = new CSound;
+	if (!Sound->LoadSound(SoundName, Group, m_System, Loop, FileName))
+	{
+		SAFE_DELETE(Sound);
+		return false;
+	}
+
+	m_mapSound.insert(std::make_pair(SoundName, Sound));
+
+	return true;
+}
 
 bool CResourceManager::CreateChannelGroup(const std::string& GroupName)
 {
-	FMOD::ChannelGroup* Group = FindChannelGroup(GroupName);
+	FMOD::ChannelGroup* Group = FindGroup(GroupName);
 	if (Group)
 		return true;
 
@@ -275,28 +297,9 @@ bool CResourceManager::CreateChannelGroup(const std::string& GroupName)
 	if (result != FMOD_OK)
 		return false;
 
-	m_MasterGroup->addGroup(Group, false);
+	m_MasterGroup->addGroup(Group);
 
 	m_mapChannelGroup.insert(std::make_pair(GroupName, Group));
-
-	return true;
-}
-
-bool CResourceManager::CreateSound(const std::string& SoundName, const std::string& GroupName, bool Loop, 
-	const char* FileName, const std::string& PathName)
-{
-	CSound* Sound = FindSound(SoundName);
-	if (Sound)
-		return true;
-	FMOD::ChannelGroup* Group = FindChannelGroup(GroupName);
-	if (!Group)
-		return false;
-
-	Sound = new CSound;
-	if (!Sound->LoadSound(m_System, Group, SoundName, Loop, FileName, PathName))
-		return false;
-
-	m_mapSound.insert(std::make_pair(SoundName, Sound));
 
 	return true;
 }
@@ -305,23 +308,15 @@ void CResourceManager::SoundPlay(const std::string& SoundName)
 {
 	CSound* Sound = FindSound(SoundName);
 	if (!Sound)
-		return;
+		return;;
 	Sound->Play();
-}
-
-void CResourceManager::SoundResume(const std::string& SoundName)
-{
-	CSound* Sound = FindSound(SoundName);
-	if (!Sound)
-		return;
-	Sound->Resume();
 }
 
 void CResourceManager::SoundStop(const std::string& SoundName)
 {
 	CSound* Sound = FindSound(SoundName);
 	if (!Sound)
-		return;
+		return;;
 	Sound->Stop();
 }
 
@@ -329,16 +324,16 @@ void CResourceManager::SoundPause(const std::string& SoundName)
 {
 	CSound* Sound = FindSound(SoundName);
 	if (!Sound)
-		return;
+		return;;
 	Sound->Pause();
 }
 
-void CResourceManager::SetVolume(const std::string& GroupName, int Volume)
+void CResourceManager::SoundResume(const std::string& SoundName)
 {
-	FMOD::ChannelGroup* Group = FindChannelGroup(GroupName);
-	if (!Group)
-		return;
-	Group->setVolume((float)(Volume % 100));
+	CSound* Sound = FindSound(SoundName);
+	if (!Sound)
+		return;;
+	Sound->Resume();
 }
 
 CSound* CResourceManager::FindSound(const std::string& SoundName)
@@ -349,7 +344,7 @@ CSound* CResourceManager::FindSound(const std::string& SoundName)
 	return iter->second;
 }
 
-FMOD::ChannelGroup* CResourceManager::FindChannelGroup(const std::string& GroupName)
+inline FMOD::ChannelGroup* CResourceManager::FindGroup(const std::string& GroupName)
 {
 	auto iter = m_mapChannelGroup.find(GroupName);
 	if (iter == m_mapChannelGroup.end())
@@ -357,7 +352,7 @@ FMOD::ChannelGroup* CResourceManager::FindChannelGroup(const std::string& GroupN
 	return iter->second;
 }
 
-bool CResourceManager::LoadOtheFont(const TCHAR* FileName, const std::string& PathName)
+bool CResourceManager::LoadOtherFont(const TCHAR* FileName, const std::string& PathName)
 {
 	TCHAR FullPath[MAX_PATH] = {};
 
@@ -367,7 +362,6 @@ bool CResourceManager::LoadOtheFont(const TCHAR* FileName, const std::string& Pa
 		lstrcpy(FullPath, Path->Path);
 	lstrcat(FullPath, FileName);
 
-	// 시스템에 글꼴을 등록한다
 	AddFontResource(FullPath);
 
 	m_FontLoadList.push_back(FullPath);
@@ -378,12 +372,10 @@ bool CResourceManager::LoadOtheFont(const TCHAR* FileName, const std::string& Pa
 bool CResourceManager::LoadFont(const std::string& Name, const TCHAR* FontName, int Width, int Height)
 {
 	CFont* Font = FindFont(Name);
-
 	if (Font)
 		return true;
 
 	Font = new CFont;
-
 	if (!Font->LoadFont(FontName, Width, Height))
 	{
 		SAFE_DELETE(Font);
@@ -398,10 +390,7 @@ bool CResourceManager::LoadFont(const std::string& Name, const TCHAR* FontName, 
 CFont* CResourceManager::FindFont(const std::string& FontName)
 {
 	auto iter = m_mapFont.find(FontName);
-
 	if (iter == m_mapFont.end())
 		return nullptr;
-		
 	return iter->second;
 }
-

@@ -2,42 +2,44 @@
 #include "../Path/PathManager.h"
 
 CSound::CSound() :
-m_Play(false)
+	m_Group(nullptr),
+	m_Channel(nullptr),
+	m_Sound(nullptr),
+	m_System(nullptr),
+	m_Loop(false),
+	m_Play(false)
 {}
 
 CSound::CSound(const CSound& Sound)
 {
-	m_Name     = Sound.m_Name;
-	m_Group    = Sound.m_Group;
+	m_Group = Sound.m_Group;
 	m_Channel = Sound.m_Channel;
-	m_System  = Sound.m_System;
-	m_Sound   = Sound.m_Sound;
-	m_Play      = Sound.m_Play;
-	m_Loop     = Sound.m_Loop;
+	m_Sound = Sound.m_Sound;
+	m_System = Sound.m_System;
 }
 
 CSound::~CSound()
 {}
 
-bool CSound::LoadSound(FMOD::System* System, FMOD::ChannelGroup* Group, const std::string& Name, bool Loop,
-	const char* FileName, const std::string& PathName)
+bool CSound::LoadSound(const std::string& SoundName, FMOD::ChannelGroup*  Group, FMOD::System* System, bool Loop, const char* FileName,
+	const std::string& PathName)
 {
 	m_System = System;
 	m_Group = Group;
-	m_Name = Name;
+	m_Name = SoundName;
 	m_Loop = Loop;
+
+	FMOD_MODE Mode = FMOD_DEFAULT;
+	if (m_Loop)
+		Mode = FMOD_LOOP_NORMAL;
 
 	char FullPath[MAX_PATH] = {};
 
 	const PathInfo* Path = CPathManager::GetInst()->FindPath(PathName);
-	if (Path->PathMultibyte)
+
+	if (Path)
 		strcpy_s(FullPath, Path->PathMultibyte);
 	strcat_s(FullPath, FileName);
-
-
-	FMOD_MODE Mode = FMOD_DEFAULT;
-	if (Loop)
-		Mode = FMOD_LOOP_NORMAL;
 
 	if (m_System->createSound(FullPath, Mode, nullptr, &m_Sound) != FMOD_OK)
 		return false;
@@ -58,12 +60,13 @@ void CSound::Stop()
 
 	bool Playing = false;
 	m_Channel->isPlaying(&Playing);
+
 	if (Playing)
 	{
 		m_Channel->stop();
 		m_Channel = nullptr;
+		m_Play = false;
 	}
-	m_Play = false;
 }
 
 void CSound::Resume()
@@ -73,11 +76,12 @@ void CSound::Resume()
 
 	bool Playing = false;
 	m_Channel->isPlaying(&Playing);
+
 	if (!Playing)
 	{
 		m_Channel->setPaused(false);
+		m_Play = true;
 	}
-	m_Play = true;
 }
 
 void CSound::Pause()
@@ -87,9 +91,10 @@ void CSound::Pause()
 
 	bool Playing = false;
 	m_Channel->isPlaying(&Playing);
+
 	if (Playing)
 	{
 		m_Channel->setPaused(true);
+		m_Play = false;
 	}
-	m_Play = false;
 }

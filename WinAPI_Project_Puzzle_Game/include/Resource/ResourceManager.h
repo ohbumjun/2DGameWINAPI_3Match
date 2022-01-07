@@ -44,23 +44,23 @@ public :
 	void AddAnimationFrameData(const std::string& SequenceName, float StartX, float StartY, float SizeX, float SizeY);
 	CAnimationSequence* FindAnimationSequence(const std::string& Name);
 
-	// Sound -------------------------------------------------------------------------------------------------------------------------------------------------
+	// Sound -----------------------------------------------------------------------------------------------------------------------------------------------
+
+	bool CreateSound(const std::string& SoundName, const std::string& GroupName, bool Loop, const char* FileName);
 	bool CreateChannelGroup(const std::string& GroupName);
-	bool CreateSound(const std::string& SoundName, const std::string& GroupName,
-	bool Loop, const char* FileName, const std::string& PathName = SOUND_PATH);
 	void SoundPlay(const std::string& SoundName);
-	void SoundResume(const std::string& SoundName);
 	void SoundStop(const std::string& SoundName);
 	void SoundPause(const std::string& SoundName);
-	void SetVolume(const std::string& SoundName, int Volume);
+	void SoundResume(const std::string& SoundName);
 
 	CSound* FindSound(const std::string& SoundName);
-	FMOD::ChannelGroup* FindChannelGroup(const std::string& GroupName);
+	FMOD::ChannelGroup* FindGroup(const std::string& GroupName);
 
 	// Font -------------------------------------------------------------------------------------------------------------------------------------------------
-	bool LoadOtheFont(const TCHAR* FileName, const std::string& PathName = FONT_PATH);
+	bool LoadOtherFont(const TCHAR* FileName, const std::string& PathName = FONT_PATH);
 	bool LoadFont(const std::string& Name, const TCHAR* FontName, int Width = 0, int Height = 0);
 	CFont* FindFont(const std::string& FontName);
+
 
 private :
 	static CResourceManager* m_Inst;
