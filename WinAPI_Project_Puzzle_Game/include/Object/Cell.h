@@ -24,7 +24,24 @@ private :
 	std::vector<const char*> m_AnimalNames;
 	BlockType		 m_BlockType;
 	
+	// DFS ( 가로 검사 or 세로 검사)
+	bool m_HorizontalMatchChecked; // 
+	bool m_VerticalMatchChecked;
 public :
+	void ResetMatchChecked()
+	{
+		m_HorizontalMatchChecked = false;
+		m_VerticalMatchChecked = false;
+	}
+	void SetVerticalMatchEnable(bool Enable)
+	{
+		m_VerticalMatchChecked = Enable;
+	}
+	void SetHorizontalMatchEnable(bool Enable)
+	{
+		m_HorizontalMatchChecked = Enable;
+	}
+
 	void SetIsMoving(bool Moving)
 {
 		m_IsMoving = Moving;
@@ -76,6 +93,14 @@ public :
 	void SetAnimalType(AnimalType Type); //
 
 public :
+	bool IsVerticalMatchChecked() const
+	{
+		return m_VerticalMatchChecked;
+	}
+	bool IsHorizontalMatchChecked() const
+	{
+		return m_HorizontalMatchChecked;
+	}
 	bool IsSwapping() const
 	{
 		return m_IsSwapping;

@@ -151,8 +151,10 @@ void CBoard::MouseLButton(float DeltaTime)
 		return;
 
 	bool UpdateEnable = CheckUpdateEnable();
+
 	if (!UpdateEnable)
 		return;
+
 	Vector2 MousePos = CInput::GetInst()->GetMousePos();
 
 	// Tile 선택
@@ -341,6 +343,7 @@ bool CBoard::Update(float DeltaTime)
 
 		// 모든 Cell 들이 내려왔을 때, 그 순간에만 Cell 들을 Match 하는지 검사 + 제거
 		bool IsMatch = true;
+
 		if (UpdateEnable)
 		{
 			// Match 되는 Cell 들이 있는지 체크한다. -> Match 되는Cell 들을 제거 표시해둔다.
@@ -583,6 +586,7 @@ bool CBoard::CheckRemoveEnable()
 bool CBoard::ChangeUpperCellsPos(int RowIndex, int ColIndex)
 {
 	int CurIdx = -1;
+
 	for (int Row = RowIndex - 1; Row >= 0; Row--)
 	{
 		CurIdx = Row * m_ColCount + ColIndex;
@@ -592,7 +596,6 @@ bool CBoard::ChangeUpperCellsPos(int RowIndex, int ColIndex)
 		Vector2 PrevPos = m_vecCells[CurIdx]->GetNewPos();
 		float NewYPos = PrevPos.y + m_SingleBlockSize.y;
 		m_vecCells[CurIdx]->SetNewPos(PrevPos.x, NewYPos);
-
 	}
 
 	return true;
@@ -836,6 +839,121 @@ void CBoard::MoveTwoClickedCells(float DeltaTime)
 	}
 }
 
+void CBoard::DFSInvetigateMactch(int AccMatchN, AnimalType InitType, int InitR, int InitC,
+	int CurR, int CurC, bool IsVerticalCheck, bool& IsMatchFound)
+{
+	// 범위를 벗어나면 X
+	if (CurR >= m_RowCount || CurC >= m_ColCount)
+	{
+		// Match Num 이 3개 이상인지 확인한다.
+		if (AccMatchN >= 3)
+		{
+			// 세로로 검사
+			if (IsVerticalCheck)
+			{
+				for (int r = InitR; r <= CurR - 1; r++)
+					m_vecDestroyedCells[r][CurC] = true;
+			}
+			// 가로로 검사
+			else
+			{
+				for (int c = InitC; c <= CurC - 1; c++)
+					m_vecDestroyedCells[InitR][c] = true;
+			}
+
+			IsMatchFound = true;
+		}
+		else
+		{
+			// 지금까지 검사한 Cell 들로 하여금 다시 검사를 할 수 있게 하기 위해서 정보를 Reset 해준다.
+			// 세로로 검사
+			if (IsVerticalCheck)
+			{
+				for (int r = InitR; r <= CurR - 1; r++)
+					m_vecCells[r * m_ColCount + InitC]->ResetMatchChecked();
+			}
+			// 가로로 검사
+			else
+			{
+				for (int c = InitC; c <= CurC - 1; c++)
+					m_vecCells[InitR * m_ColCount + c]->ResetMatchChecked();
+			}
+		}
+		
+		return;
+	}
+
+	// 현재 Cell 이 이미 검사되었는지 여부를 살펴야 한다.
+	// 가로 , 세로 검사가 되었는지 여부를 각각 검사해야 한다.
+	// 세로 검사 표시
+	if (IsVerticalCheck)
+	{
+		if (m_vecCells[CurR * m_ColCount + CurC]->IsVerticalMatchChecked())
+			return;
+
+		m_vecCells[CurR * m_ColCount + CurC]->SetVerticalMatchEnable(true);
+	}
+	// 가로 검사 표시
+	else
+	{
+		if (m_vecCells[CurR * m_ColCount + CurC]->IsHorizontalMatchChecked())
+			return;
+
+		m_vecCells[CurR * m_ColCount + CurC]->SetHorizontalMatchEnable(true);
+	}
+
+	bool IsMatchWithInitType = m_vecCells[CurR * m_ColCount + CurC]->GetAnimalType() == InitType ? true : false;
+
+	if (IsMatchWithInitType)
+	{
+		AccMatchN += 1;
+
+		// 세로로 파고 들어가는지
+		if (IsVerticalCheck)
+			DFSInvetigateMactch(AccMatchN, InitType, InitR, InitC, CurR + 1, CurC, IsVerticalCheck, IsMatchFound);
+		// 가로로 파고 들어가는지 
+		else
+			DFSInvetigateMactch(AccMatchN, InitType, InitR, InitC, CurR , CurC + 1, IsVerticalCheck, IsMatchFound);
+	}
+	else
+	{
+		// Match Num 이 3개 이상인지 확인한다.
+		if (AccMatchN >= 3)
+		{
+			// 세로로 검사
+			if (IsVerticalCheck)
+			{
+				for (int r = InitR; r <= CurR - 1; r++)
+					m_vecDestroyedCells[r][CurC] = true;
+			}
+			// 가로로 검사
+			else
+			{
+				for (int c = InitC; c <= CurC - 1; c++)
+					m_vecDestroyedCells[InitR][c] = true;
+			}
+
+			IsMatchFound = true;
+		}
+		else
+		{
+			// 지금까지 검사한 Cell 들로 하여금 다시 검사를 할 수 있게 하기 위해서 정보를 Reset 해준다.
+			// 세로로 검사
+			if (IsVerticalCheck)
+			{
+				for (int r = InitR; r <= CurR; r++)
+					m_vecCells[r * m_ColCount + InitC]->ResetMatchChecked();
+			}
+			// 가로로 검사
+			else
+			{
+				for (int c = InitC; c <= CurC; c++)
+					m_vecCells[InitR * m_ColCount + c]->ResetMatchChecked();
+			}
+		}
+	}
+}
+
 bool CBoard::DenoteMatchCells()
 {
 	bool IsMatch = false;
@@ -846,8 +964,12 @@ bool CBoard::DenoteMatchCells()
 		for (int Col = 0; Col < m_ColCount; Col++)
 		{
 			m_vecDestroyedCells[Row][Col] = false;
+
+			// 각 Cell 에 대해서 가로 검사, 세로 검사 여부에 대한 정보도 Reset
+			m_vecCells[Row * m_ColCount + Col]->ResetMatchChecked();
 		}
 	}
+
 
 	// 현재 row, col
 	// 이전 위치 AnimalType, 같은 개수, 방향 x, y
@@ -857,6 +979,7 @@ bool CBoard::DenoteMatchCells()
 
 	// Row 검사 ( 가로 검사 ) --> 실제 보여지는 Real Board 에 대해서만 진행할 것이다. 
 	// for (int RMatchLen = 3;m_ColCount - 1; RMatchLen >= 3; RMatchLen--)
+	/*
 	for (int RMatchLen = 3; RMatchLen <= m_ColCount; RMatchLen++)
 	{
 		// 모든 Cell 들에 대해서 검사한다. ( 보여지는 화면 만 검사하기 )
@@ -889,9 +1012,31 @@ bool CBoard::DenoteMatchCells()
 			}
 		}
 	}
+	*/
+
+	// 가로 검사 (왼쪽 - 오른쪽)
+	for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
+	{
+		for (int Col = 0; Col < m_ColCount; Col++)
+		{
+			AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+			bool IsMatchFound = false;
+
+			// DFSInvetigateMactch(0, InitType, Row, Col, Row, Col, bool IsVerticalCheck, bool& IsMatchFound)
+			DFSInvetigateMactch(0, InitType, Row, Col, Row, Col, false, IsMatchFound);
+
+			if (IsMatchFound)
+			{
+				IsMatch = true;
+				m_MatchCount += 1;
+			}
+		}
+	}
 
 	// Column 검사
 	// for (int CMatchLen = m_RowCount / 2; CMatchLen >= 3; CMatchLen--)
+	/*
 	for (int CMatchLen = 3; CMatchLen <= m_RowCount / 2; CMatchLen++)
 	{
 		// 모든 Cell 들에 대해서 검사한다.
@@ -925,7 +1070,27 @@ bool CBoard::DenoteMatchCells()
 			}
 		}
 	}
+	*/
 
+	for (int Col = 0; Col < m_ColCount; Col++)
+	{
+		// 각 Colum --> 세로로 검사할 예정이다. 
+		for (int Row = m_RowCount / 2; Row < m_RowCount; Row++)
+		{
+			AnimalType InitType = m_vecCells[Row * m_ColCount + Col]->GetAnimalType();
+
+			bool IsMatchFound = false;
+
+			// DFSInvetigateMactch(0, InitType, Row, Col, Row, Col, bool IsVerticalCheck, bool& IsMatchFound)
+			DFSInvetigateMactch(0, InitType, Row, Col, Row, Col, true, IsMatchFound);
+
+			if (IsMatchFound)
+			{
+				IsMatch = true;
+				m_MatchCount += 1;
+			}
+		}
+	}
 
 	// 모두 검사한 다음 , 사라지는 Cell 들에 대해 Block을 Empty로 만든다.
 	for (int Row = 0; Row < m_RowCount; Row++)

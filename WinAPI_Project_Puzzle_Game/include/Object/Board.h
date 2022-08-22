@@ -183,8 +183,11 @@ public : // Updates
 	bool CheckUpdateEnable();
 	void MoveTwoClickedCells(float DeltaTime);
 public : // Check Logic
+	void DFSInvetigateMactch(int AccMatchN, AnimalType InitType, int InitR, int InitC,  
+		int CurR, int CurC, bool IsVerticalCheck, bool& IsMatchFound);
 	bool DenoteMatchCells();
 	bool CheckMatchCells();
+public :
 	Vector2   GetOppositeDirection(int curDx, int curDy);
 	bool CheckMatchPossible();
 	bool MakeMatchableBoard();

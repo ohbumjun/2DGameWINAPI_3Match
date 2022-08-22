@@ -52,6 +52,15 @@ void CAnimation::AddAnimation(const std::string& SequenceName,
 	if (!Sequence)
 		return;
 
+	// 여기서 중복을 제거해줘야 한다
+	// 1) 중복을 허용하면, 계속 AnimationInfo 를 만들고, Sequence도 추가하여, Sequence의 Usage Count는 증가
+	// 2) 그런데 unordered_map은 중복을 허용안해서, 중복 키로 들어온 data는 무시
+	// 즉, Sequence의 Usage Count는 1 증가 시켜놓은 상태인데, unordered_map 에 들어가지는않고
+	// 나중에 unordered_map의 원소를 지워주더라도 Usage Count는 1만 감소시킬 텐데
+	// 중복해서 3개를 넣어서 UC가 3 증가해도 결국 나중에는 Usage Count가 1만 감소하게 되어
+	// UC가 0이 되지 않아 Memery Leak이 발생하게 되는 것이다
+
+	
 	if (FindAnimation(AnimName))
 		return;
 

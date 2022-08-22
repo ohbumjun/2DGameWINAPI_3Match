@@ -13,7 +13,9 @@ CCell::CCell() :
 	m_AnimalNames{"Panda","Bear","Parrot","Elephant","Penguin","Duck"},
 	m_IsMoving(false),
 	m_NewPos{},
-	m_IsSwapping(false)
+	m_IsSwapping(false),
+	m_HorizontalMatchChecked(false),
+	m_VerticalMatchChecked(false)
 {
 }
 
